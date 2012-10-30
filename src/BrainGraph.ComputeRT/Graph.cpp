@@ -2,7 +2,7 @@
 #include "Graph.h"
 #include <exception>
 
-namespace BrainLabLibrary
+namespace BrainGraph { namespace Compute { namespace Graph
 {
 	Graph::Graph(int nVerts, GraphLookup* lu) : _graph(nVerts)
 	{
@@ -147,4 +147,4 @@ namespace BrainLabLibrary
 	{
 		return ComponentEdges[id].size();
 	}
-}
+}}}

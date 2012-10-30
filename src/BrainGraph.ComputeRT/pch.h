@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <map>
-
 #include <iostream>
 #include <math.h>
 #include <amp.h>

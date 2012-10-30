@@ -2,7 +2,7 @@
 #include "Graph.h"
 //#include "Subject.h"
 
-namespace BrainLabLibrary
+namespace BrainGraph { namespace Compute { namespace Graph
 {
 	using namespace std;
 
@@ -79,5 +79,5 @@ namespace BrainLabLibrary
 		map<int, shared_ptr<Vertex>> _verticesById;
 		map<int, int> _overlapDistribution;
 	};
-}
+}}}
 

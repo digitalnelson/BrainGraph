@@ -49,6 +49,7 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<INavigationService>().To<FrameAdapter>().InSingletonScope().WithConstructorArgument("frame", RootFrame);
 			_kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 			_kernel.Bind<IRegionService>().To<RegionService>().InSingletonScope();
+			_kernel.Bind<ISubjectService>().To<SubjectService>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)

@@ -2,18 +2,15 @@
 #include "GraphComparison.h"
 #include "Graph.h"
 #include "Stats.h"
-#include <amp_math.h>
-#include <vector>
 #include <algorithm>
 #include <ppl.h>
 #include <concurrent_vector.h>
-#include <math.h>
 #include <iostream>
 
 using namespace std;
 using namespace concurrency;
 
-namespace BrainLabLibrary
+namespace BrainGraph { namespace Compute { namespace Graph
 {
 	GraphComparison::GraphComparison(int subjectCount, int verts, int edges) 
 		: _subjectEdges(boost::extents[edges][subjectCount]), _lu(verts), _grpStats(edges), _graph(verts) //, _g(verts, &_lu)
@@ -32,7 +29,7 @@ namespace BrainLabLibrary
 	void GraphComparison::AddGraph(Graph* graph)
 	{
 		int edge = 0;
-		for(Graph::EdgeValueCollection::iterator iter = graph->EdgeValues.begin(); iter < graph->EdgeValues.end(); ++iter)
+		for(auto iter = graph->EdgeValues.begin(); iter < graph->EdgeValues.end(); ++iter)
 		{
 			_subjectEdges[edge][_currentSubjectIdx] = iter->Value;
 			//_subjectEdgesView(edge, _currentSubjectIdx) = iter->Value;
@@ -252,4 +249,4 @@ namespace BrainLabLibrary
 
 		components = _grpComponent;
 	}
-}
+}}}

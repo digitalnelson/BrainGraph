@@ -5,24 +5,74 @@
       <UniqueIdentifier>e0048b94-ab9a-419b-8794-c31ad0422188</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Subjects">
+      <UniqueIdentifier>{67ff26bb-557a-41ed-8250-f8f47e6122eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graph">
+      <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Class1.cpp" />
-    <ClCompile Include="Graph.cpp" />
-    <ClCompile Include="GraphComparison.cpp" />
-    <ClCompile Include="GraphComparisonMulti.cpp" />
-    <ClCompile Include="GraphLookup.cpp" />
-    <ClCompile Include="Stats.cpp" />
+    <ClCompile Include="Subject.cpp">
+      <Filter>Subjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphComparison.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphComparisonMulti.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphLookup.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Stats.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="SubjectGraph.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupGraph.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Graph</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Class1.h" />
-    <ClInclude Include="EdgeValue.h" />
-    <ClInclude Include="Graph.h" />
-    <ClInclude Include="GraphComparison.h" />
-    <ClInclude Include="GraphComparisonMulti.h" />
-    <ClInclude Include="GraphLookup.h" />
-    <ClInclude Include="Stats.h" />
+    <ClInclude Include="Subject.h">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphComparison.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphComparisonMulti.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphLookup.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Stats.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectGraph.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupGraph.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphEdge.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

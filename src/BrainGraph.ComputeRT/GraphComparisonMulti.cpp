@@ -3,7 +3,7 @@
 #include "GraphComparison.h"
 #include "Stats.h"
 
-namespace BrainLabLibrary
+namespace BrainGraph { namespace Compute { namespace Graph
 {
 	using namespace std;
 
@@ -141,4 +141,4 @@ namespace BrainLabLibrary
 
 		return overlap;
 	}
-}
+}}}

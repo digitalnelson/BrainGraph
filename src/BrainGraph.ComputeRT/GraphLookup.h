@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 
-namespace BrainLabLibrary
+namespace BrainGraph { namespace Compute { namespace Graph
 {
 	class GraphEdgeMapper
 	{
@@ -54,4 +54,4 @@ namespace BrainLabLibrary
 		std::map<std::pair<int, int>, int> _edgeToIdx;
 		int _size;
 	};
-}
+}}}

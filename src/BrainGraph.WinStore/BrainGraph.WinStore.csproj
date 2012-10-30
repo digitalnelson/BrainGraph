@@ -133,7 +133,10 @@
     <Compile Include="Screens\Subjects\SubjectViewModel.cs" />
     <Compile Include="Services\IAppPreferences.cs" />
     <Compile Include="Services\IRegionService.cs" />
+    <Compile Include="Services\ISubjectService.cs" />
+    <Compile Include="Services\Loaders\AdjCSVLoader.cs" />
     <Compile Include="Services\Loaders\ROILoader.cs" />
+    <Compile Include="Services\Loaders\SubjectCSVLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -208,6 +211,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BrainGraph.ComputeRT\BrainGraph.ComputeRT.vcxproj">
+      <Project>{6756aaf2-df88-4fe3-a833-736ee3861afd}</Project>
+      <Name>BrainGraph.ComputeRT</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BrainGraph.Storage\BrainGraph.Storage.csproj">
       <Project>{0dc45ebb-585a-4c95-b12c-49261c76a1b5}</Project>
       <Name>BrainGraph.Storage</Name>

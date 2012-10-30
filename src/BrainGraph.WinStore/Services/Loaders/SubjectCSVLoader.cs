@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrainLabLibrary;
+using BrainGraph.Compute.Subjects;
+using Windows.Storage;
 
-namespace BrainLab.Services.Loaders
+namespace BraingGraph.Services.Loaders
 {
 	class SubjectCSVLoader
 	{
-		public SubjectCSVLoader(string fullPath)
-		{
-			_fullPath = fullPath;
-		}
-
-		public List<Subject> LoadSubjectFile()
+		public static async Task<List<Subject>> LoadSubjectFile(StorageFile file)
 		{
 			// Read in all the lines
-			string[] lines = System.IO.File.ReadAllLines(_fullPath);
+			var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
+
+			if (lines.Count == 0)
+				throw new Exception("Subject file empty");
 
 			// Pull out the headers
 			char[] splitChars = new char[] { '\t' };
@@ -71,19 +70,17 @@ namespace BrainLab.Services.Loaders
 						case "age":
 							subject.Age = propVal;
 							break;
-						case "eventId":
-							subject.EventIds.Add(propVal);
-							break;
-						default:
-							subject.AddAttribute(headers[i], fields[i]);
-							break;
+						//case "eventId":
+						//	subject.EventIds.Add(propVal);
+						//	break;
+						//default:
+						//	subject.AddAttribute(headers[i], fields[i]);
+						//	break;
 					}	
 				}
 			}
 
 			return subjects.Values.ToList();
 		}
-
-		private string _fullPath;
 	}
 }

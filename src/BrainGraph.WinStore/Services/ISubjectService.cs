@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrainLab.Events;
-using BrainLab.Services.Loaders;
-using BrainLabLibrary;
 using Caliburn.Micro;
+using BrainGraph.Compute.Subjects;
+using BrainGraph.WinStore.Services;
+using BraingGraph.Services.Loaders;
+using Windows.Storage;
 
-namespace BrainLab.Services
+namespace BrainGraph.WinStore.Services
 {
 	public interface ISubjectService
 	{
-		void LoadSubjectFile(string fullPath);
+		void LoadSubjectFile(StorageFile file);
 		void LoadSubjectData(string fullPath, int limit);
 
 		List<Subject> GetSubjects();
@@ -34,20 +35,17 @@ namespace BrainLab.Services
 		private List<string> _dataTypes;
 		private int _filesLoadedCount;
 
-		public SubjectService(IEventAggregator eventAggregator)
+		public SubjectService()
 		{
-			_eventAggregator = eventAggregator;
-
 			_subjects = new List<Subject>();
 			_subjectsByGroup = new Dictionary<string, List<Subject>>();
 			_subjectsByEventId = new Dictionary<string, Subject>();
 			_dataTypes = new List<string>();
 		}
 
-		public void LoadSubjectFile(string fullPath)
+		public async void LoadSubjectFile(StorageFile file)
 		{
-			var subjectLoader = new SubjectCSVLoader(fullPath);
-			_subjects = subjectLoader.LoadSubjectFile();
+			_subjects = await SubjectCSVLoader.LoadSubjectFile(file);
 
 			foreach (var sub in _subjects)
 			{
@@ -56,31 +54,31 @@ namespace BrainLab.Services
 					
 				_subjectsByGroup[sub.GroupId].Add(sub);
 
-				foreach(var eventId in sub.EventIds)
-					_subjectsByEventId[eventId] = sub;
+				//foreach(var eventId in sub.EventIds)
+				//	_subjectsByEventId[eventId] = sub;
 			}
 
-			_eventAggregator.Publish(new SubjectsLoadedEvent());
+			//_eventAggregator.Publish(new SubjectsLoadedEvent());
 		}
 
-		public void LoadSubjectData(string fullPath, int limit)
+		public void LoadSubjectData(StorageFolder folder)
 		{
-			var adjLoader = new AdjCSVLoader(fullPath, limit);  // TODO: Fix, feels yucky. :-P
-			adjLoader.Load(_subjectsByEventId);
+			//var adjLoader = new AdjCSVLoader(fullPath, limit);  // TODO: Fix, feels yucky. :-P
+			//AdjCSVLoader.Load(folder, _subjectsByEventId);
 
-			_dataTypes.Clear();
-			foreach (var subject in _subjects)
-			{
-				foreach (var graph in subject.Graphs)
-				{
-					if (!_dataTypes.Contains(graph.Value.DataSource))
-						_dataTypes.Add(graph.Value.DataSource);
-				}
-			}
+			//_dataTypes.Clear();
+			//foreach (var subject in _subjects)
+			//{
+			//	foreach (var graph in subject.Graphs)
+			//	{
+			//		if (!_dataTypes.Contains(graph.Value.DataSource))
+			//			_dataTypes.Add(graph.Value.DataSource);
+			//	}
+			//}
 
-			_filesLoadedCount = adjLoader.FilesLoaded;
+			//_filesLoadedCount = adjLoader.FilesLoaded;
 
-			_eventAggregator.Publish(new DataLoadedEvent());
+			//_eventAggregator.Publish(new DataLoadedEvent());
 		}
 
 		public List<Subject> GetSubjects()

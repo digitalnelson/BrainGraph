@@ -1,11 +1,10 @@
 #pragma once
-#include "EdgeValue.h"
+#include "Component.h"
 #include "Graph.h"
 #include "GraphLookup.h"
 
-
-namespace BrainLabLibrary
-{	
+namespace BrainGraph { namespace Compute { namespace Graph
+{
 	using namespace std;
 
 	class GraphComparison
@@ -66,5 +65,6 @@ namespace BrainLabLibrary
 		float PValue;
 		int RightTailCount;
 	};
-}
+
+}}}
 

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using BrainGraph.Compute.Subjects;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrainLabLibrary;
-using BrainLabStorage;
+using Windows.Storage;
 
 namespace BrainLab.Services.Loaders
 {
@@ -15,18 +15,19 @@ namespace BrainLab.Services.Loaders
 		{
 			_fullPath = fullPath;
 			_vertexCount = vertexCount;
-			_sgf = new SubjectGraphFactory(_vertexCount);
+			//_sgf = new SubjectGraphFactory(_vertexCount);
 		}
 
-		public void Load(Dictionary<string, Subject> subjectsByEventId)
+		public async void Load(StorageFolder folder, Dictionary<string, Subject> subjectsByEventId)
 		{
-			string[] adjFiles = Directory.GetFiles(_fullPath);
+			var files = await folder.GetFilesAsync();
+
 			int filesLoadedCount = 0;
 
 			//foreach (var adjFile in adjFiles)
-			Parallel.ForEach(adjFiles, adjFile =>
+			Parallel.ForEach(files, async file => 
 			{
-				var fileName = System.IO.Path.GetFileName(adjFile);
+				var fileName = file.Name;
 				var fileParts = fileName.Split(new char[]{'-'});
 
 				var idents = fileParts[0].Split(new char[] { '_' });
@@ -50,13 +51,13 @@ namespace BrainLab.Services.Loaders
 				else
 					subject = subjectsByEventId[eventId];
 
-				SubjectGraphItem itm = _sgf.CreateSubject();
-				itm.DataSource = adjType;
+				//SubjectGraphItem itm = _sgf.CreateSubject();
+				//itm.DataSource = adjType;
 
 				// Read in all the lines
-				string[] lines = System.IO.File.ReadAllLines(adjFile);
+				var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
 
-				for (int lineIdx = 0; lineIdx < lines.Length; lineIdx++)
+				for (int lineIdx = 0; lineIdx < lines.Count; lineIdx++)
 				{
 					var line = lines[lineIdx];
 					var columns = line.TrimEnd().Split('\t');
