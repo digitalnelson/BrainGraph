@@ -124,6 +124,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <WindowsMetadataFile>$(OutDir)BrainGraph.Compute.winmd</WindowsMetadataFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -203,25 +204,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="GraphEdge.h" />
-    <ClInclude Include="Graph.h" />
-    <ClInclude Include="GraphComparison.h" />
-    <ClInclude Include="GraphComparisonMulti.h" />
+    <ClInclude Include="CompareGraphSupport.h" />
+    <ClInclude Include="SubjectGraphEdge.h" />
+    <ClInclude Include="MultiDatatypeSupport.h" />
+    <ClInclude Include="SingleDatatypeCompare.h" />
+    <ClInclude Include="MultiDatatypeCompare.h" />
     <ClInclude Include="GraphLookup.h" />
-    <ClInclude Include="GroupGraph.h" />
+    <ClInclude Include="CompareGraph.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Stats.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="SubjectGraph.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Graph.cpp" />
-    <ClCompile Include="GraphComparison.cpp" />
-    <ClCompile Include="GraphComparisonMulti.cpp" />
-    <ClCompile Include="GraphLookup.cpp" />
-    <ClCompile Include="GroupGraph.cpp" />
+    <ClCompile Include="MultiDatatypeCompare.cpp" />
+    <ClCompile Include="SingleDatatypeCompare.cpp" />
+    <ClCompile Include="CompareGraph.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -230,7 +227,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Stats.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="SubjectGraph.cpp" />
   </ItemGroup>

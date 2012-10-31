@@ -17,28 +17,16 @@
     <ClCompile Include="Subject.cpp">
       <Filter>Subjects</Filter>
     </ClCompile>
-    <ClCompile Include="Graph.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphComparison.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphComparisonMulti.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphLookup.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="Stats.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
     <ClCompile Include="SubjectGraph.cpp">
+      <Filter>Subjects</Filter>
+    </ClCompile>
+    <ClCompile Include="CompareGraph.cpp">
       <Filter>Graph</Filter>
     </ClCompile>
-    <ClCompile Include="GroupGraph.cpp">
+    <ClCompile Include="SingleDatatypeCompare.cpp">
       <Filter>Graph</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
+    <ClCompile Include="MultiDatatypeCompare.cpp">
       <Filter>Graph</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,31 +35,28 @@
     <ClInclude Include="Subject.h">
       <Filter>Subjects</Filter>
     </ClInclude>
-    <ClInclude Include="Graph.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphComparison.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphComparisonMulti.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
     <ClInclude Include="GraphLookup.h">
       <Filter>Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Stats.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
     <ClInclude Include="SubjectGraph.h">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CompareGraph.h">
       <Filter>Graph</Filter>
     </ClInclude>
-    <ClInclude Include="GroupGraph.h">
+    <ClInclude Include="SingleDatatypeCompare.h">
       <Filter>Graph</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
+    <ClInclude Include="MultiDatatypeCompare.h">
       <Filter>Graph</Filter>
     </ClInclude>
-    <ClInclude Include="GraphEdge.h">
+    <ClInclude Include="MultiDatatypeSupport.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectGraphEdge.h">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CompareGraphSupport.h">
       <Filter>Graph</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@
 #include <map>
 #include <iostream>
 #include <math.h>
+#include <ppl.h>
 #include <amp.h>
 
 #include <boost/graph/adjacency_matrix.hpp>

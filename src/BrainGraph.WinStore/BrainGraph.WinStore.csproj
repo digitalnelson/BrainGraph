@@ -106,8 +106,10 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\GraphComponent.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\ROI.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Common\Viz\BrainScatter.cs" />
@@ -132,6 +134,7 @@
     </Compile>
     <Compile Include="Screens\Subjects\SubjectViewModel.cs" />
     <Compile Include="Services\IAppPreferences.cs" />
+    <Compile Include="Services\IComputeService.cs" />
     <Compile Include="Services\IRegionService.cs" />
     <Compile Include="Services\ISubjectService.cs" />
     <Compile Include="Services\Loaders\AdjCSVLoader.cs" />
@@ -214,10 +217,6 @@
     <ProjectReference Include="..\BrainGraph.ComputeRT\BrainGraph.ComputeRT.vcxproj">
       <Project>{6756aaf2-df88-4fe3-a833-736ee3861afd}</Project>
       <Name>BrainGraph.ComputeRT</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BrainGraph.Storage\BrainGraph.Storage.csproj">
-      <Project>{0dc45ebb-585a-4c95-b12c-49261c76a1b5}</Project>
-      <Name>BrainGraph.Storage</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

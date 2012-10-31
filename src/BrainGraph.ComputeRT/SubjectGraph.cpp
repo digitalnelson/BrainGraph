@@ -1,15 +1,10 @@
 #include "pch.h"
 #include "SubjectGraph.h"
 
-namespace BrainGraph { namespace Compute { namespace Graph
+namespace BrainGraph { namespace Compute { namespace Subjects
 {
 
 	SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts)
-	{
-	}
-
-
-	SubjectGraph::~SubjectGraph(void)
 	{
 	}
 
@@ -22,14 +17,14 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		boost::add_edge(i, j, _adjMtx);
 
-		GraphEdge edge;
+		SubjectGraphEdge edge;
 		edge.Vertices = std::pair<int, int>(i, j);
 		edge.Value = val;
 
 		Edges.push_back(edge);
 	}
 
-	GraphEdge SubjectGraph::GetEdge(int i, int j)
+	SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)
 	{
 		// TODO: Figure out how to do a lookup on this
 		int idx = 0; //_lu->GetEdge(i, j);

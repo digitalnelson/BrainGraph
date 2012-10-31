@@ -8,32 +8,33 @@ using BrainGraph.Compute.Subjects;
 using BrainGraph.WinStore.Services;
 using BraingGraph.Services.Loaders;
 using Windows.Storage;
+using BrainLab.Services.Loaders;
 
 namespace BrainGraph.WinStore.Services
 {
 	public interface ISubjectService
 	{
 		void LoadSubjectFile(StorageFile file);
-		void LoadSubjectData(string fullPath, int limit);
+		void LoadSubjectData(StorageFolder folder, int vertexLimit);
 
 		List<Subject> GetSubjects();
 
 		List<string> GetGroups();
 		List<string> GetDataTypes();
 
-		int GetFilesLoadedCount();
+		//int GetFilesLoadedCount();
 	}
 
 	public class SubjectService : ISubjectService
 	{
-		private readonly IEventAggregator _eventAggregator;
+		//private readonly IEventAggregator _eventAggregator;
 
 		private List<Subject> _subjects;
 		private Dictionary<string, List<Subject>> _subjectsByGroup;
 		private Dictionary<string, Subject> _subjectsByEventId;
 
 		private List<string> _dataTypes;
-		private int _filesLoadedCount;
+		//private int _filesLoadedCount;
 
 		public SubjectService()
 		{
@@ -54,17 +55,16 @@ namespace BrainGraph.WinStore.Services
 					
 				_subjectsByGroup[sub.GroupId].Add(sub);
 
-				//foreach(var eventId in sub.EventIds)
-				//	_subjectsByEventId[eventId] = sub;
+				foreach (var eventId in sub.EventIds)
+					_subjectsByEventId[eventId] = sub;
 			}
 
 			//_eventAggregator.Publish(new SubjectsLoadedEvent());
 		}
 
-		public void LoadSubjectData(StorageFolder folder)
+		public void LoadSubjectData(StorageFolder folder, int vertexLimit)
 		{
-			//var adjLoader = new AdjCSVLoader(fullPath, limit);  // TODO: Fix, feels yucky. :-P
-			//AdjCSVLoader.Load(folder, _subjectsByEventId);
+			AdjCSVLoader.Load(folder, _subjectsByEventId, vertexLimit);
 
 			//_dataTypes.Clear();
 			//foreach (var subject in _subjects)
@@ -96,9 +96,9 @@ namespace BrainGraph.WinStore.Services
 			return _dataTypes;
 		}
 
-		public int GetFilesLoadedCount()
-		{
-			return _filesLoadedCount;
-		}
+		//public int GetFilesLoadedCount()
+		//{
+		//	return _filesLoadedCount;
+		//}
 	}
 }

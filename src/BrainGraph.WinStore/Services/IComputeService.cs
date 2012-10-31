@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrainLab.Events;
-using BrainLabLibrary;
 using Caliburn.Micro;
-using BrainLabStorage;
+using BrainGraph.Compute.Graph;
 
 namespace BrainLab.Services
 {
@@ -141,7 +139,7 @@ namespace BrainLab.Services
 		#region NBSm
 		public void LoadSubjects()
 		{
-			_compare = new MultiModalCompare(_filteredSubjectData.Count, _regionService.GetNodeCount(), _regionService.GetEdgeCount(), _dataTypes.Keys.ToList());
+			_compare = new MultiDatatypeCompare(); //(_filteredSubjectData.Count, _regionService.GetNodeCount(), _regionService.GetEdgeCount(), _dataTypes.Keys.ToList());
 			_compare.LoadSubjects(_filteredSubjectData);
 		}
 
