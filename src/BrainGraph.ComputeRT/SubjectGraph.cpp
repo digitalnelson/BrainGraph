@@ -6,14 +6,15 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 
 	SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts)
 	{
+		_nVerts = nVerts;
 	}
 
 	void SubjectGraph::AddEdge(int i, int j, double val)
 	{
 		if(i >= _nVerts)
-			throw std::exception("Exceeded matrix bounds.  i >= number of verticies");
+			throw ref new Platform::Exception(E_FAIL, "Exceeded matrix bounds.  i >= number of verticies");
 		if(j >= _nVerts)
-			throw std::exception("Exceeded matrix bounds.  i >= _m");
+			throw ref new Platform::Exception(E_FAIL, "Exceeded matrix bounds.  i >= _m");
 
 		boost::add_edge(i, j, _adjMtx);
 

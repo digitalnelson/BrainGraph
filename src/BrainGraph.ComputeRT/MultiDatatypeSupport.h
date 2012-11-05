@@ -6,16 +6,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	using namespace std;
 	using namespace Platform;
 
-	struct Threshold
+	public ref class Threshold sealed
 	{
-		string DataType;
-		double Value;
+	public:
+		property String^ DataType;
+		property double Value;
 	};
 
 	struct Vertex
 	{
 		int Id;
-
 		bool IsFullOverlap;
 		int RandomOverlapCount;
 
@@ -27,10 +27,10 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	};
 
-	ref class Overlap
+	public ref class Overlap sealed
 	{
 		
-	internal:
+	private:
 		vector<shared_ptr<Vertex>> Vertices;
 		
 		int RightTailOverlapCount;

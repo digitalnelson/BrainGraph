@@ -10,7 +10,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	{
 	public:
 		SubjectGraph(int nVerts);
-		void AddEdge(int m, int n, double val);
+		void AddEdge(int i, int j, double val);
 
 		property String^ DataType;
 

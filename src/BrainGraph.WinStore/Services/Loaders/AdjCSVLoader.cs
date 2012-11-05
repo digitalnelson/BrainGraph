@@ -11,12 +11,12 @@ namespace BrainLab.Services.Loaders
 {
 	class AdjCSVLoader
 	{
-		public static async void Load(StorageFolder folder, Dictionary<string, Subject> subjectsByEventId, int vertexCount)
+		public async static Task Load(StorageFolder folder, Dictionary<string, Subject> subjectsByEventId, int vertexCount)
 		{
 			var files = await folder.GetFilesAsync();
 
-			//foreach (var adjFile in adjFiles)
-			Parallel.ForEach(files, async file => 
+			foreach (var file in files)
+			//Parallel.ForEach(files, async file => 
 			{
 				var fileName = file.Name;
 				var fileParts = fileName.Split(new char[]{ '-' });
@@ -38,7 +38,7 @@ namespace BrainLab.Services.Loaders
 
 				Subject subject = null;
 				if (!subjectsByEventId.ContainsKey(eventId))
-					return; //return; //continue;
+					continue; //return; //continue;
 				else
 					subject = subjectsByEventId[eventId];
 
@@ -65,7 +65,7 @@ namespace BrainLab.Services.Loaders
 				}
 
 				subject.AddGraph(subjectGraph);
-			});
+			}//);
 		}
 	}
 }

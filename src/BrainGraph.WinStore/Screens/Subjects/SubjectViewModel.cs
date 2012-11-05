@@ -1,4 +1,5 @@
-﻿using BrainGraph.WinStore.Common;
+﻿using BrainGraph.Compute.Subjects;
+using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
@@ -15,25 +16,53 @@ namespace BrainGraph.WinStore.Screens.Subjects
 	public class SubjectViewModel : ViewModelBase
 	{
 
+		public SubjectViewModel()
+		{
+			Subjects = new BindableCollection<Subject>();
+		}
+
 		protected async override void OnActivate()
 		{
 			base.OnActivate();
 
-			FileOpenPicker openPicker = new FileOpenPicker();
-			openPicker.ViewMode = PickerViewMode.List;
-			//openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-			openPicker.FileTypeFilter.Add(".txt");
+			var subjectService = IoC.Get<ISubjectService>();
 
-			StorageFile file = await openPicker.PickSingleFileAsync();
+			//FileOpenPicker openPicker = new FileOpenPicker();
+			//openPicker.ViewMode = PickerViewMode.List;
+			////openPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			//openPicker.FileTypeFilter.Add(".txt");
+
+			//StorageFile file = await openPicker.PickSingleFileAsync();
+
+			var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+
+			// acquire file
+			var file = await folder.GetFileAsync(@"Assets\Subjects\VA2929.txt");
+
 			if (file != null)
 			{
-				// Application now has read/write access to the picked file
-				var text = "Picked photo: " + file.Name;
-
-				var subjectService = IoC.Get<ISubjectService>();
-				subjectService.LoadSubjectFile(file);
+				List<Subject> subs = await subjectService.LoadSubjectFile(file);
+				foreach (var sub in subs)
+				{
+					Subjects.Add(sub);
+				}
 			}
+
+			FolderPicker adjPicker = new FolderPicker();
+			adjPicker.ViewMode = PickerViewMode.List;
+			adjPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+
+			adjPicker.FileTypeFilter.Add(".txt");
+
+			StorageFolder adjFolder = await adjPicker.PickSingleFolderAsync();
+			if (adjFolder != null)
+			{
+				await subjectService.LoadSubjectData(adjFolder, 90);
+			}
+
 		}
+
+		public BindableCollection<Subject> Subjects { get { return _inlSubjects; } set { _inlSubjects = value; NotifyOfPropertyChange(() => Subjects); } } private BindableCollection<Subject> _inlSubjects;
 
 		//internal bool EnsureUnsnapped()
 		//{

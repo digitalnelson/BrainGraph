@@ -8,7 +8,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	using namespace Platform::Collections;
 	using namespace Windows::Foundation::Collections;
 
-	public ref class Subject sealed
+	[Windows::UI::Xaml::Data::Bindable]
+	public ref class Subject sealed 
 	{
 	public:
 
@@ -38,9 +39,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			IMapView<String^, String^>^ get() { return _attributes->GetView(); }
 		}
 
-		property IMapView<String^, SubjectGraph^>^ Graphs
+		property IMap<String^, SubjectGraph^>^ Graphs
 		{
-			IMapView<String^, SubjectGraph^>^ get() { return _graphs->GetView(); }
+			IMap<String^, SubjectGraph^>^ get() { return _graphs; }
 		}
 	
 	private:

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "SingleDatatypeCompare.h"
+#include "MultiDatatypeSupport.h"
 #include <algorithm>
 
 using namespace std;
@@ -7,9 +8,10 @@ using namespace concurrency;
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	SingleDatatypeCompare::SingleDatatypeCompare(int subjectCount, int verts, int edges) 
+	SingleDatatypeCompare::SingleDatatypeCompare(int subjectCount, int verts, int edges, Threshold ^dataType) 
 		: _subjectEdges(boost::extents[edges][subjectCount]), _lu(verts), _grpStats(edges), _graph(verts) //, _g(verts, &_lu)
 	{
+		_dataType = dataType;
 		_subjectCount = subjectCount;
 		_vertCount = verts;
 		_edgeCount = edges;
@@ -21,8 +23,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	SingleDatatypeCompare::~SingleDatatypeCompare(void)
 	{}
 
-	void SingleDatatypeCompare::AddGraph(SubjectGraph^ graph)
+	void SingleDatatypeCompare::AddSubject(Subject^ subject)
 	{
+		// Pull out the graph for this datatype
+		auto graph = subject->Graphs->Lookup(_dataType->DataType);
+
+		// TODO: What to do if the graph does not exist?
+		// Add our graph to the list
 		int edge = 0;
 		for(auto &iter : graph->Edges)
 		{
@@ -91,10 +98,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		});
 	}
 
-	Component SingleDatatypeCompare::CompareGroups(vector<int> &idxs, int szGrp1, double tStatThreshold)
+	Component SingleDatatypeCompare::CompareGroups(vector<int> &idxs, int szGrp1)
 	{
 		// Calculate t stats for this subject labeling
 		CalcEdgeTStats(idxs, szGrp1, _grpStats);
+
+		double threshold = _dataType->Value;
 
 		// Load graph with thresholded t stats
 		for(vector<CompareEdge>::size_type idx=0; idx<_grpStats.size(); ++idx)
@@ -103,7 +112,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			pair<int, int> edge = _lu.GetEdge(idx);
 
 			// If our edge tstat is larger than our threshold keep it for NBS
-			if(abs(_grpStats[idx].TStat) > tStatThreshold)
+			if(abs(_grpStats[idx].TStat) > threshold)
 			{
 				// Add the edge to our bgl graph
 				boost::add_edge(edge.first, edge.second, _graph);
@@ -133,68 +142,68 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		return _grpComponent[maxId];
 	}
 
-	Component SingleDatatypeCompare::Permute(const vector<int> &idxs, int szGrp1, double tStatThreshold)
-	{
-		// Make a temp graph for calculating high-level graph stats
-		UDGraph g(_vertCount);
+	//Component SingleDatatypeCompare::Permute(const vector<int> &idxs, int szGrp1, double tStatThreshold)
+	//{
+	//	// Make a temp graph for calculating high-level graph stats
+	//	UDGraph g(_vertCount);
 
-		// Create somewhere temp to store our permuted t stats
-		vector<CompareEdge> permEdgeStats(_edgeCount);
-		vector<int> supraThreshEdgeIdxs;
+	//	// Create somewhere temp to store our permuted t stats
+	//	vector<CompareEdge> permEdgeStats(_edgeCount);
+	//	vector<int> supraThreshEdgeIdxs;
 
-		// Calculate t stats for this random subject labeling
-		CalcEdgeTStats(idxs, szGrp1, permEdgeStats);
+	//	// Calculate t stats for this random subject labeling
+	//	CalcEdgeTStats(idxs, szGrp1, permEdgeStats);
 
-		// Loop through edge stats and calc	our measures
-		for(vector<CompareEdge>::size_type idx=0; idx<permEdgeStats.size(); ++idx)
-		{
-			// Edge level testing - If this tstat is bigger than our grp tstat, increment the count
-			if(abs(permEdgeStats[idx].TStat) >= abs(_grpStats[idx].TStat))
-				_grpStats[idx].RightTailCount++;
+	//	// Loop through edge stats and calc	our measures
+	//	for(vector<CompareEdge>::size_type idx=0; idx<permEdgeStats.size(); ++idx)
+	//	{
+	//		// Edge level testing - If this tstat is bigger than our grp tstat, increment the count
+	//		if(abs(permEdgeStats[idx].TStat) >= abs(_grpStats[idx].TStat))
+	//			_grpStats[idx].RightTailCount++;
 
-			// TODO: Eventually store this as a graph tag so we can have multiple pieces of info stored with our edges
-			// NBS level testing - Add this to the NBS graph if above our threshold, we will calc the size of the cmp soon
-			if(abs(permEdgeStats[idx].TStat) > tStatThreshold)
-			{
-				// Lookup our edge
-				std::pair<int, int> edge = _lu.GetEdge(idx);
-				// Store the edge in our graph
-				boost::add_edge(edge.first, edge.second, g);
-				// Mark this edge as surviving
-				supraThreshEdgeIdxs.push_back(idx);
-			}
-		}
+	//		// TODO: Eventually store this as a graph tag so we can have multiple pieces of info stored with our edges
+	//		// NBS level testing - Add this to the NBS graph if above our threshold, we will calc the size of the cmp soon
+	//		if(abs(permEdgeStats[idx].TStat) > tStatThreshold)
+	//		{
+	//			// Lookup our edge
+	//			std::pair<int, int> edge = _lu.GetEdge(idx);
+	//			// Store the edge in our graph
+	//			boost::add_edge(edge.first, edge.second, g);
+	//			// Mark this edge as surviving
+	//			supraThreshEdgeIdxs.push_back(idx);
+	//		}
+	//	}
 
-		// NBS calcs
-		vector<Component> cmps;
+	//	// NBS calcs
+	//	vector<Component> cmps;
 
-		// Calculate our largest component
-		ComputeComponents(g, supraThreshEdgeIdxs, cmps);
+	//	// Calculate our largest component
+	//	ComputeComponents(g, supraThreshEdgeIdxs, cmps);
 
-		// Find the biggest component
-		int maxEdgeCount = 0, maxId = 0;
-		for(auto &cmp : cmps)
-		{
-			int cmpEdgeCount = cmp.Edges.size();
-			if(cmpEdgeCount > maxEdgeCount)
-			{
-				maxEdgeCount = cmpEdgeCount;
-				maxId = cmp.Identifier;
-			}
-		}
+	//	// Find the biggest component
+	//	int maxEdgeCount = 0, maxId = 0;
+	//	for(auto &cmp : cmps)
+	//	{
+	//		int cmpEdgeCount = cmp.Edges.size();
+	//		if(cmpEdgeCount > maxEdgeCount)
+	//		{
+	//			maxEdgeCount = cmpEdgeCount;
+	//			maxId = cmp.Identifier;
+	//		}
+	//	}
 
-		// Increment rt tail if this is larger than the actual component
-		for(auto &cmp : _grpComponent)
-		{
-			if(maxEdgeCount >= cmp.Edges.size())
-				++cmp.RightTailExtent;
-		}
+	//	// Increment rt tail if this is larger than the actual component
+	//	for(auto &cmp : _grpComponent)
+	//	{
+	//		if(maxEdgeCount >= cmp.Edges.size())
+	//			++cmp.RightTailExtent;
+	//	}
 
-		// Keep track of permutations
-		++_permutations;
+	//	// Keep track of permutations
+	//	++_permutations;
 
-		return cmps[maxId];
-	}
+	//	return cmps[maxId];
+	//}
 
 	void SingleDatatypeCompare::ComputeComponents(UDGraph &graph, vector<int> &edgeIdxs, vector<Component> &components)
 	{

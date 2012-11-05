@@ -70,12 +70,12 @@ namespace BraingGraph.Services.Loaders
 						case "age":
 							subject.Age = propVal;
 							break;
-						//case "eventId":
-						//	subject.EventIds.Add(propVal);
-						//	break;
-						//default:
-						//	subject.AddAttribute(headers[i], fields[i]);
-						//	break;
+						case "eventId":
+							subject.AddEventId(propVal);
+							break;
+						default:
+							subject.AddAttribute(headers[i], fields[i]);
+							break;
 					}	
 				}
 			}

@@ -6,6 +6,7 @@
     xmlns:local="using:BrainGraph.WinStore.Screens.Subjects"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:oxy="using:OxyPlot.Metro"
     mc:Ignorable="d">
 
 	<Grid Style="{StaticResource LayoutRootStyle}">
@@ -24,20 +25,62 @@
 			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="Subjects" Style="{StaticResource PageHeaderTextStyle}"/>
 		</Grid>
 
-		<Grid Grid.Row="1" Grid.Column="0" Margin="8">
+		<Grid Grid.Row="1" Margin="8">
+
 			<Grid.RowDefinitions>
 				<RowDefinition />
 			</Grid.RowDefinitions>
-
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width=".33*" />
-				<ColumnDefinition Width=".66*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-
 			
+			<Grid Width="400" Margin="10,0,0,0">
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<oxy:Plot Background="#00000000" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+				<oxy:Plot Background="#00000000" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+				<oxy:Plot Background="#00000000" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+			</Grid>
+
+			<GridView ItemsSource="{Binding Subjects}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" Grid.Column="1">
+
+				<GridView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapGrid />
+					</ItemsPanelTemplate>
+				</GridView.ItemsPanel>
+
+				<GridView.ItemTemplate>
+					<DataTemplate>
+						<Grid HorizontalAlignment="Left" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Margin="4">
+							<Grid.RowDefinitions>
+								<RowDefinition />
+								<RowDefinition />
+							</Grid.RowDefinitions>
+
+							<StackPanel Orientation="Horizontal">
+								<TextBlock TextWrapping="Wrap" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Width="200" VerticalAlignment="Center" Text="{Binding SubjectId}" HorizontalAlignment="Left" FontFamily="Segoe UI" />
+								<TextBlock Text="(" />
+								<TextBlock Text="{Binding GroupId}" />
+								<TextBlock Text=")" />
+							</StackPanel>
+							<StackPanel Grid.Row="1">
+								<TextBlock Text="{Binding Age}" />
+							</StackPanel>
+						</Grid>
+					</DataTemplate>
+				</GridView.ItemTemplate>
+				
+			</GridView>
+
 		</Grid>
 
-		<VisualStateManager.VisualStateGroups>
+	<VisualStateManager.VisualStateGroups>
 
 			<!-- Visual states reflect the application's view state -->
 			<VisualStateGroup x:Name="ApplicationViewStates">

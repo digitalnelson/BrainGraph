@@ -3,21 +3,24 @@
 #include "SubjectGraph.h"
 #include "CompareGraph.h"
 #include "CompareGraphSupport.h"
+#include "Subject.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
 	using namespace std;
 	using namespace BrainGraph::Compute::Subjects;
 
+	ref class Threshold;
+
 	class SingleDatatypeCompare
 	{
 	public:
-		SingleDatatypeCompare(int subjectCount, int verts, int edges);
+		SingleDatatypeCompare(int subjectCount, int verts, int edges, Threshold ^dataType);
 		~SingleDatatypeCompare(void);
 
-		void AddGraph(SubjectGraph^ graph);
-		Component CompareGroups(vector<int> &idxs, int szGrp1, double tStatThreshold);
-		Component Permute(const vector<int> &idxs, int szGrp1, double tStatThreshold);
+		void AddSubject(Subject^ subject);
+		Component CompareGroups(vector<int> &idxs, int szGrp1);
+		//Component Permute(const vector<int> &idxs, int szGrp1, double tStatThreshold);
 		void GetComponents(vector<Component> &components);
 	
 	private:
@@ -28,6 +31,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		void CalcEdgeTStats(const vector<int> &idxs, int szGrp1, vector<CompareEdge> &edgeStats);
 		void ComputeComponents(UDGraph &graph, vector<int> &edgeIdxs, vector<Component> &components);
+
+		Threshold ^_dataType;
 
 		int _subjectCount;
 		int _currentSubjectIdx;
