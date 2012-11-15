@@ -6,21 +6,375 @@
     xmlns:common="using:BrainGraph.WinStore.Common"
 	xmlns:caliburn="using:Caliburn.Micro"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:data="using:BrainGraph.WinStore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+	
+	<UserControl.Resources>
 
-    <Page.Resources>
-
-        <!-- Collection of items displayed by this page -->
-        <CollectionViewSource
+		<CollectionViewSource
             x:Name="itemsViewSource"
-            Source="{Binding Items}"/>
+            Source="{Binding Groups}"
+            IsSourceGrouped="True"
+			ItemsPath="Items" 
+			d:Source="{Binding Groups, Source={d:DesignInstance Type=data:MainMenuViewModel, IsDesignTimeCreatable=True}}"/>
+		
+		
+		<Style x:Key="GridViewContainerStyle" TargetType="GroupItem">
+			<Setter Property="IsTabStop" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="GroupItem">
+						<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+							<Grid Margin="0,0,10,0">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+								</Grid.RowDefinitions>
+								<ContentControl x:Name="HeaderContent" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" Content="{TemplateBinding Content}" IsTabStop="False" Margin="{TemplateBinding Padding}" TabIndex="0"/>
+								<ItemsControl x:Name="ItemsControl" IsTabStop="False" ItemsSource="{Binding GroupItems}" Grid.Row="1" TabIndex="1" TabNavigation="Once">
+									<ItemsControl.ItemContainerTransitions>
+										<TransitionCollection>
+											<AddDeleteThemeTransition/>
+											<ContentThemeTransition/>
+											<ReorderThemeTransition/>
+											<EntranceThemeTransition IsStaggeringEnabled="False"/>
+										</TransitionCollection>
+									</ItemsControl.ItemContainerTransitions>
+								</ItemsControl>
+							</Grid>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="GridViewMainStyle" TargetType="GridView">
+			<Setter Property="Padding" Value="0,0,0,10"/>
+			<Setter Property="IsTabStop" Value="False"/>
+			<Setter Property="TabNavigation" Value="Once"/>
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+			<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Enabled"/>
+			<Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False"/>
+			<Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
+			<Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False"/>
+			<Setter Property="ScrollViewer.ZoomMode" Value="Disabled"/>
+			<Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+			<Setter Property="ScrollViewer.BringIntoViewOnFocusChange" Value="True"/>
+			<Setter Property="IsSwipeEnabled" Value="True"/>
+			<Setter Property="ItemContainerTransitions">
+				<Setter.Value>
+					<TransitionCollection>
+						<AddDeleteThemeTransition/>
+						<ContentThemeTransition/>
+						<ReorderThemeTransition/>
+						<EntranceThemeTransition IsStaggeringEnabled="False"/>
+					</TransitionCollection>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="ItemsPanel">
+				<Setter.Value>
+					<ItemsPanelTemplate>
+						<WrapGrid Orientation="Vertical"/>
+					</ItemsPanelTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="GridView">
+						<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+							<ScrollViewer x:Name="ScrollViewer" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}" Padding="0">
+								<ItemsPresenter HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}"/>
+							</ScrollViewer>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="GridViewItemContainerStyle" TargetType="GridViewItem">
+			<Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}"/>
+			<Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="TabNavigation" Value="Local"/>
+			<Setter Property="IsHoldingEnabled" Value="True"/>
+			<Setter Property="Margin" Value="0,0,2,2"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="GridViewItem">
+						<Border x:Name="OuterContainer">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="PointerOver">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PointerOverBorder"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="SelectionBackground">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="SelectedBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBorderThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="SelectedEarmark">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<PointerDownThemeAnimation TargetName="ContentContainer"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="PointerOverPressed">
+										<Storyboard>
+											<PointerDownThemeAnimation TargetName="ContentContainer"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PointerOverBorder"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="SelectionBackground">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="SelectedBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBorderThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="SelectedEarmark">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedPointerOverBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="{StaticResource ListViewItemDisabledThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="contentPresenter"/>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates">
+									<VisualState x:Name="Focused">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisual"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unfocused"/>
+									<VisualState x:Name="PointerFocused"/>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="SelectionHintStates">
+									<VisualStateGroup.Transitions>
+										<VisualTransition GeneratedDuration="0:0:0.65" To="NoSelectionHint"/>
+									</VisualStateGroup.Transitions>
+									<VisualState x:Name="VerticalSelectionHint">
+										<Storyboard>
+											<SwipeHintThemeAnimation ToHorizontalOffset="0" TargetName="SelectionBackground" ToVerticalOffset="15"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="0" TargetName="ContentBorder" ToVerticalOffset="15"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="0" TargetName="SelectedBorder" ToVerticalOffset="15"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="0" TargetName="SelectedCheckMark" ToVerticalOffset="15"/>
+											<DoubleAnimationUsingKeyFrames Duration="0:0:0.500" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyph">
+												<DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0.5"/>
+												<DiscreteDoubleKeyFrame KeyTime="0:0:0.500" Value="0"/>
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="HorizontalSelectionHint">
+										<Storyboard>
+											<SwipeHintThemeAnimation ToHorizontalOffset="-23" TargetName="SelectionBackground" ToVerticalOffset="0"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="-23" TargetName="ContentBorder" ToVerticalOffset="0"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="-23" TargetName="SelectedBorder" ToVerticalOffset="0"/>
+											<SwipeHintThemeAnimation ToHorizontalOffset="-23" TargetName="SelectedCheckMark" ToVerticalOffset="0"/>
+											<DoubleAnimationUsingKeyFrames Duration="0:0:0.500" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyph">
+												<DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0.5"/>
+												<DiscreteDoubleKeyFrame KeyTime="0:0:0.500" Value="0"/>
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="NoSelectionHint"/>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="SelectionStates">
+									<VisualState x:Name="Unselecting">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unselected">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="UnselectedPointerOver">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="UnselectedSwiping">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectingGlyph"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Selecting">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectingGlyph"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="HintGlyphBorder"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Selected">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedCheckMark"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="SelectedSwiping">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedCheckMark"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="SelectedUnfocused">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectionBackground"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedBorder"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="SelectedCheckMark"/>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="contentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ListViewItemSelectedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="DragStates">
+									<VisualStateGroup.Transitions>
+										<VisualTransition GeneratedDuration="0:0:0.2" To="NotDragging"/>
+									</VisualStateGroup.Transitions>
+									<VisualState x:Name="NotDragging"/>
+									<VisualState x:Name="Dragging">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="{StaticResource ListViewItemDragThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="InnerDragContent"/>
+											<DragItemThemeAnimation TargetName="InnerDragContent"/>
+											<FadeOutThemeAnimation TargetName="SelectedCheckMarkOuter"/>
+											<FadeOutThemeAnimation TargetName="SelectedBorder"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="DraggingTarget">
+										<Storyboard>
+											<DropTargetItemThemeAnimation TargetName="OuterContainer"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="MultipleDraggingPrimary">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MultiArrangeOverlayBackground"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MultiArrangeOverlayText"/>
+											<DoubleAnimation Duration="0" To="{StaticResource ListViewItemDragThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentBorder"/>
+											<FadeInThemeAnimation TargetName="MultiArrangeOverlayBackground"/>
+											<FadeInThemeAnimation TargetName="MultiArrangeOverlayText"/>
+											<DragItemThemeAnimation TargetName="ContentBorder"/>
+											<FadeOutThemeAnimation TargetName="SelectionBackground"/>
+											<FadeOutThemeAnimation TargetName="SelectedCheckMarkOuter"/>
+											<FadeOutThemeAnimation TargetName="SelectedBorder"/>
+											<FadeOutThemeAnimation TargetName="PointerOverBorder"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="MultipleDraggingSecondary">
+										<Storyboard>
+											<FadeOutThemeAnimation TargetName="ContentContainer"/>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="ReorderHintStates">
+									<VisualStateGroup.Transitions>
+										<VisualTransition GeneratedDuration="0:0:0.2" To="NoReorderHint"/>
+									</VisualStateGroup.Transitions>
+									<VisualState x:Name="NoReorderHint"/>
+									<VisualState x:Name="BottomReorderHint">
+										<Storyboard>
+											<DragOverThemeAnimation Direction="Bottom" ToOffset="{StaticResource ListViewItemReorderHintThemeOffset}" TargetName="ReorderHintContent"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="TopReorderHint">
+										<Storyboard>
+											<DragOverThemeAnimation Direction="Top" ToOffset="{StaticResource ListViewItemReorderHintThemeOffset}" TargetName="ReorderHintContent"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="RightReorderHint">
+										<Storyboard>
+											<DragOverThemeAnimation Direction="Right" ToOffset="{StaticResource ListViewItemReorderHintThemeOffset}" TargetName="ReorderHintContent"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="LeftReorderHint">
+										<Storyboard>
+											<DragOverThemeAnimation Direction="Left" ToOffset="{StaticResource ListViewItemReorderHintThemeOffset}" TargetName="ReorderHintContent"/>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="DataVirtualizationStates">
+									<VisualState x:Name="DataAvailable"/>
+									<VisualState x:Name="DataPlaceholder">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="PlaceholderTextBlock">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Visibility" Storyboard.TargetName="PlaceholderRect">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<Grid x:Name="ReorderHintContent" Background="Transparent">
+								<Path x:Name="SelectingGlyph" Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{StaticResource ListViewItemCheckSelectingThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Height="13" Margin="0,9.5,9.5,0" Opacity="0" Stretch="Fill" VerticalAlignment="Top" Width="15"/>
+								<Border x:Name="HintGlyphBorder" HorizontalAlignment="Right" Height="40" Margin="4" Opacity="0" VerticalAlignment="Top" Width="40">
+									<Path x:Name="HintGlyph" Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{StaticResource ListViewItemCheckHintThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Height="13" Margin="0,5.5,5.5,0" Opacity="0" Stretch="Fill" VerticalAlignment="Top" Width="15"/>
+								</Border>
+								<Border x:Name="ContentContainer">
+									<Grid x:Name="InnerDragContent">
+										<Rectangle x:Name="PointerOverBorder" Fill="{StaticResource ListViewItemPointerOverBackgroundThemeBrush}" IsHitTestVisible="False" Margin="1" Opacity="0"/>
+										<Rectangle x:Name="FocusVisual" IsHitTestVisible="False" Opacity="0" Stroke="{StaticResource ListViewItemFocusBorderThemeBrush}" StrokeThickness="2"/>
+										<Rectangle x:Name="SelectionBackground" Fill="{StaticResource ListViewItemSelectedBackgroundThemeBrush}" Margin="4" Opacity="0"/>
+										<Border x:Name="ContentBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="4">
+											<Grid>
+												<ContentPresenter x:Name="contentPresenter" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+												<TextBlock x:Name="PlaceholderTextBlock" Foreground="{x:Null}" IsHitTestVisible="False" Margin="{TemplateBinding Padding}" Text="Xg" Visibility="Collapsed"/>
+												<Rectangle x:Name="PlaceholderRect" Fill="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" IsHitTestVisible="False" Visibility="Collapsed"/>
+												<Rectangle x:Name="MultiArrangeOverlayBackground" Fill="{StaticResource ListViewItemDragBackgroundThemeBrush}" IsHitTestVisible="False" Opacity="0"/>
+											</Grid>
+										</Border>
+										<Rectangle x:Name="SelectedBorder" IsHitTestVisible="False" Margin="4" Opacity="0" Stroke="{StaticResource ListViewItemSelectedBackgroundThemeBrush}" StrokeThickness="{StaticResource GridViewItemSelectedBorderThemeThickness}"/>
+										<Border x:Name="SelectedCheckMarkOuter" HorizontalAlignment="Right" IsHitTestVisible="False" Margin="4" VerticalAlignment="Top">
+											<Grid x:Name="SelectedCheckMark" Height="40" Opacity="0" Width="40">
+												<Path x:Name="SelectedEarmark" Data="M0,0 L40,0 L40,40 z" Fill="{StaticResource ListViewItemSelectedBackgroundThemeBrush}" Stretch="Fill"/>
+												<Path Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{StaticResource ListViewItemCheckThemeBrush}" FlowDirection="LeftToRight" HorizontalAlignment="Right" Height="13" Margin="0,5.5,5.5,0" Stretch="Fill" VerticalAlignment="Top" Width="15"/>
+											</Grid>
+										</Border>
+										<TextBlock x:Name="MultiArrangeOverlayText" Foreground="{StaticResource ListViewItemDragForegroundThemeBrush}" FontSize="26.667" FontFamily="{StaticResource ContentControlThemeFontFamily}" IsHitTestVisible="False" Margin="18,9,0,0" Opacity="0" TextWrapping="Wrap" Text="{Binding TemplateSettings.DragItemsCount, RelativeSource={RelativeSource Mode=TemplatedParent}}" TextTrimming="WordEllipsis"/>
+									</Grid>
+								</Border>
+							</Grid>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		
+	</UserControl.Resources>
 
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
-    </Page.Resources>
-
-    <!--
+	<!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
@@ -31,48 +385,104 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Horizontal scrolling grid used in most view states -->
-        <GridView
-            x:Name="itemGridView"
-            AutomationProperties.AutomationId="ItemsGridView"
-            AutomationProperties.Name="Items"
-            TabIndex="1"
-            Grid.RowSpan="2"
-            Padding="116,136,116,46"
-            ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard250x250ItemTemplate}"
-            SelectionMode="None"
-            IsSwipeEnabled="false"
-			IsItemClickEnabled="True" 
-			caliburn:Message.Attach="[Event ItemClick] = [MenuItemSelected($eventArgs)]"
+		<Path CacheMode="BitmapCache" Stretch="Fill" Data="F1 M 690.13,0C 615.086,0 554.254,60.8359 554.254,135.88C 554.254,162.969 562.212,188.185 575.873,209.378L 458.33,372.718L 459.305,373.418C 423.226,374.135 392.057,394.803 376.365,424.857L 205.195,452.871C 183.862,427.593 151.964,411.519 116.298,411.519C 52.0668,411.519 -1.52588e-005,463.586 -1.52588e-005,527.813C -1.52588e-005,592.042 52.0668,644.109 116.298,644.109C 173.556,644.109 221.118,602.71 230.769,548.221L 382.455,523.393C 395.542,542.338 415.274,556.323 438.29,561.986L 452.215,667.119C 412.029,694.161 385.588,740.057 385.588,792.128C 385.588,875.289 453.006,942.7 536.164,942.7C 619.323,942.7 686.733,875.289 686.733,792.128C 686.733,712.954 625.609,648.094 547.979,642.059L 534.106,537.29L 527.404,538.177C 545.593,520.755 556.936,496.246 556.936,469.072C 556.936,451.744 552.307,435.506 544.254,421.486L 655.258,267.228C 666.389,270.176 678.072,271.764 690.13,271.764C 765.175,271.764 826.014,210.924 826.014,135.88C 826.014,60.8359 765.175,0 690.13,0 Z " UseLayoutRounding="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="750" Height="750" Margin="0,0,-100,-100" Grid.Row="1" Fill="#0CFFFFFF"/>
+
+
+<!-- Horizontal scrolling grid used in most view states  -->
+    	<GridView
+    		x:Name="itemGridView"
+    		TabIndex="1"
+    		Grid.Row="1"
+    		Padding="120,136,116,46"
+    		ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+    		SelectionMode="None"
+    		IsSwipeEnabled="false"
+    		IsItemClickEnabled="True" 
+    		caliburn:Message.Attach="[Event ItemClick] = [MenuItemSelected($eventArgs)]" Style="{StaticResource GridViewMainStyle}" ItemContainerStyle="{StaticResource GridViewItemContainerStyle}" Margin="120,0,0,0"
+			>
+			
+    		<GridView.GroupStyle>
+    			<GroupStyle ContainerStyle="{StaticResource GridViewContainerStyle}">
+					
+    				<GroupStyle.Panel>
+    					<ItemsPanelTemplate>
+    						<VariableSizedWrapGrid  Orientation="Vertical"  />
+    					</ItemsPanelTemplate>
+    				</GroupStyle.Panel>
+					
+    				<GroupStyle.HeaderTemplate>
+    					<DataTemplate>
+    						<Grid HorizontalAlignment="Stretch" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" Margin="10">
+    							<TextBlock Text="{Binding Title}" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="25" Margin="5" />
+    						</Grid>
+    					</DataTemplate>
+    				</GroupStyle.HeaderTemplate>
+					
+    			</GroupStyle>
+    		</GridView.GroupStyle>
+			
+    		<GridView.ItemsPanel>
+    			<ItemsPanelTemplate>
+    				<VirtualizingStackPanel Orientation="Horizontal" />
+    			</ItemsPanelTemplate>
+    		</GridView.ItemsPanel>
+			
+    		<GridView.ItemTemplate>
+				
+    			<DataTemplate>
+    				<Grid HorizontalAlignment="Left" Width="250" Height="250">
+    					<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+    						<Image Stretch="UniformToFill" />
+    					</Border>
+    					<Grid>
+    						<Grid.RowDefinitions>
+    							<RowDefinition Height="Auto"/>
+    							<RowDefinition/>
+    							<RowDefinition Height="Auto"/>
+    						</Grid.RowDefinitions>
+    						<StackPanel VerticalAlignment="Top" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" Margin="0">
+    							<TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource PageSubheaderTextStyle}" Margin="10,5,30,20" VerticalAlignment="Center"/>
+    						</StackPanel>
+    						<Viewbox Grid.Row="1">
+    							<TextBlock TextWrapping="Wrap" Text="{Binding PrimaryValue}" VerticalAlignment="Center" Margin="30,0,2,0" Foreground="#80FFFFFF"/>
+    						</Viewbox>
+    						<StackPanel Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" VerticalAlignment="Bottom" Grid.Row="2" Height="50">
+    							<TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="Wrap" Margin="10,0,30,10" VerticalAlignment="Bottom"/>
+    						</StackPanel>
+    					</Grid>
+    				</Grid>
+    			</DataTemplate>
+			
+    		</GridView.ItemTemplate>
+			
+    	</GridView>
+
+<!-- Vertical scrolling list only used when snapped -->
+    	<ListView
+    		x:Name="itemListView"
+    		AutomationProperties.AutomationId="ItemsListView"
+    		AutomationProperties.Name="Items"
+    		TabIndex="1"
+    		Grid.RowSpan="2"
+    		Visibility="Collapsed"
+    		Margin="0,-10,0,0"
+    		Padding="10,0,0,60"
+    		ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
+    		ItemTemplate="{StaticResource Standard80ItemTemplate}"
+    		SelectionMode="None"
+    		IsSwipeEnabled="false"
+    		caliburn:Message.Attach="[Event ItemClick] = [MenuItemSelected($eventArgs)]"
 			/>
 
-        <!-- Vertical scrolling list only used when snapped -->
-        <ListView
-            x:Name="itemListView"
-            AutomationProperties.AutomationId="ItemsListView"
-            AutomationProperties.Name="Items"
-            TabIndex="1"
-            Grid.Row="1"
-            Visibility="Collapsed"
-            Margin="0,-10,0,0"
-            Padding="10,0,0,60"
-            ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"
-            SelectionMode="None"
-            IsSwipeEnabled="false"
-			caliburn:Message.Attach="[Event ItemClick] = [MenuItemSelected($eventArgs)]"
-			/>
-
-        <!-- Back button and page title -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-			<Button  x:Name="GoBack" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}"/>
-        </Grid>
+<!-- Back button and page title -->
+    	<Grid>
+    		<Grid.ColumnDefinitions>
+    			<ColumnDefinition Width="Auto"/>
+    			<ColumnDefinition Width="*"/>
+    		</Grid.ColumnDefinitions>
+    		<Button  x:Name="GoBack" Style="{StaticResource BackButtonStyle}" Visibility="Collapsed"/>
+    		<TextBlock x:Name="pageTitle" Grid.Column="1" Text="BRAINGRAPH" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" Margin="120,0,30,40" VerticalAlignment="Bottom"/>
+    	</Grid>
 
         <VisualStateManager.VisualStateGroups>
 

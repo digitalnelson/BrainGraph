@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OxyPlot;
 using BrainGraph.Storage;
+using BrainGraph.WinStore.Models;
 
 
 namespace BrainGraph.WinStore.Common.Viz

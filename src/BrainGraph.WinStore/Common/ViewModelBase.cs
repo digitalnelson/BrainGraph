@@ -14,21 +14,28 @@ namespace BrainGraph.WinStore.Common
 	/// </summary>
 	public abstract class ViewModelBase : Screen
 	{
-		private readonly INavigationService _navigationService = IoC.Get<INavigationService>();
+		private readonly INavigationService _navigationService;
 
 		protected ViewModelBase()
-		{}
+		{
+			if(!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+				_navigationService = IoC.Get<INavigationService>();
+		}
 
 		public void GoBack()
 		{
-			_navigationService.GoBack();
+			if(_navigationService != null)
+				_navigationService.GoBack();
 		}
 
 		public bool CanGoBack
 		{
 			get
 			{
-				return _navigationService.CanGoBack;
+				if (_navigationService != null)
+					return _navigationService.CanGoBack;
+				else
+					return false;
 			}
 		}
 	}

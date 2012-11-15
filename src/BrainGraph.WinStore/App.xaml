@@ -17,5 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
 
         </ResourceDictionary>
+
+
     </Application.Resources>
 </caliburn:CaliburnApplication>

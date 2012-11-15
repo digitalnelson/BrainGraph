@@ -62,7 +62,7 @@ namespace BraingGraph.Services.Loaders
 					switch (propName)
 					{
 						case "groupId":
-							subject.GroupId = propVal;
+							subject.GroupId = propVal.ToUpper();
 							break;
 						case "sex":
 							subject.Sex = propVal;

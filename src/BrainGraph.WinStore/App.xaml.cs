@@ -1,4 +1,5 @@
-﻿using BrainGraph.WinStore.Services;
+﻿using BrainGraph.WinStore.Screens.Sources;
+using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using Ninject;
 using System;
@@ -36,7 +37,16 @@ namespace BrainGraph.WinStore
         public App()
         {
             this.InitializeComponent();
+
+			Application.Current.DebugSettings.IsBindingTracingEnabled = true;
+			//Application.Current.DebugSettings.IsOverdrawHeatMapEnabled = true;
+			Application.Current.DebugSettings.BindingFailed += DebugSettings_BindingFailed;
         }
+
+		void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)
+		{
+			
+		}
 
 		protected override void Configure()
 		{
@@ -46,10 +56,16 @@ namespace BrainGraph.WinStore
 			container.RegisterWinRTServices();
 
 			_kernel = new StandardKernel();
+			
 			_kernel.Bind<INavigationService>().To<FrameAdapter>().InSingletonScope().WithConstructorArgument("frame", RootFrame);
+			
 			_kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 			_kernel.Bind<IRegionService>().To<RegionService>().InSingletonScope();
 			_kernel.Bind<ISubjectService>().To<SubjectService>().InSingletonScope();
+
+			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
+			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
+			_kernel.Bind<SubjectViewModel>().To<SubjectViewModel>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)

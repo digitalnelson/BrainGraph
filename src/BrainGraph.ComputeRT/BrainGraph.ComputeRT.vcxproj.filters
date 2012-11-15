@@ -11,6 +11,9 @@
     <Filter Include="Graph">
       <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{dbda4698-d4e7-498f-9f05-eec97738e2c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -28,6 +31,9 @@
     </ClCompile>
     <ClCompile Include="MultiDatatypeCompare.cpp">
       <Filter>Graph</Filter>
+    </ClCompile>
+    <ClCompile Include="BindableBase.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="CompareGraphSupport.h">
       <Filter>Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="BindableBase.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="BrainGraph.WinStore.Screens.Sources.GroupsPopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BrainGraph.WinStore.Screens.Sources"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Height="150"
+    Width="250">
+
+	<Grid Margin="8">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		
+		<TextBlock Text="Groups" Grid.Row="0" Foreground="Black" Margin="0,0,0,8" FontSize="18.667" />
+
+		<ItemsControl ItemsSource="{Binding Groups}" Grid.Row="2">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Text="{Binding StudyGroup}" Foreground="Black" FontSize="16" VerticalAlignment="Center" />
+						<ComboBox Grid.Column="1" ItemsSource="{Binding ExperimentGroups}" SelectedItem="{Binding ExperimentGroup, Mode=TwoWay}" Foreground="Black" />
+					</Grid>
+
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</UserControl>

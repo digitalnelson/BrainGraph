@@ -9,12 +9,13 @@ using BrainGraph.WinStore.Services;
 using BraingGraph.Services.Loaders;
 using Windows.Storage;
 using BrainLab.Services.Loaders;
+using BrainGraph.WinStore.Events;
 
 namespace BrainGraph.WinStore.Services
 {
 	public interface ISubjectService
 	{
-		Task<List<Subject>> LoadSubjectFile(StorageFile file);
+		Task<List<Subject>> LoadSubjects(StorageFile file);
 		Task LoadSubjectData(StorageFolder folder, int vertexLimit);
 
 		List<Subject> GetSubjects();
@@ -36,7 +37,7 @@ namespace BrainGraph.WinStore.Services
 
 	public class SubjectService : ISubjectService
 	{
-		//private readonly IEventAggregator _eventAggregator;
+		private readonly IEventAggregator _eventAggregator;
 
 		private List<Subject> _subjects;
 		private Dictionary<string, List<Subject>> _subjectsByGroup;
@@ -54,13 +55,14 @@ namespace BrainGraph.WinStore.Services
 
 		public SubjectService()
 		{
+			_eventAggregator = IoC.Get<IEventAggregator>();
 			_subjects = new List<Subject>();
 			_subjectsByGroup = new Dictionary<string, List<Subject>>();
 			_subjectsByEventId = new Dictionary<string, Subject>();
 			_dataTypes = new List<string>();
 		}
 
-		public async Task<List<Subject>> LoadSubjectFile(StorageFile file)
+		public async Task<List<Subject>> LoadSubjects(StorageFile file)
 		{
 			_subjects = await SubjectCSVLoader.LoadSubjectFile(file);
 
@@ -75,9 +77,9 @@ namespace BrainGraph.WinStore.Services
 					_subjectsByEventId[eventId] = sub;
 			}
 
-			return _subjects;
+			_eventAggregator.Publish(new SubjectsLoadedEvent());
 
-			//_eventAggregator.Publish(new SubjectsLoadedEvent());
+			return _subjects;
 		}
 
 		public async Task LoadSubjectData(StorageFolder folder, int vertexLimit)

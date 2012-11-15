@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BrainGraph.WinStore_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <ExpressionBlendVersion>5.0.30924.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -109,30 +110,41 @@
     <Compile Include="Common\GraphComponent.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
-    <Compile Include="Common\ROI.cs" />
+    <Compile Include="Models\ROI.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Common\Viz\BrainScatter.cs" />
     <Compile Include="Common\Viz\InvisibleAxis.cs" />
-    <Compile Include="MainPageViewModel.cs" />
+    <Compile Include="Dialogs\DialogService.cs" />
+    <Compile Include="Events\RegionsLoadedEvent.cs" />
+    <Compile Include="Events\SubjectsLoadedEvent.cs" />
     <Compile Include="MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainMenuViewModel.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Screens\Regions\RegionsOfInterestView.xaml.cs">
-      <DependentUpon>RegionsOfInterestView.xaml</DependentUpon>
+    <Compile Include="Screens\IMenuItem.cs" />
+    <Compile Include="Screens\Sources\RegionsView.xaml.cs">
+      <DependentUpon>RegionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Regions\RegionsOfInterestViewModel.cs" />
-    <Compile Include="Screens\Regions\RegionView.cs" />
-    <Compile Include="Screens\Regions\RegionViewModel.cs" />
-    <Compile Include="Screens\Subjects\SubjectView.xaml.cs">
+    <Compile Include="Screens\Sources\RegionsViewModel.cs" />
+    <Compile Include="Screens\Selection\DataTypesPopup.xaml.cs">
+      <DependentUpon>DataTypesPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\DataTypesViewModel.cs" />
+    <Compile Include="Screens\Sources\GroupsPopup.xaml.cs">
+      <DependentUpon>GroupsPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\GroupsViewModel.cs" />
+    <Compile Include="Screens\Selection\PermutationPopup.xaml.cs">
+      <DependentUpon>PermutationPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\PermutationViewModel.cs" />
+    <Compile Include="Screens\Sources\RegionViewModel.cs" />
+    <Compile Include="Screens\Sources\SubjectView.xaml.cs">
       <DependentUpon>SubjectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Subjects\SubjectViewModel.cs" />
+    <Compile Include="Screens\Sources\SubjectViewModel.cs" />
     <Compile Include="Services\IAppPreferences.cs" />
     <Compile Include="Services\IComputeService.cs" />
     <Compile Include="Services\IRegionService.cs" />
@@ -145,6 +157,8 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Assets\BrainLab Icon.design" />
+    <None Include="Assets\BrainLab Logo.design" />
     <None Include="BrainGraph.WinStore_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -172,19 +186,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Regions\RegionsOfInterestView.xaml">
+    <Page Include="Screens\Sources\RegionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Regions\RegionView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Screens\Selection\DataTypesPopup.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Subjects\SubjectView.xaml">
+    <Page Include="Screens\Sources\GroupsPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Selection\PermutationPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Sources\SubjectView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,6 +213,9 @@
     </Reference>
     <Reference Include="Caliburn.Micro.Extensions">
       <HintPath>..\packages\Caliburn.Micro\Caliburn.Micro.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Callisto">
+      <HintPath>..\packages\Callisto.1.2.5\lib\winrt45\Callisto.dll</HintPath>
     </Reference>
     <Reference Include="Ninject.Common">
       <HintPath>packages\Portable.Ninject.3.0.2.0\lib\winrt45\Ninject.Common.dll</HintPath>
@@ -220,6 +241,7 @@
       <Name>BrainGraph.ComputeRT</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

@@ -96,6 +96,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>false</GenerateManifest>
+    <IncludePath>..\..\..\boost_1_50_0;..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <GenerateManifest>false</GenerateManifest>
@@ -140,6 +141,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>runtimeobject.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <WindowsMetadataFile>$(OutDir)BrainGraph.Compute.winmd</WindowsMetadataFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -204,6 +206,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BindableBase.h" />
     <ClInclude Include="CompareGraphSupport.h" />
     <ClInclude Include="SubjectGraphEdge.h" />
     <ClInclude Include="MultiDatatypeSupport.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="SubjectGraph.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BindableBase.cpp" />
     <ClCompile Include="MultiDatatypeCompare.cpp" />
     <ClCompile Include="SingleDatatypeCompare.cpp" />
     <ClCompile Include="CompareGraph.cpp" />

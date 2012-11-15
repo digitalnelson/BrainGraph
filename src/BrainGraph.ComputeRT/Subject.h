@@ -1,4 +1,5 @@
 #pragma once
+#include "BindableBase.h"
 #include "SubjectGraph.h"
 #include <collection.h>
 
@@ -8,8 +9,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	using namespace Platform::Collections;
 	using namespace Windows::Foundation::Collections;
 
-	[Windows::UI::Xaml::Data::Bindable]
-	public ref class Subject sealed 
+	[Windows::UI::Xaml::Data::Bindable] 
+	[Windows::Foundation::Metadata::WebHostHiddenAttribute]
+	public ref class Subject sealed //: public BrainGraph::Compute::Common::BindableBase
 	{
 	public:
 
@@ -28,6 +30,11 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		property String^ GroupId;
 		property String^ Age;
 		property String^ Sex;
+		
+		property int GraphCount
+        {
+            int get() { return _graphs->Size; }
+        }
 
 		property IVectorView<String^>^ EventIds
 		{
@@ -39,9 +46,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			IMapView<String^, String^>^ get() { return _attributes->GetView(); }
 		}
 
-		property IMap<String^, SubjectGraph^>^ Graphs
+		property IMapView<String^, SubjectGraph^>^ Graphs
 		{
-			IMap<String^, SubjectGraph^>^ get() { return _graphs; }
+			IMapView<String^, SubjectGraph^>^ get() { return _graphs->GetView(); }
 		}
 	
 	private:

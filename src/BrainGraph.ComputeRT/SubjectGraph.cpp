@@ -3,15 +3,21 @@
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
+	using namespace Platform;
+	using namespace Windows::Foundation::Collections;
 
 	SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts)
 	{
 		_nVerts = nVerts;
 	}
 
+	void SubjectGraph::AddGraphLines(Windows::Foundation::Collections::IVector<String^>^ lines)
+	{
+	}
+
 	void SubjectGraph::AddEdge(int i, int j, double val)
 	{
-		if(i >= _nVerts)
+		/*if(i >= _nVerts)
 			throw ref new Platform::Exception(E_FAIL, "Exceeded matrix bounds.  i >= number of verticies");
 		if(j >= _nVerts)
 			throw ref new Platform::Exception(E_FAIL, "Exceeded matrix bounds.  i >= _m");
@@ -22,7 +28,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		edge.Vertices = std::pair<int, int>(i, j);
 		edge.Value = val;
 
-		Edges.push_back(edge);
+		Edges.push_back(edge);*/
 	}
 
 	SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)

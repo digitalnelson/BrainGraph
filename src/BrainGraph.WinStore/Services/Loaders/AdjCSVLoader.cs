@@ -13,13 +13,13 @@ namespace BrainLab.Services.Loaders
 	{
 		public async static Task Load(StorageFolder folder, Dictionary<string, Subject> subjectsByEventId, int vertexCount)
 		{
-			var files = await folder.GetFilesAsync();
+			DateTime dtStart = DateTime.Now;
+			var files = await folder.GetFilesAsync(Windows.Storage.Search.CommonFileQuery.OrderByName);
 
-			foreach (var file in files)
-			//Parallel.ForEach(files, async file => 
+			var multiFileLoad = files.Select(async file =>
 			{
 				var fileName = file.Name;
-				var fileParts = fileName.Split(new char[]{ '-' });
+				var fileParts = fileName.Split(new char[] { '-' });
 
 				var idents = fileParts[0].Split(new char[] { '_' });
 				var eventId = idents[0];
@@ -38,7 +38,7 @@ namespace BrainLab.Services.Loaders
 
 				Subject subject = null;
 				if (!subjectsByEventId.ContainsKey(eventId))
-					continue; //return; //continue;
+					return null; //return; //continue;
 				else
 					subject = subjectsByEventId[eventId];
 
@@ -47,6 +47,8 @@ namespace BrainLab.Services.Loaders
 
 				// Read in all the lines
 				var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
+
+				//subjectGraph.AddGraphLines(lines);
 
 				for (int lineIdx = 0; lineIdx < lines.Count; lineIdx++)
 				{
@@ -65,7 +67,15 @@ namespace BrainLab.Services.Loaders
 				}
 
 				subject.AddGraph(subjectGraph);
-			}//);
+
+				return subjectGraph;
+			});
+
+			var graphs = await Task.WhenAll(multiFileLoad);
+
+			DateTime dtFinish = DateTime.Now;
+			TimeSpan tsDiff = dtFinish - dtStart;
+			double count = tsDiff.TotalMilliseconds;
 		}
 	}
 }

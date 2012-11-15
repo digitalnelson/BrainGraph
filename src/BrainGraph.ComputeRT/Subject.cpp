@@ -3,6 +3,10 @@
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
+	using namespace Windows::ApplicationModel::Core;
+	using namespace Windows::Foundation;
+	using namespace Windows::UI::Core;
+	using namespace Windows::UI::Xaml;
 
 	void Subject::AddEventId(String^ eventId)
 	{
@@ -17,6 +21,13 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	void Subject::AddGraph(SubjectGraph^ graph)
 	{
 		_graphs->Insert(graph->DataType, graph);  // TODO: Dedupe
+
+		//CoreWindow^ wnd = CoreApplication::MainView->CoreWindow;
+		//CoreDispatcher^ dispatcher = wnd->Dispatcher;
+		//dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this] () 
+		//{
+		//	OnPropertyChanged("GraphCount");
+		//}));
 	}
 
 } } }
