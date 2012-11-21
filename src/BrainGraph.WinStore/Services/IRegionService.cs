@@ -14,7 +14,7 @@ namespace BrainGraph.WinStore.Services
 {
 	public interface IRegionService
 	{
-		Task Load(StorageFile roiFile);
+		Task<List<ROI>> Load(StorageFile roiFile);
 		
 		List<ROI> GetRegionsByIndex();
 		int GetNodeCount();
@@ -36,7 +36,7 @@ namespace BrainGraph.WinStore.Services
 			_regionsOfInterestByIndex = new Dictionary<int, ROI>();
 		}
 
-		public async Task Load(StorageFile roiFile)
+		public async Task<List<ROI>> Load(StorageFile roiFile)
 		{
 			var rois = await ROILoader.Load(roiFile);
 
@@ -47,6 +47,8 @@ namespace BrainGraph.WinStore.Services
 			}
 
 			_eventAggregator.Publish(new RegionsLoadedEvent());
+
+			return _regionsOfInterest.OrderBy(r => r.Index).ToList();
 		}
 
 		public List<ROI> GetRegionsByIndex()

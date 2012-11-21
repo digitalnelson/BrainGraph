@@ -1,7 +1,6 @@
 ﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
-using Callisto.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +13,23 @@ using Windows.UI.Xaml.Controls.Primitives;
 using BrainGraph.WinStore.Screens;
 using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Screens.Sources;
+using Windows.Storage.Pickers;
+using BrainGraph.WinStore.Events;
+using BrainGraph.WinStore.Screens.Experiment;
+using BrainGraph.Compute.Graph;
 
 namespace BrainGraph.WinStore
 {
 	public class MainMenuViewModel : ViewModelBase
 	{
 		#region Private Service Vars
+		private IEventAggregator _eventAggregator;
 		private INavigationService _navService;
 		private IRegionService _regionService;
-		private ISubjectService _subjectService;
+		private ISubjectDataService _subjectService;
+		private ISubjectFilterService _subjectFilterService;
+		private IComputeService _computeService;
 		#endregion
-
-		private bool _needsInit = true;
 
 		public MainMenuViewModel()
 		{
@@ -33,52 +37,40 @@ namespace BrainGraph.WinStore
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
+				_eventAggregator = IoC.Get<IEventAggregator>();
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
-				_subjectService = IoC.Get<ISubjectService>();
+				_subjectService = IoC.Get<ISubjectDataService>();
+				_subjectFilterService = IoC.Get<ISubjectFilterService>();
+				_computeService = IoC.Get<IComputeService>();
 
-				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectViewModel>(), new PermutationViewModel() } });
+				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
+				Groups.Add(new MenuGroup { Title = "Experiment", Items = { new PermutationViewModel(), new RunExperimentViewModel() } });
 				Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
 				Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
 			}
-			else
-			{
-				Groups.Add(new MenuGroup { Title = "Source", Items = { new RegionsViewModel(), new SubjectViewModel(), new PermutationViewModel() } });
-				Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
-				Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
-			}
+			//else
+			//{
+			//	Groups.Add(new MenuGroup { Title = "Source", Items = { new RegionsViewModel(), new SubjectsViewModel(), new PermutationViewModel() } });
+			//	Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
+			//	Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
+			//}
 		}
 
-		protected override async void OnActivate()
+		public async void SetWorkingFolder(RoutedEventArgs eventArgs)
 		{
- 			 base.OnActivate();
+			FolderPicker wkPicker = new FolderPicker();
+			wkPicker.ViewMode = PickerViewMode.List;
+			wkPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			wkPicker.FileTypeFilter.Add(".txt");
 
-			if (_needsInit)
+			var folder = await wkPicker.PickSingleFolderAsync();
+			if (folder != null)
 			{
-				StorageFolder studyFolder = await KnownFolders.DocumentsLibrary.GetFolderAsync(@"Studies\SZ_169\NBSm");
+				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+				roamingSettings.Values["WorkingFolder"] = folder.Path;
 
-				var initRegions = Task.Run(async () =>
-				{
-					var regionFilePath = @"AAL.txt";
-					var regionFile = await studyFolder.GetFileAsync(regionFilePath);
-
-					await _regionService.Load(regionFile);
-				});
-
-				var initSubjects = Task.Run(async () =>
-				{
-					var subjectFilePath = @"VA2929.txt";
-					//var subjectDataPath = "";
-
-					var subjectFile = await studyFolder.GetFileAsync(subjectFilePath);
-
-					await _subjectService.LoadSubjects(subjectFile);
-				});
-
-				Task.WhenAll(new Task[] { initRegions, initSubjects }).ContinueWith(act =>
-				{
-					_needsInit = false;
-				});
+				_eventAggregator.Publish(new SettingWorkingFolderUpdated());
 			}
 		}
 
@@ -87,7 +79,29 @@ namespace BrainGraph.WinStore
 			var menuItem = (IMenuItem)eventArgs.ClickedItem;
 			var popupType = menuItem.PopupType;
 
-			if (popupType != null)
+			if (menuItem is RunExperimentViewModel)
+			{
+				var dtItms = _subjectFilterService.GetDataTypeSettings();
+
+				List<Threshold> dataTypes = new List<Threshold>();
+				foreach (var itm in dtItms)
+				{
+					if (itm.Value)
+					{
+						Threshold t = new Threshold()
+						{
+							DataType = itm.Key,
+							Value = 2
+						};
+
+						dataTypes.Add(t);
+					}
+				}
+
+				_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
+				_computeService.CompareGroups();
+			}
+			else if (popupType != null)
 			{
 				var sender = (GridView)eventArgs.OriginalSource;
 				var clickedUI = sender.ItemContainerGenerator.ContainerFromItem(eventArgs.ClickedItem);
@@ -96,7 +110,7 @@ namespace BrainGraph.WinStore
 				popup.DataContext = menuItem;
 
 				// Flyout is a ContentControl so set your content within it.
-				Flyout f = new Flyout();
+				Callisto.Controls.Flyout f = new Callisto.Controls.Flyout();
 				f.Background = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.White);
 				f.Content = popup;
 				f.Placement = PlacementMode.Top;
@@ -116,17 +130,6 @@ namespace BrainGraph.WinStore
 		}
 
 		public BindableCollection<MenuGroup> Groups { get { return _inlGroups; } set { _inlGroups = value; NotifyOfPropertyChange(() => Groups); } } private BindableCollection<MenuGroup> _inlGroups;
-	}
-
-	public class MenuItem : Screen, IMenuItem
-	{
-		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
-		public string Subtitle { get { return _inlSubtitle; } set { _inlSubtitle = value; NotifyOfPropertyChange(() => Subtitle); } } private string _inlSubtitle;
-		public string Description { get { return _inlDescription; } set { _inlDescription = value; NotifyOfPropertyChange(() => Description); } } private string _inlDescription;
-		public string PrimaryValue { get { return _inlPrimaryValue; } set { _inlPrimaryValue = value; NotifyOfPropertyChange(() => PrimaryValue); } } private string _inlPrimaryValue;
-
-		public Type ViewModelType { get { return typeof(MenuItem); } }
-		public Type PopupType { get { return null; } }
 	}
 
 	public class MenuGroup : Screen

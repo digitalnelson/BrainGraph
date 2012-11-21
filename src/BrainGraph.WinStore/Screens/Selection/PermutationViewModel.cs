@@ -1,4 +1,6 @@
-﻿using Caliburn.Micro;
+﻿using BrainGraph.WinStore.Common;
+using BrainGraph.WinStore.Events;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +9,55 @@ using System.Threading.Tasks;
 
 namespace BrainGraph.WinStore.Screens.Selection
 {
-	public class PermutationViewModel : Screen, IMenuItem
+	public class PermutationViewModel : ViewModelBase, IMenuItem, IHandle<SubjectsLoadedEvent>
 	{
+		private IEventAggregator _eventAggregator;
+
+		private const string SETTING_PERMUTATIONS = "Permutations";
+
 		public PermutationViewModel()
 		{
 			Title = "Permutations";
-			Permutations = "10,000";
+
+			Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+			if (roamingSettings.Values.ContainsKey(SETTING_PERMUTATIONS))
+			{
+				Permutations = roamingSettings.Values[SETTING_PERMUTATIONS] as string;
+			}
+			else
+				Permutations = "0";
+
+			_eventAggregator = IoC.Get<IEventAggregator>();
+			_eventAggregator.Subscribe(this);
 		}
 
-		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
-		public string Subtitle { get { return _inlSubtitle; } set { _inlSubtitle = value; NotifyOfPropertyChange(() => Subtitle); } } private string _inlSubtitle;
-		public string Description { get { return _inlDescription; } set { _inlDescription = value; NotifyOfPropertyChange(() => Description); } } private string _inlDescription;
-		public string PrimaryValue { get { return _inlPermutations; } set {} }
-
 		public string Permutations { 
-			get { return _inlPermutations; } 
-			set { _inlPermutations = value; NotifyOfPropertyChange(() => Permutations); NotifyOfPropertyChange(() => PrimaryValue); } 
-		} private string _inlPermutations;
+			get { return _inlPermutations; }
+			set 
+			{ 
+				_inlPermutations = value;
 
-		public Type ViewModelType { get { return typeof(PermutationViewModel); } }
-		public Type PopupType { get { return typeof(PermutationPopup); } }
+				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+				roamingSettings.Values[SETTING_PERMUTATIONS] = _inlPermutations;
+
+				PrimaryValue = value; 
+				NotifyOfPropertyChange(() => Permutations); 
+			} 
+		} 
+		private string _inlPermutations;
+
+
+		public void Handle(SubjectsLoadedEvent message)
+		{
+			IsReady = true;
+		}
+
+		public override Type PopupType
+		{
+			get
+			{
+				return typeof(PermutationPopup);
+			}
+		}
 	}
 }

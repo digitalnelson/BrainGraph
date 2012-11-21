@@ -6,14 +6,14 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 {
 	using namespace std;
 	using namespace Platform;
-	using namespace Windows::Foundation::Collections;
+	namespace WFC = Windows::Foundation::Collections;
 
 	public ref class SubjectGraph sealed
 	{
 	public:
 		SubjectGraph(int nVerts);
 		void AddEdge(int i, int j, double val);
-		void AddGraphLines(Windows::Foundation::Collections::IVector<String^>^ lines);
+		void AddGraphLines(WFC::IVector<String^>^ lines);
 
 		property String^ DataType;
 

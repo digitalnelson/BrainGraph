@@ -44,9 +44,7 @@ namespace BrainGraph.WinStore
         }
 
 		void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)
-		{
-			
-		}
+		{}
 
 		protected override void Configure()
 		{
@@ -61,11 +59,13 @@ namespace BrainGraph.WinStore
 			
 			_kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 			_kernel.Bind<IRegionService>().To<RegionService>().InSingletonScope();
-			_kernel.Bind<ISubjectService>().To<SubjectService>().InSingletonScope();
+			_kernel.Bind<ISubjectDataService>().To<SubjectDataService>().InSingletonScope();
+			_kernel.Bind<ISubjectFilterService>().To<SubjectFilterService>().InSingletonScope();
+			_kernel.Bind<IComputeService>().To<ComputeService>().InSingletonScope();
 
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
-			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
-			_kernel.Bind<SubjectViewModel>().To<SubjectViewModel>().InSingletonScope();
+			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>().InSingletonScope();
+			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)

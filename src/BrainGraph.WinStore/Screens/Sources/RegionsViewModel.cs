@@ -11,10 +11,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
 
 namespace BrainGraph.WinStore.Screens.Sources
 {
-	public class RegionsViewModel : ViewModelBase, IMenuItem, IHandle<RegionsLoadedEvent>
+	public class RegionsViewModel : ViewModelBase
 	{
 		#region Private Service Vars
 		private IEventAggregator _eventAggregator;
@@ -22,86 +26,104 @@ namespace BrainGraph.WinStore.Screens.Sources
 		private IRegionService _regionService;
 		#endregion
 
+		private const string SETTING_ROI_FILE_TOKEN = "ROIFileToken";
+
 		public RegionsViewModel()
 		{
 			Regions = new BindableCollection<RegionViewModel>();
 
 			Title = "Regions";
-			PrimaryValue = "";
+			PrimaryValue = "0";
 			Subtitle = "Brain areas of interest defined in 3D.  Usually based on an imaging atlas.";
+			IsReady = true;
 
-			if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-			{
-				#region Sample Data
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2000, Index = 1, Name = "Region One", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2001, Index = 2, Name = "Region Two", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2002, Index = 3, Name = "Region Three", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2003, Index = 4, Name = "Region Four", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2004, Index = 5, Name = "Region Five", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2005, Index = 6, Name = "Region Six", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2006, Index = 7, Name = "Region Seven", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2007, Index = 8, Name = "Region Eight", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2008, Index = 9, Name = "Region Nine", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2009, Index = 10, Name = "Region Ten", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2010, Index = 51, Name = "Region Eleven", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2000, Index = 1, Name = "Region One", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2001, Index = 2, Name = "Region Two", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2002, Index = 3, Name = "Region Three", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2003, Index = 4, Name = "Region Four", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2004, Index = 5, Name = "Region Five", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2005, Index = 6, Name = "Region Six", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2006, Index = 7, Name = "Region Seven", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2007, Index = 8, Name = "Region Eight", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2008, Index = 9, Name = "Region Nine", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2009, Index = 10, Name = "Region Ten", Special = false, X = 10, Y = 10, Z = 10 } });
-				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2010, Index = 51, Name = "Region Eleven", Special = false, X = 10, Y = 10, Z = 10 } });
-				#endregion
-			}
-			else
+			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
 				_eventAggregator = IoC.Get<IEventAggregator>();
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
-
 				_eventAggregator.Subscribe(this);
+
+				Task.Factory.StartNew(async () =>
+				{
+					await OpenFileFromCache();
+
+				}, new System.Threading.CancellationToken(), TaskCreationOptions.None, TaskScheduler.Default);
 			}
-		}
 
-		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
-		public string Subtitle { get { return _inlSubtitle; } set { _inlSubtitle = value; NotifyOfPropertyChange(() => Subtitle); } } private string _inlSubtitle;
-		public string Description { get { return _inlDescription; } set { _inlDescription = value; NotifyOfPropertyChange(() => Description); } } private string _inlDescription;
-		public string PrimaryValue { get { return _inlPrimaryValue; } set { _inlPrimaryValue = value; NotifyOfPropertyChange(() => PrimaryValue); } } private string _inlPrimaryValue;
-
-		public Type ViewModelType { get { return typeof(RegionsViewModel); } }
-		public Type PopupType { get { return null; } }
-
-		protected override void OnViewAttached(object view, object context)
-		{
-			base.OnViewAttached(view, context);
-		}
-
-		protected override void OnActivate()
-		{
-			if (Regions.Count != _regionService.GetNodeCount())
+			#region Sample Data
+			if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
-				Regions.Clear();
-
-				var regions = _regionService.GetRegionsByIndex();
-
-				foreach (var region in regions)
-					Regions.Add(new RegionViewModel() { Region = region });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2000, Index = 1, Name = "Region One", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2001, Index = 2, Name = "Region Two", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2002, Index = 3, Name = "Region Three", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2003, Index = 4, Name = "Region Four", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2004, Index = 5, Name = "Region Five", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2005, Index = 6, Name = "Region Six", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2006, Index = 7, Name = "Region Seven", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2007, Index = 8, Name = "Region Eight", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2008, Index = 9, Name = "Region Nine", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2009, Index = 10, Name = "Region Ten", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2010, Index = 51, Name = "Region Eleven", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2000, Index = 1, Name = "Region One", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2001, Index = 2, Name = "Region Two", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2002, Index = 3, Name = "Region Three", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2003, Index = 4, Name = "Region Four", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2004, Index = 5, Name = "Region Five", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2005, Index = 6, Name = "Region Six", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2006, Index = 7, Name = "Region Seven", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2007, Index = 8, Name = "Region Eight", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2008, Index = 9, Name = "Region Nine", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2009, Index = 10, Name = "Region Ten", Special = false, X = 10, Y = 10, Z = 10 } });
+				Regions.Add(new RegionViewModel { Region = new ROI { Ident = 2010, Index = 51, Name = "Region Eleven", Special = false, X = 10, Y = 10, Z = 10 } });
 			}
-
-			UpdateRegions();
-
-			base.OnActivate();
+			#endregion
 		}
 
-		public void UpdateRegions()
+		public async Task OpenFileFromCache()
 		{
-			AXPlotModel = LoadPlotModel(r => r.X, r => r.Y);
-			SGPlotModel = LoadPlotModel(r => (100 - r.Y), r => r.Z);
-			CRPlotModel = LoadPlotModel(r => r.X, r => r.Z);
+			Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+			if (roamingSettings.Values.ContainsKey(SETTING_ROI_FILE_TOKEN))
+			{
+				var token = roamingSettings.Values[SETTING_ROI_FILE_TOKEN] as string;
+				StorageFile file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+				LoadRegionFile(file);
+			}
+		}
+
+		public async void OpenFileFromPicker(RoutedEventArgs args)
+		{
+			FileOpenPicker wkPicker = new FileOpenPicker();
+			wkPicker.ViewMode = PickerViewMode.List;
+			wkPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			wkPicker.FileTypeFilter.Add(".txt");
+
+			var regionFile = await wkPicker.PickSingleFileAsync();
+			if (regionFile != null)
+			{
+				var token = StorageApplicationPermissions.FutureAccessList.Add(regionFile);
+
+				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+				roamingSettings.Values[SETTING_ROI_FILE_TOKEN] = token;
+
+				LoadRegionFile(regionFile);
+			}
+		}
+
+		public async void LoadRegionFile(StorageFile file)
+		{
+			Regions.Clear();
+
+			var regions = await _regionService.Load(file);
+
+			foreach (var region in regions)
+				Regions.Add(new RegionViewModel() { Region = region });
+
+			this.PrimaryValue = regions.Count.ToString();
+
+			//AXPlotModel = LoadPlotModel(r => r.X, r => r.Y);
+			//SGPlotModel = LoadPlotModel(r => (100 - r.Y), r => r.Z);
+			//CRPlotModel = LoadPlotModel(r => r.X, r => r.Z);
 		}
 
 		protected PlotModel LoadPlotModel(Func<ROI, double> horizSelector, Func<ROI, double> vertSelector)
@@ -139,16 +161,12 @@ namespace BrainGraph.WinStore.Screens.Sources
 			return model;
 		}
 
+		public override Type ViewModelType { get { return typeof(RegionsViewModel); } }
+		
 		public BindableCollection<RegionViewModel> Regions { get; private set; }
 
 		public PlotModel SGPlotModel { get { return _inlSGPlotModel; } set { _inlSGPlotModel = value; NotifyOfPropertyChange(() => SGPlotModel); } } private PlotModel _inlSGPlotModel;
 		public PlotModel AXPlotModel { get { return _inlAXPlotModel; } set { _inlAXPlotModel = value; NotifyOfPropertyChange(() => AXPlotModel); } } private PlotModel _inlAXPlotModel;
 		public PlotModel CRPlotModel { get { return _inlCRPlotModel; } set { _inlCRPlotModel = value; NotifyOfPropertyChange(() => CRPlotModel); } } private PlotModel _inlCRPlotModel;
-
-		public void Handle(RegionsLoadedEvent message)
-		{
-			var itms = _regionService.GetNodeCount();
-			this.PrimaryValue = itms.ToString();
-		}
 	}
 }

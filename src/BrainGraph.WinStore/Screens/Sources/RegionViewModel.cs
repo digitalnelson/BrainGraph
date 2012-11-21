@@ -12,5 +12,6 @@ namespace BrainGraph.WinStore.Screens.Sources
 		public ROI Region { get; set; }
 
 		public string Title { get { return Region.Name; } }
+		public string Index { get { return Region.Index.ToString(); } }
 	}
 }

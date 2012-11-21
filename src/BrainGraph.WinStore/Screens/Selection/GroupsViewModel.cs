@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BrainGraph.WinStore.Screens.Selection
 {
-	class GroupsViewModel : Screen, IMenuItem
+	class GroupsViewModel : Screen
 	{
 		public GroupsViewModel()
 		{

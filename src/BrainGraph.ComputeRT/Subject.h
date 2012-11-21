@@ -1,5 +1,4 @@
 #pragma once
-#include "BindableBase.h"
 #include "SubjectGraph.h"
 #include <collection.h>
 
@@ -9,9 +8,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	using namespace Platform::Collections;
 	using namespace Windows::Foundation::Collections;
 
-	[Windows::UI::Xaml::Data::Bindable] 
-	[Windows::Foundation::Metadata::WebHostHiddenAttribute]
-	public ref class Subject sealed //: public BrainGraph::Compute::Common::BindableBase
+	public ref class Subject sealed
 	{
 	public:
 

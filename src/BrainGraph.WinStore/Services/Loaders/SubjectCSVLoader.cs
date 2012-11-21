@@ -46,7 +46,8 @@ namespace BraingGraph.Services.Loaders
 				// Create subject if they do not exist
 				if (!subjects.ContainsKey(subId))
 				{
-					subjects[subId] = new Subject();
+					var sub = new Subject();
+					subjects[subId] = sub;
 					subjects[subId].SubjectId = subId;
 				}
 

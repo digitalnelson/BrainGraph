@@ -12,6 +12,7 @@ namespace BrainGraph.WinStore.Services
 {
 	public enum ComputeGroup
 	{
+		GroupNone,
 		GroupOne,
 		GroupTwo
 	}
@@ -23,7 +24,7 @@ namespace BrainGraph.WinStore.Services
 
 	public interface IComputeService
 	{
-		//void LoadSubjects(List<Subject> group1, List<Subject> group2);
+		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
 		void PermuteGroups(int permutations, IProgress<PermutationProgress> progress);
 		Overlap GetResults();

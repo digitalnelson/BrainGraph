@@ -27,7 +27,7 @@
 							<ColumnDefinition Width="1*" MinWidth="50"/>
 						</Grid.ColumnDefinitions>
 
-						<CheckBox  Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" IsChecked="{Binding IsIncluded, Mode=TwoWay}" />
+						<CheckBox  Grid.Column="0" Margin="0,0,4,0" HorizontalAlignment="Left" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" IsChecked="{Binding IsIncluded, Mode=TwoWay}" />
 						<TextBlock Text="{Binding Title, Mode=TwoWay}" Grid.Column="1" Foreground="Black" FontSize="16" VerticalAlignment="Center" />
 						<TextBox Text="{Binding Threshold, Mode=TwoWay}" Grid.Column="2" />
 					</Grid>

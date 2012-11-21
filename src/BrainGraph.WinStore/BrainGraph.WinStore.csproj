@@ -110,6 +110,9 @@
     <Compile Include="Common\GraphComponent.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\Util\GridViewReadySelector.cs" />
+    <Compile Include="Events\SettingWorkingFolderUpdated.cs" />
+    <Compile Include="Events\SubjectsFilteredEvent.cs" />
     <Compile Include="Models\ROI.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Common\ViewModelBase.cs" />
@@ -123,6 +126,7 @@
     </Compile>
     <Compile Include="MainMenuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\Experiment\RunExperimentViewModel.cs" />
     <Compile Include="Screens\IMenuItem.cs" />
     <Compile Include="Screens\Sources\RegionsView.xaml.cs">
       <DependentUpon>RegionsView.xaml</DependentUpon>
@@ -141,14 +145,18 @@
     </Compile>
     <Compile Include="Screens\Selection\PermutationViewModel.cs" />
     <Compile Include="Screens\Sources\RegionViewModel.cs" />
-    <Compile Include="Screens\Sources\SubjectView.xaml.cs">
-      <DependentUpon>SubjectView.xaml</DependentUpon>
+    <Compile Include="Screens\Sources\SubjectGroupViewModel.cs" />
+    <Compile Include="Screens\Sources\SubjectsFilterViewModels.cs" />
+    <Compile Include="Screens\Sources\SubjectsView.xaml.cs">
+      <DependentUpon>SubjectsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Sources\SubjectsViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectViewModel.cs" />
     <Compile Include="Services\IAppPreferences.cs" />
     <Compile Include="Services\IComputeService.cs" />
     <Compile Include="Services\IRegionService.cs" />
-    <Compile Include="Services\ISubjectService.cs" />
+    <Compile Include="Services\ISubjectDataService.cs" />
+    <Compile Include="Services\ISubjectFilterService.cs" />
     <Compile Include="Services\Loaders\AdjCSVLoader.cs" />
     <Compile Include="Services\Loaders\ROILoader.cs" />
     <Compile Include="Services\Loaders\SubjectCSVLoader.cs" />
@@ -170,7 +178,6 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Subjects\VA2929.txt" />
     <Content Include="Common\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +185,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Common\BrainGraphStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -202,7 +213,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Sources\SubjectView.xaml">
+    <Page Include="Screens\Sources\SubjectsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,6 +245,9 @@
     <Reference Include="Windows.UI.Interactivity">
       <HintPath>..\packages\Caliburn.Micro\Windows.UI.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="WinRTXamlToolkit">
+      <HintPath>..\packages\winrtxamltoolkit.1.3.5.1\lib\netcore45\WinRTXamlToolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BrainGraph.ComputeRT\BrainGraph.ComputeRT.vcxproj">
@@ -241,7 +255,9 @@
       <Name>BrainGraph.ComputeRT</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>

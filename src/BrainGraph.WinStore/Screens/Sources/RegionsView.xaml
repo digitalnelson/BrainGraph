@@ -6,9 +6,28 @@
     xmlns:common="using:BrainGraph.WinStore.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:caliburn="using:Caliburn.Micro"
 	xmlns:oxy="using:OxyPlot.Metro"
     mc:Ignorable="d"
 	>
+
+	<Page.BottomAppBar>
+		<AppBar>
+			<Grid>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+					<Button caliburn:Message.Attach="[Event Click] = [OpenFileFromPicker($eventArgs)]" >
+						<Button.Style>
+							<Style BasedOn="{StaticResource AppBarButtonStyle}" TargetType="ButtonBase">
+								<Setter Property="AutomationProperties.AutomationId" Value="EditAppBarButton"/>
+								<Setter Property="AutomationProperties.Name" Value="Open Region File"/>
+								<Setter Property="Content" Value="&#xE150;"/>
+							</Style>
+						</Button.Style>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</AppBar>
+	</Page.BottomAppBar>
 
 	<UserControl.Resources>
 		<CollectionViewSource
