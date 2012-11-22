@@ -40,13 +40,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		std::pair<int, int> Edge;
 		int EdgeIndex;
 
-		CompareEdge EdgeValue;
+		shared_ptr<CompareEdge> EdgeValue;
 	};
 
 	struct Component
 	{
 		int Identifier;
-		vector<ComponentEdge> Edges;
+		vector<shared_ptr<ComponentEdge>> Edges;
 		vector<int> Vertices;
 
 		int RightTailExtent;

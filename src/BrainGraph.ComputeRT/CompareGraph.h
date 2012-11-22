@@ -12,14 +12,14 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		CompareGraph(int nVerts, shared_ptr<GraphLookup> lu);
 		~CompareGraph(void);
 
-		void AddEdge(int m, int n, CompareEdge val);
-		CompareEdge GetEdge(int m, int n);
+		void AddEdge(int m, int n, shared_ptr<CompareEdge> val);
+		shared_ptr<CompareEdge> GetEdge(int m, int n);
 
-		void ComputeComponents(vector<int> &edgeIdxs);
-		//void GetComponents(vector<Component> &components);
+		void ComputeComponents();
+		shared_ptr<Component> GetLargestComponent();
 
-		vector<CompareEdge> Edges;
-		vector<Component> Components;
+		vector<shared_ptr<CompareEdge>> Edges;
+		vector<shared_ptr<Component>> Components;
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;

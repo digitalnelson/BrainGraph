@@ -29,7 +29,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		typedef boost::multi_array_types::index_range range;
 		typedef boost::adjacency_matrix<boost::undirectedS> UDGraph;
 
-		void CalcEdgeTStats(const vector<int> &idxs, int szGrp1, vector<CompareEdge> &edgeStats);
+		void CalcEdgeTStats(const vector<int> &idxs, int szGrp1, vector<shared_ptr<CompareEdge>> &edgeStats);
 		void ComputeComponents(UDGraph &graph, vector<int> &edgeIdxs, vector<Component> &components);
 
 		Threshold ^_threshold;
@@ -48,7 +48,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		UDGraph _graph;
 		
-		vector<CompareEdge> _grpStats;
+		vector<shared_ptr<CompareEdge>> _grpStats;
 		vector<int> _grpSupraThreshEdgeIdxs;
 		vector<pair<int, int>> _grpSupraThreshEdges;
 		vector<Component> _grpComponent;
