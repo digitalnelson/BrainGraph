@@ -4,10 +4,9 @@
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	CompareGraph::CompareGraph(int nVerts, GraphLookup* lu) : _adjMtx(nVerts)
+	CompareGraph::CompareGraph(int nVerts, shared_ptr<GraphLookup> lu) : _adjMtx(nVerts), _lu(lu)
 	{
 		_nVerts = nVerts;
-		_lu = lu;
 	}
 
 	CompareGraph::~CompareGraph(void)
@@ -16,7 +15,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	void CompareGraph::AddEdge(int i, int j, CompareEdge val)
 	{
 		if(i >= _nVerts)
-			throw std::exception("Exceeded matrix bounds.  i >= number of verticies");
+			throw std::exception("Exceeded matrix bounds.  i >= number of vertices");
 		if(j >= _nVerts)
 			throw std::exception("Exceeded matrix bounds.  i >= _m");
 

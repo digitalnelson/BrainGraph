@@ -16,7 +16,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		MultiDatatypeCompare(int verts, int edges, IVector<Threshold^>^ thresholds);
 		void LoadSubjects(IVector<Subject^>^ group1, IVector<Subject^>^ group2);		
 		void Compare();
-		//void Permute(const vector<vector<int>> &permutations);  // TODO: Move the permutation generation to c++ code from c#
+		void Permute(const vector<vector<int>> &permutations);  // TODO: Move the permutation generation to c++ code from c#
 
 		//Overlap^ GetOverlapResult();*/
 

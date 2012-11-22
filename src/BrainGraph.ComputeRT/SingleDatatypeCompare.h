@@ -20,7 +20,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		void AddSubject(Subject^ subject);
 		Component CompareGroups(vector<int> &idxs, int szGrp1);
-		//Component Permute(const vector<int> &idxs, int szGrp1, double tStatThreshold);
+		Component Permute(const vector<int> &idxs, int szGrp1);
 		void GetComponents(vector<Component> &components);
 	
 	private:
@@ -32,7 +32,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		void CalcEdgeTStats(const vector<int> &idxs, int szGrp1, vector<CompareEdge> &edgeStats);
 		void ComputeComponents(UDGraph &graph, vector<int> &edgeIdxs, vector<Component> &components);
 
-		Threshold ^_dataType;
+		Threshold ^_threshold;
+		shared_ptr<CompareGraph> _cmpGraph;
 
 		int _subjectCount;
 		int _currentSubjectIdx;
@@ -40,7 +41,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		int _edgeCount;
 		int _permutations;
 
-		GraphLookup _lu;
+		shared_ptr<GraphLookup> _lu;
 		EdgesBySubject _subjectEdges;  // Mtx of edge vs subject  e.g. 4005x58
 
 		vector<float> _allEdges;

@@ -21,13 +21,6 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	void Subject::AddGraph(SubjectGraph^ graph)
 	{
 		_graphs->Insert(graph->DataType, graph);  // TODO: Dedupe
-
-		//CoreWindow^ wnd = CoreApplication::MainView->CoreWindow;
-		//CoreDispatcher^ dispatcher = wnd->Dispatcher;
-		//dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this] () 
-		//{
-		//	OnPropertyChanged("GraphCount");
-		//}));
 	}
 
 } } }

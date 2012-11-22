@@ -92,48 +92,46 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	}
 
-	//void MultiDatatypeCompare::Permute(const vector<vector<int>> &permutations, map<String^, Threshold> &threshes)
-	//{
-	//	//for(int i=0; i<permutations.size(); i++)
-	//	parallel_for_each(begin(permutations), end(permutations), [=, &threshes] (const vector<int> &subIdxs)
-	//	{	
-	//		std::vector<int> nodeCounts(_vertices);
+	void MultiDatatypeCompare::Permute(const vector<vector<int>> &permutations)
+	{
+		for(int i=0; i<permutations.size(); i++)
+		//parallel_for_each(begin(permutations), end(permutations), [=, &threshes] (const vector<int> &subIdxs)
+		{	
+			std::vector<int> nodeCounts(_vertices);
 
-	//		// Loop through our comparisons and call permute on them passing our new random subject assortement
-	//		//for(auto it=_dataByType.begin(); it!=_dataByType.end(); ++it)
-	//		parallel_for_each(begin(_dataByType), end(_dataByType), [=, &subIdxs, &threshes, &nodeCounts] (pair<String^, shared_ptr<SingleDatatypeCompare>> item)
-	//		{
-	//			double threshold = threshes[item.first].Value;
+			// Loop through our comparisons and call permute on them passing our new random subject assortement
+			for(auto &dataItem : _dataByType)
+			//parallel_for_each(begin(_dataByType), end(_dataByType), [=, &subIdxs, &threshes, &nodeCounts] (pair<String^, shared_ptr<SingleDatatypeCompare>> item)
+			{
+				// Run the permutation for this index arrangement
+				Component cmp = dataItem.second->Permute(subIdxs, _group1Count);
 
-	//			// Run the permutation for this index arrangement
-	//			Component cmp = item.second->Permute(subIdxs, _group1Count, threshold);
+				// Pull out the vertices and store then in our counting map
+				for(auto vert : cmp.Vertices)
+					++nodeCounts[vert];
+			}//);
 
-	//			// Pull out the vertices and store then in our counting map
-	//			for(auto vert : cmp.Vertices)
-	//				++nodeCounts[vert];
-	//		});
+			// Calculate how many nodes overlap between all of the nodes
+			int permOverlap = 0, maxOverlap = _dataByType.size();
+			for(auto nc=0; nc<nodeCounts.size();++nc)
+			{
+				if(nodeCounts[nc] == maxOverlap)
+				{
+					_verticesById[nc]->RandomOverlapCount++;
+					++permOverlap;
+				}
+			}
 
-	//		// Calculate how many nodes overlap between all of the nodes
-	//		int permOverlap = 0, maxOverlap = _dataByType.size();
-	//		for(auto nc=0; nc<nodeCounts.size();++nc)
-	//		{
-	//			if(nodeCounts[nc] == maxOverlap)
-	//			{
-	//				_verticesById[nc]->RandomOverlapCount++;
-	//				++permOverlap;
-	//			}
-	//		}
+			if(_overlapDistribution.count(permOverlap) == 0)
+				_overlapDistribution[permOverlap] = 0;
+			
+			_overlapDistribution[permOverlap]++;
 
-	//		if(_overlapDistribution.count(permOverlap) == 0)
-	//			_overlapDistribution[permOverlap] = 0;
-	//		
-	//		_overlapDistribution[permOverlap]++;
-
-	//		// NBS multimodal compare
-	//		if(permOverlap >= _realOverlap)
-	//			++_rightTailOverlapCount;
-	//	});
-	//}
+			// NBS multimodal compare
+			if(permOverlap >= _realOverlap)
+				++_rightTailOverlapCount;
+		}//);
+	}
 
 	//std::unique_ptr<Overlap> MultiDatatypeCompare::GetOverlapResult()
 	//{

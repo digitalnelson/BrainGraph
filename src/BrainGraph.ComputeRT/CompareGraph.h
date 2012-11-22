@@ -9,7 +9,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	class CompareGraph
 	{
 	public:
-		CompareGraph(int nVerts, GraphLookup* lu);
+		CompareGraph(int nVerts, shared_ptr<GraphLookup> lu);
 		~CompareGraph(void);
 
 		void AddEdge(int m, int n, CompareEdge val);
@@ -23,7 +23,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;
-		GraphLookup * _lu;
+		shared_ptr<GraphLookup> _lu;
 		int _nVerts;
 	};
 

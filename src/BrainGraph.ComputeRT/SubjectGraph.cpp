@@ -31,12 +31,12 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		Edges.push_back(edge);
 	}
 
-	SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)
-	{
-		// TODO: Figure out how to do a lookup on this
-		int idx = 0; //_lu->GetEdge(i, j);
-		return Edges[idx];
-	}
+	//SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)
+	//{
+	//	// TODO: Figure out how to do a lookup on this
+	//	int idx = 0; //_lu->GetEdge(i, j);
+	//	return Edges[idx];
+	//}
 
 	float SubjectGraph::GlobalStrength()
 	{

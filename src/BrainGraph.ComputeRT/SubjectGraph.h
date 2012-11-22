@@ -18,11 +18,11 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		property String^ DataType;
 
 	internal:
-		SubjectGraphEdge GetEdge(int m, int n);
+		//SubjectGraphEdge GetEdge(int m, int n);
 		float GlobalStrength();
 		void GetMeanVtxStrength(vector<float> &meanVtxStr);
 
-		property vector<SubjectGraphEdge> Edges;
+		vector<SubjectGraphEdge> Edges;
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;
