@@ -6,7 +6,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 {
 	CompareGraph::CompareGraph(int nVerts, shared_ptr<GraphLookup> lu, float nbsThreshold) : 
 		_adjMtx(nVerts), 
-		_lu(lu)
+		_lu(lu),
+		_nLargestComponentId(-1)
 	{
 		_nVerts = nVerts;
 		_nbsThreshold = nbsThreshold;
@@ -85,12 +86,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 				Components[componentIdx]->Edges.push_back(edge);
 			}
 		}
-	}
 
-	shared_ptr<Component> CompareGraph::GetLargestComponent()
-	{
 		// Some vars for the biggest cmp
-		int maxEdgeCount = 0, maxId = 0;
+		int maxEdgeCount = 0;
 
 		// Loop through cmps and find the biggest
 		for(auto cmp : Components)
@@ -101,11 +99,17 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			if(cmpEdgeCount > maxEdgeCount)
 			{
 				maxEdgeCount = cmpEdgeCount;
-				maxId = cmp->Identifier;
+				_nLargestComponentId = cmp->Identifier;
 			}
 		}
+	}
 
-		return Components[maxId];
+	shared_ptr<Component> CompareGraph::GetLargestComponent()
+	{
+		if(_nLargestComponentId >= 0)
+			return Components[_nLargestComponentId];
+		else
+			return nullptr;
 	}
 
 }}}

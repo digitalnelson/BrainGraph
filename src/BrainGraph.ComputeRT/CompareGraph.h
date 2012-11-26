@@ -32,6 +32,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		
 		int _nVerts;
 		float _nbsThreshold;
+
+		int _nLargestComponentId;
 	};
 
 }}}

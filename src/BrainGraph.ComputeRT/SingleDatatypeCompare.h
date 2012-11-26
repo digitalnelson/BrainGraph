@@ -19,7 +19,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		~SingleDatatypeCompare(void);
 
 		void AddSubject(BCS::Subject^ subject);
-		shared_ptr<Component> Compare(std::vector<int> &idxs, int szGrp1);
+		shared_ptr<CompareGraph> Compare(std::vector<int> &idxs, int szGrp1);
 		shared_ptr<Component> Permute(std::vector<int> &idxs, int szGrp1);
 	
 	private:

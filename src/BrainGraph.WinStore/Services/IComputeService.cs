@@ -7,6 +7,7 @@ using Caliburn.Micro;
 using BrainGraph.Compute.Graph;
 using BrainGraph.Compute.Subjects;
 using BrainGraph.WinStore.Services;
+using Windows.Foundation;
 
 namespace BrainGraph.WinStore.Services
 {
@@ -26,7 +27,7 @@ namespace BrainGraph.WinStore.Services
 	{
 		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
-		void PermuteGroups(int permutations);
+        Task PermuteGroups(int permutations, AsyncActionProgressHandler<int> progressHandler);
 		Overlap GetResults();
 	}
 
@@ -49,9 +50,17 @@ namespace BrainGraph.WinStore.Services
 				_compare.Compare();
 		}
 
-		public async void PermuteGroups(int permutations)
+		public Task PermuteGroups(int permutations, AsyncActionProgressHandler<int> progressHandler)
 		{
-			await _compare.Permute(permutations);
+			var tsk = _compare.PermuteAsyncWithProgress(permutations);
+            tsk.Progress += progressHandler;
+
+            //tsk.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+            //{
+            //    int i = p;
+            //});
+
+            return tsk.AsTask();
 
 			//if (_compare != null)
 			//{

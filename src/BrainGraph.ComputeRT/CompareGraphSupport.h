@@ -53,8 +53,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		TStat Diversity;
 	};
 
-	struct Component
+	class Component
 	{
+	public:
+		Component() : Identifier(0)
+		{}
+
 		int Identifier;
 		std::vector<std::shared_ptr<CompareEdge>> Edges;
 		//std::vector<std::shared_ptr<CompareNode>> Nodes;
@@ -62,6 +66,15 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		std::vector<int> Vertices;  // TODO: Deprec
 
 		int RightTailExtent;
+
+		double GetAverageEdgeDifference()
+		{
+			double dVal = 0;
+			for(auto edge : Edges)
+				dVal += ( edge->Stats.M1 - edge->Stats.M2 );
+
+			return dVal / Edges.size();
+		}
 	};
 
 }}}

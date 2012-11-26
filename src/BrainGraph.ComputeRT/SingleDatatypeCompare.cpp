@@ -57,14 +57,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	// Calculate a edge stats for the two groups based on the indexes passed in
 	vector<shared_ptr<CompareEdge>> SingleDatatypeCompare::CalcEdgeComparison(vector<int> &idxs, int szGrp1)
 	{
+		auto &edges = _edges;
+
 		// TODO: Probably need to make this thread safe
 		vector<shared_ptr<CompareEdge>> edgeStats(_edgeCount);
 
-		for(int edgeIndex=0; edgeIndex<_edgeCount; edgeIndex++)
-		//parallel_for(0, _edgeCount, [=, &idxs, &edgeStats] (int i)
+		//for(int edgeIndex=0; edgeIndex<_edgeCount; edgeIndex++)
+		parallel_for(0, _edgeCount, [=, &idxs, &edgeStats, &edges] (int edgeIndex)
 		{
 			// Pull out a view of the subject values for a single edge
-			auto edgeValues = _edges[edgeIndex];
+			auto &edgeValues = edges[edgeIndex];
 			
 			TStatCalc calcEdgeValue;
 			
@@ -86,7 +88,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			edge->Stats = calcEdgeValue.Calculate();
 
 			edgeStats[edgeIndex] = edge;
-		}//);
+		});
 
 		return edgeStats;
 	}
@@ -96,8 +98,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// TODO: Probably need to make this thread safe
 		vector<shared_ptr<CompareNode>> nodeStats(_nodeCount);
 
-		for(int nodeIndex=0; nodeIndex<_nodeCount; nodeIndex++)
-		//parallel_for(0, _nodeCount, [=, &idxs, &nodeStats] (int i)
+		//for(int nodeIndex=0; nodeIndex<_nodeCount; nodeIndex++)
+		parallel_for(0, _nodeCount, [=, &idxs, &nodeStats] (int nodeIndex)
 		{
 			// Pull out a view of the subject values for a single edge
 			auto nodeValues = _nodes[nodeIndex];
@@ -129,12 +131,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			node->Strength = calcStrength.Calculate();
 
 			nodeStats[nodeIndex] = node;
-		}//);
+		});
 
 		return nodeStats;
 	}
 
-	shared_ptr<Component> SingleDatatypeCompare::Compare(vector<int> &idxs, int szGrp1)
+	shared_ptr<CompareGraph> SingleDatatypeCompare::Compare(vector<int> &idxs, int szGrp1)
 	{
 		// Calculate edge group comparison
 		_cmpGraph->AddEdges( CalcEdgeComparison(idxs, szGrp1) );
@@ -150,7 +152,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// TODO: Global diversity
 
 		// Return the largest component
-		return _cmpGraph->GetLargestComponent();
+		return _cmpGraph;
 	}
 
 	shared_ptr<Component> SingleDatatypeCompare::Permute(vector<int> &idxs, int szGrp1)
@@ -179,8 +181,11 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		auto lrgstRndmCmp = randomGraph->GetLargestComponent();
 		auto lrgstRealCmp = _cmpGraph->GetLargestComponent();
 
-		if(lrgstRndmCmp->Edges.size() > lrgstRealCmp->Edges.size())
-			lrgstRealCmp->RightTailExtent++;
+		if(lrgstRndmCmp != nullptr)
+		{
+			if(lrgstRndmCmp->Edges.size() > lrgstRealCmp->Edges.size())
+				lrgstRealCmp->RightTailExtent++;
+		}
 
 		return lrgstRndmCmp;
 	}

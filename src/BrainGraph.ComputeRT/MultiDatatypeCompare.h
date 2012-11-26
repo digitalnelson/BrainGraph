@@ -19,7 +19,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		MultiDatatypeCompare(int verts, int edges, WFC::IVector<Threshold^>^ thresholds);
 		void LoadSubjects(WFC::IVector<BCS::Subject^>^ group1, WFC::IVector<BCS::Subject^>^ group2);		
 		void Compare();
-		WF::IAsyncActionWithProgress<int>^ Permute(int permutations);
+		WF::IAsyncActionWithProgress<int>^ PermuteAsyncWithProgress(int permutations);
 
 	private:
 		void AddSubject(Platform::String^ groupId, BCS::Subject^ itm);

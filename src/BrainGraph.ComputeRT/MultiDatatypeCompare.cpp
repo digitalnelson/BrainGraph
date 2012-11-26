@@ -77,10 +77,15 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		for(auto &groupCompareItem : _groupCompareByType)
 		{
 			// Compare the two groups for this data type
-			auto cmp = groupCompareItem.second->Compare(idxs, _group1Count);
+			auto compareGraph = groupCompareItem.second->Compare(idxs, _group1Count);
+
+			// Pull out the largest component
+			auto largestComponent = compareGraph->GetLargestComponent();
+
+			double dDiff = largestComponent->GetAverageEdgeDifference();
 
 			// Pull out the vertices and store then in our counting map
-			for(auto vert : cmp->Vertices)
+			for(auto vert : largestComponent->Vertices)
 				++nodeCounts[vert];
 		}
 
@@ -99,22 +104,23 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	}
 
-	IAsyncActionWithProgress<int>^ MultiDatatypeCompare::Permute(int permutations)
+	IAsyncActionWithProgress<int>^ MultiDatatypeCompare::PermuteAsyncWithProgress(int permutations)
 	{
-		// Put together a list of idxs representing our two groups
-		vector<int> idxs;
-		for(auto itm : _subIdxsByGroup["group1"])
-			idxs.push_back(itm);
-		for(auto itm : _subIdxsByGroup["group2"])
-			idxs.push_back(itm);
-
-		// Keep track of our group 1 size for the permutation step
-		auto group1Count = _subIdxsByGroup["group1"].size();
-
-		IAsyncActionWithProgress<int>^ action_with_progress = create_async( [=, &idxs] ( progress_reporter<int> reporter ) 
+		IAsyncActionWithProgress<int>^ action_with_progress = create_async( [=] ( progress_reporter<int> reporter ) 
 		{
-			for(int i=0; i<permutations; i++)
-			//parallel_for_each(begin(permutations), end(permutations), [=, &threshes] (const vector<int> &subIdxs)
+			// Put together a list of idxs representing our two groups
+			vector<int> idxs;
+			for(auto itm : _subIdxsByGroup["group1"])
+				idxs.push_back(itm);
+			for(auto itm : _subIdxsByGroup["group2"])
+				idxs.push_back(itm);
+
+			// Keep track of our group 1 size for the permutation step
+			auto group1Count = _subIdxsByGroup["group1"].size();
+			auto permCount = 0;
+
+			//for(int i=0; i<permutations; i++)
+			parallel_for(0, permutations, [=, &idxs, &permCount] (int permutation)
 			{	
 				// Shuffle subjects randomly
 				random_shuffle(idxs.begin(), idxs.end());
@@ -128,9 +134,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 					// Compare the two groups for this data type
 					auto cmp = groupCompareItem.second->Permute(idxs, group1Count);
 
-					// Pull out the vertices and store then in our counting map
-					for(auto vert : cmp->Vertices)
-						++nodeCounts[vert];
+					if(cmp != nullptr)
+					{
+						// Pull out the vertices and store then in our counting map
+						for(auto vert : cmp->Vertices)
+							++nodeCounts[vert];
+					}
 				}
 
 				// Calculate how many nodes overlap between all of the nodes
@@ -153,8 +162,11 @@ namespace BrainGraph { namespace Compute { namespace Graph
 				if(permOverlap >= _realOverlap)
 					++_rightTailOverlapCount;
 
-				reporter.report(permutations);
-			}//);
+				++permCount;
+
+				if(permCount % 10 == 0)
+					reporter.report(permCount);
+			});
 		});
 
 		return action_with_progress;

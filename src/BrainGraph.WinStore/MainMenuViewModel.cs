@@ -31,6 +31,8 @@ namespace BrainGraph.WinStore
 		private IComputeService _computeService;
 		#endregion
 
+        private RunExperimentViewModel _running = new RunExperimentViewModel();
+
 		public MainMenuViewModel()
 		{
 			Groups = new BindableCollection<MenuGroup>();
@@ -45,7 +47,7 @@ namespace BrainGraph.WinStore
 				_computeService = IoC.Get<IComputeService>();
 
 				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
-				Groups.Add(new MenuGroup { Title = "Experiment", Items = { new PermutationViewModel(), new RunExperimentViewModel() } });
+                Groups.Add(new MenuGroup { Title = "Experiment", Items = { new PermutationViewModel(), _running } });
 				Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
 				Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
 			}
@@ -74,7 +76,7 @@ namespace BrainGraph.WinStore
 			}
 		}
 
-		public void MenuItemSelected(ItemClickEventArgs eventArgs)
+		public async void MenuItemSelected(ItemClickEventArgs eventArgs)
 		{
 			var menuItem = (IMenuItem)eventArgs.ClickedItem;
 			var popupType = menuItem.PopupType;
@@ -103,7 +105,16 @@ namespace BrainGraph.WinStore
 
 				_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
 				_computeService.CompareGroups();
-				_computeService.PermuteGroups(5000);
+				
+                var permutation = _computeService.PermuteGroups(5000, new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+                {
+                    _running.PrimaryValue = p.ToString();
+                }));
+
+                await permutation.ContinueWith( (_) => 
+                    {
+                        _running.PrimaryValue = "5000";
+                    });
 			}
 			else if (popupType != null)
 			{
