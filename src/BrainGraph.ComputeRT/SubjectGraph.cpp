@@ -6,13 +6,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	using namespace Platform;
 	using namespace Windows::Foundation::Collections;
 
-	SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts)
+	SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts), Nodes(nVerts)
 	{
 		_nVerts = nVerts;
-	}
-
-	void SubjectGraph::AddGraphLines(Windows::Foundation::Collections::IVector<String^>^ lines)
-	{
 	}
 
 	void SubjectGraph::AddEdge(int i, int j, double val)
@@ -29,6 +25,15 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		edge.Value = val;
 
 		Edges.push_back(edge);
+
+		Nodes[i].Index = i;
+		Nodes[j].Index = j;
+
+		if(val > 0)
+		{
+			Nodes[i].Degree += 1;
+			Nodes[j].Degree += 1;
+		}
 	}
 
 	//SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)

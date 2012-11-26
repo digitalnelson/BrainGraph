@@ -26,7 +26,7 @@ namespace BrainGraph.WinStore.Services
 	{
 		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
-		void PermuteGroups(int permutations, IProgress<PermutationProgress> progress);
+		void PermuteGroups(int permutations);
 		Overlap GetResults();
 	}
 
@@ -49,8 +49,10 @@ namespace BrainGraph.WinStore.Services
 				_compare.Compare();
 		}
 
-		public void PermuteGroups(int permutations, IProgress<PermutationProgress> progress)
+		public async void PermuteGroups(int permutations)
 		{
+			await _compare.Permute(permutations);
+
 			//if (_compare != null)
 			//{
 			//	int batchSize = 5000;

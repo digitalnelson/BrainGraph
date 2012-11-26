@@ -1,47 +1,45 @@
 #pragma once
 #include "MultiDatatypeSupport.h"
-#include "SingleDatatypeCompare.h"
-#include "Subject.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	using namespace std;
-	using namespace Windows::Foundation::Collections;
-	using namespace BrainGraph::Compute::Subjects;
+	// Namespace shortcuts
+	namespace WF = Windows::Foundation;
+	namespace WFC = Windows::Foundation::Collections;
+	namespace BCS = BrainGraph::Compute::Subjects;
+
+	// Forward decls
+	ref class BCS::Subject;
+	class SingleDatatypeCompare;
 
 	public ref class MultiDatatypeCompare sealed
 	{
 	public:
 
-		MultiDatatypeCompare(int verts, int edges, IVector<Threshold^>^ thresholds);
-		void LoadSubjects(IVector<Subject^>^ group1, IVector<Subject^>^ group2);		
+		MultiDatatypeCompare(int verts, int edges, WFC::IVector<Threshold^>^ thresholds);
+		void LoadSubjects(WFC::IVector<BCS::Subject^>^ group1, WFC::IVector<BCS::Subject^>^ group2);		
 		void Compare();
-		void Permute(const vector<vector<int>> &permutations);  // TODO: Move the permutation generation to c++ code from c#
-
-		//Overlap^ GetOverlapResult();*/
+		WF::IAsyncActionWithProgress<int>^ Permute(int permutations);
 
 	private:
-		void AddSubject(String^ groupId, Subject^ itm);
+		void AddSubject(Platform::String^ groupId, BCS::Subject^ itm);
 
-		int _subjectCount;
 		int _vertices;
 		int _edges;
-		int _subCounter;
 
+		int _subjectCount;
+		int _subCounter;
+		int _group1Count;
+
+		std::map<Platform::String^, std::vector<int>> _subIdxsByGroup;
+		std::map<Platform::String^, std::shared_ptr<SingleDatatypeCompare>> _groupCompareByType;
+		std::vector<Threshold^> _dataThresholds;
+		
 		int _realOverlap;
 		int _rightTailOverlapCount;
 		int _permutations;
-
-		int _group1Count;
-
-		vector<Threshold^> _dataThresholds;
-
-		map<String^, shared_ptr<SingleDatatypeCompare>> _dataByType;
-		
-		map<String^, std::vector<int>> _subIdxsByGroup;
-		
-		map<int, shared_ptr<Vertex>> _verticesById;
-		map<int, int> _overlapDistribution;
+		std::map<int, std::shared_ptr<Vertex>> _verticesById;
+		std::map<int, int> _overlapDistribution;
 	};
 }}}
 

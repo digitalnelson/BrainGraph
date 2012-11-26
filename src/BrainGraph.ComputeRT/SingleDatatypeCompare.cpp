@@ -1,26 +1,37 @@
 #include "pch.h"
+#include <algorithm>
+#include "Subject.h"
+#include "SubjectGraphEdge.h"
 #include "SingleDatatypeCompare.h"
 #include "MultiDatatypeSupport.h"
-#include <algorithm>
-
-using namespace std;
-using namespace concurrency;
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	SingleDatatypeCompare::SingleDatatypeCompare(int subjectCount, int verts, int edges, Threshold ^threshold) 
-		: _subjectEdges(boost::extents[edges][subjectCount]), 
-		_lu(new GraphLookup(verts)), 
-		_grpStats(edges), 
-		_graph(verts), 
-		_cmpGraph(new CompareGraph(_vertCount, _lu))
+	using namespace std;
+	using namespace concurrency;
+	using namespace BrainGraph::Compute::Subjects;
+
+	SingleDatatypeCompare::SingleDatatypeCompare(int subjectCount, int nodes, int edges, Threshold ^threshold) : 
+		_edges(edges),
+		_nodes(nodes),
+		_globals(subjectCount)
 	{
+		_lu = make_shared<GraphLookup>(nodes);
+		_cmpGraph = make_shared<CompareGraph>(nodes, _lu, (float)threshold->Value);
+
 		_threshold = threshold;
 		_subjectCount = subjectCount;
-		_vertCount = verts;
+		_nodeCount = nodes;
 		_edgeCount = edges;
-		_currentSubjectIdx = 0;
-		_permutations = 0;
+
+		//// Preallocate our edge mtx
+		//for(auto i=0; i<edges; ++i)
+		//	_edges[i].resize(subjectCount);
+		//// Preallocate our node mtx
+		//for(auto i=0; i<nodes; ++i)
+		//	_nodes[i].resize(subjectCount);
+		//// Preallocate our global mtx
+		//_globals.resize(subjectCount);
 	}
 
 	SingleDatatypeCompare::~SingleDatatypeCompare(void)
@@ -32,174 +43,145 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// Pull out the graph for this datatype
 		auto graph = subject->Graphs->Lookup(_threshold->DataType);
 
-		// Add our graph to the list
-		int edge = 0;
-		for(auto &iter : graph->Edges)
-		{
-			_subjectEdges[edge][_currentSubjectIdx] = iter.Value;			
-			++edge;
-		}
-		++_currentSubjectIdx;
+		// Store our edges
+		for(auto edgeIdx=0; edgeIdx<_edgeCount; ++edgeIdx)
+			_edges[edgeIdx].push_back(graph->Edges[edgeIdx]);
+
+		// Store our nodes
+		for(auto nodeIdx=0; nodeIdx<_nodeCount; ++nodeIdx)
+			_nodes[nodeIdx].push_back(graph->Nodes[nodeIdx]);
+
+		// TODO: Store our globals
 	}
 
-	// Calculate a T stat for the two groups based on the indexes passed in
-	void SingleDatatypeCompare::CalcEdgeTStats(const vector<int> &idxs, int szGrp1, vector<shared_ptr<CompareEdge>> &edgeStats)
+	// Calculate a edge stats for the two groups based on the indexes passed in
+	vector<shared_ptr<CompareEdge>> SingleDatatypeCompare::CalcEdgeComparison(vector<int> &idxs, int szGrp1)
 	{
 		// TODO: Probably need to make this thread safe
-		//for(int i=0; i<_edgeCount; i++)
-		parallel_for(0, _edgeCount, [=, &idxs, &edgeStats] (int i)
+		vector<shared_ptr<CompareEdge>> edgeStats(_edgeCount);
+
+		for(int edgeIndex=0; edgeIndex<_edgeCount; edgeIndex++)
+		//parallel_for(0, _edgeCount, [=, &idxs, &edgeStats] (int i)
 		{
 			// Pull out a view of the subject values for a single edge
-			SingleEdgeBySubject edgeValues = _subjectEdges[ boost::indices[i][range(0, _subjectCount)] ];
+			auto edgeValues = _edges[edgeIndex];
 			
-			int n1 = 0, n2 = 0;
-			float m1 = 0, m2 = 0;
-			float dv1 = 0, dv2 = 0;
-
+			TStatCalc calcEdgeValue;
+			
 			// Loop through the vals we were passed
 			for (int idx = 0; idx < _subjectCount; ++idx)
 			{
-				float edgeVal = edgeValues[idxs[idx]];
+				float edgeVal = edgeValues[idxs[idx]].Value;
+
+				if (idx < szGrp1)
+					calcEdgeValue.IncludeValue(0, edgeVal);
+				else
+					calcEdgeValue.IncludeValue(1, edgeVal);
+			}
+
+			auto edge = make_shared<CompareEdge>();
+			
+			edge->Index = edgeIndex;
+			edge->Nodes = _lu->GetEdge(edgeIndex);
+			edge->Stats = calcEdgeValue.Calculate();
+
+			edgeStats[edgeIndex] = edge;
+		}//);
+
+		return edgeStats;
+	}
+
+	vector<shared_ptr<CompareNode>> SingleDatatypeCompare::CalcNodeComparison(vector<int> &idxs, int szGrp1)
+	{
+		// TODO: Probably need to make this thread safe
+		vector<shared_ptr<CompareNode>> nodeStats(_nodeCount);
+
+		for(int nodeIndex=0; nodeIndex<_nodeCount; nodeIndex++)
+		//parallel_for(0, _nodeCount, [=, &idxs, &nodeStats] (int i)
+		{
+			// Pull out a view of the subject values for a single edge
+			auto nodeValues = _nodes[nodeIndex];
+
+			TStatCalc calcDegree;
+			TStatCalc calcStrength;
+		
+			// Loop through the vals we were passed
+			for (int idx = 0; idx < _subjectCount; ++idx)
+			{
+				auto nodeVal = nodeValues[idxs[idx]];
 
 				if (idx < szGrp1)
 				{
-					n1++;
-
-					float delta = edgeVal - m1;
-					m1 += delta / n1;
-
-					if(n1 > 1)
-						dv1 = dv1 + delta * (edgeVal - m1);
+					calcDegree.IncludeValue(0, nodeVal.Degree);
+					calcStrength.IncludeValue(0, nodeVal.Strength);
 				}
 				else
 				{
-					n2++;
-
-					float delta = edgeVal - m2;
-					m2 += delta / n2;
-
-					if(n2 > 1)
-						dv2 = dv2 + delta * (edgeVal - m2);
+					calcDegree.IncludeValue(1, nodeVal.Degree);
+					calcStrength.IncludeValue(1, nodeVal.Strength);
 				}
 			}
 
-			float v1 = abs(dv1) / ( n1 - 1 );
-			float v2 = abs(dv2) / ( n2 - 1 );
+			auto node = make_shared<CompareNode>();
 			
-			float tstat = 0;
-			if(v1 < 0.00000001f && v2 < 0.00000001f)
-				tstat = 0;
-			else
-				tstat = (m1 - m2) / sqrt( ( v1 / (float)n1 ) + ( v2 / (float)n2 ) );
+			node->Index = nodeIndex;
+			node->Degree = calcDegree.Calculate();
+			node->Strength = calcStrength.Calculate();
 
-			auto edge = make_shared<CompareEdge>();
-			edge->V1 = v1;
-			edge->V2 = v2;
-			edge->M1 = m1;
-			edge->M2 = m2;
-			edge->TStat = tstat;
-			edgeStats[i] = edge;
-		});
+			nodeStats[nodeIndex] = node;
+		}//);
+
+		return nodeStats;
 	}
 
-	Component SingleDatatypeCompare::CompareGroups(vector<int> &idxs, int szGrp1)
+	shared_ptr<Component> SingleDatatypeCompare::Compare(vector<int> &idxs, int szGrp1)
 	{
-		// Calculate t stats for this subject labeling
-		CalcEdgeTStats(idxs, szGrp1, _grpStats);
+		// Calculate edge group comparison
+		_cmpGraph->AddEdges( CalcEdgeComparison(idxs, szGrp1) );
 
-		// Create a comparison graph to hold our group comparison results
-		shared_ptr<CompareGraph> cmpGraph(new CompareGraph(_vertCount, _lu));
+		// Calculate node group comparison
+		_cmpGraph->AddNodes( CalcNodeComparison(idxs, szGrp1) );
 
-		// Load graph with thresholded t stats
-		for(vector<CompareEdge>::size_type idx=0; idx<_grpStats.size(); ++idx)
-		{
-			// If our edge tstat is larger than our threshold keep it for NBS
-			if(abs(_grpStats[idx]->TStat) > _threshold->Value)
-			{
-				// Lookup our edge
-				pair<int, int> edge = _lu->GetEdge(idx);
+		// Calculate NBS components
+		_cmpGraph->ComputeComponents();
 
-				// Add our edge to the group graph
-				cmpGraph->AddEdge(edge.first, edge.second, _grpStats[idx]);
-			}
-		}
+		//// COMPUTE GLOBAL ANALYSES
+		// TODO: Global strength
+		// TODO: Global diversity
 
-		// Calculate our largest component
-		cmpGraph->ComputeComponents();
-
-		//// Find the biggest component
-		//int maxEdgeCount = 0, maxId = 0;
-		//for(auto &cmp : _grpComponent)
-		//{
-		//	int cmpEdgeCount = cmp.Edges.size();
-		//	if(cmpEdgeCount > maxEdgeCount)
-		//	{
-		//		maxEdgeCount = cmpEdgeCount;
-		//		maxId = cmp.Identifier;
-		//	}
-		//}
-
-		//return _grpComponent[maxId];
+		// Return the largest component
+		return _cmpGraph->GetLargestComponent();
 	}
 
-	Component SingleDatatypeCompare::Permute(const vector<int> &idxs, int szGrp1)
+	shared_ptr<Component> SingleDatatypeCompare::Permute(vector<int> &idxs, int szGrp1)
 	{
-		// Create somewhere temp to store our permuted t stats
-		vector<CompareEdge> edgeStats(_edgeCount);
-
-		// Calculate t stats for this random subject labeling
-		CalcEdgeTStats(idxs, szGrp1, edgeStats);
-
 		// Create a comparison graph to hold our group comparison results
-		unique_ptr<CompareGraph> cmpGraph(new CompareGraph(_vertCount, _lu));
+		unique_ptr<CompareGraph> randomGraph(new CompareGraph(_nodeCount, _lu, (float)_threshold->Value));
 
-		// Loop through edge stats and calc	our measures
-		for(vector<CompareEdge>::size_type idx=0; idx<edgeStats.size(); ++idx)
-		{
-			// Edge level testing - If this tstat is bigger than our grp tstat, increment the count
-			if(abs(edgeStats[idx].TStat) >= abs(_grpStats[idx].TStat))
-				_grpStats[idx].RightTailCount++;
+		// Calculate edge group comparison
+		randomGraph->AddEdges( CalcEdgeComparison(idxs, szGrp1) );
 
-			// TODO: Eventually store this as a graph tag so we can have multiple pieces of info stored with our edges
-			// NBS level testing - Add this to the NBS graph if above our threshold, we will calc the size of the cmp soon
-			if(abs(edgeStats[idx].TStat) > _threshold->Value)
-			{
-				// Lookup our edge
-				pair<int, int> edge = _lu->GetEdge(idx);
-				
-				// Add our edge to the group graph
-				cmpGraph->AddEdge(edge.first, edge.second, edgeStats[idx]);
-			}
-		}
+		// Calculate node group comparison
+		randomGraph->AddNodes( CalcNodeComparison(idxs, szGrp1) );
 
-		// NBS calcs
-		vector<Component> cmps;
+		// Calculate NBS components
+		randomGraph->ComputeComponents();
 
-		//// Calculate our largest component
-		//ComputeComponents(g, supraThreshEdgeIdxs, cmps);
+		// Update our edge stats with our random values
+		_cmpGraph->UpdateEdgeStats( randomGraph->Edges );
 
-		// Find the biggest component
-		int maxEdgeCount = 0, maxId = 0;
-		//for(auto &cmp : cmps)
-		//{
-		//	int cmpEdgeCount = cmp.Edges.size();
-		//	if(cmpEdgeCount > maxEdgeCount)
-		//	{
-		//		maxEdgeCount = cmpEdgeCount;
-		//		maxId = cmp.Identifier;
-		//	}
-		//}
+		//_cmpGraph->UpdateComponentStats( randomGraph->GetLargestComponent() );
+		
+		//_cmpGraph->UpdateGlobalStats( ??? );
 
-		//// Increment rt tail if this is larger than the actual component
-		//for(auto &cmp : _grpComponent)
-		//{
-		//	if(maxEdgeCount >= cmp.Edges.size())
-		//		++cmp.RightTailExtent;
-		//}
+		// TODO: Make these methods more efficient by not searching for largest multiple times
+		// Get the largest components
+		auto lrgstRndmCmp = randomGraph->GetLargestComponent();
+		auto lrgstRealCmp = _cmpGraph->GetLargestComponent();
 
-		//// Keep track of permutations
-		//++_permutations;
+		if(lrgstRndmCmp->Edges.size() > lrgstRealCmp->Edges.size())
+			lrgstRealCmp->RightTailExtent++;
 
-		return cmps[maxId];
+		return lrgstRndmCmp;
 	}
 }}}

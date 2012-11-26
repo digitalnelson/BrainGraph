@@ -8,6 +8,8 @@
 #include <vector>
 #include <map>
 #include <iostream>
+
+#include <collection.h>
 #include <math.h>
 #include <ppl.h>
 #include <amp.h>

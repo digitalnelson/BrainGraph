@@ -68,5 +68,8 @@
     <ClInclude Include="BindableBase.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="SingleDatatypeSupport.h">
+      <Filter>Graph</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

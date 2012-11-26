@@ -1,11 +1,18 @@
 #include "pch.h"
-#include "MultiDatatypeCompare.h"
+#include "collection.h"
+#include "Subject.h"
+#include "SubjectGraphEdge.h"
 #include "SingleDatatypeCompare.h"
+#include "MultiDatatypeCompare.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
 	using namespace std;
 	using namespace concurrency;
+	using namespace Platform;
+	using namespace Windows::Foundation;
+	using namespace Windows::Foundation::Collections;
+	using namespace BrainGraph::Compute::Subjects;
 
 	MultiDatatypeCompare::MultiDatatypeCompare(int verts, int edges, IVector<Threshold^>^ thresholds)
 	{
@@ -29,7 +36,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		_subjectCount = group1->Size + group2->Size;
 
 		for(auto dataThreshold : _dataThresholds)
-			_dataByType[dataThreshold->DataType] = shared_ptr<SingleDatatypeCompare>(new SingleDatatypeCompare(_subjectCount, _vertices, _edges, dataThreshold));
+			_groupCompareByType[dataThreshold->DataType] = shared_ptr<SingleDatatypeCompare>(new SingleDatatypeCompare(_subjectCount, _vertices, _edges, dataThreshold));
 
 		for(auto subject : group1)
 			AddSubject("group1", subject);
@@ -41,8 +48,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	void MultiDatatypeCompare::AddSubject(String^ groupId, Subject^ subject)
 	{
 		// Loop through the graphs for this subject
-		for(auto dataType : _dataThresholds)
-			_dataByType[dataType->DataType]->AddSubject( subject );
+		for(auto thresh : _dataThresholds)
+			_groupCompareByType[thresh->DataType]->AddSubject( subject );
 
 		// Add our subject idx to the proper group vector
 		_subIdxsByGroup[groupId].push_back(_subCounter);
@@ -67,18 +74,18 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		vector<int> nodeCounts(_vertices);
 
 		// Loop through our comparisons and call compare group passing our actual subject labels
-		for(auto &dataItem : _dataByType)
+		for(auto &groupCompareItem : _groupCompareByType)
 		{
 			// Compare the two groups for this data type
-			Component cmp = dataItem.second->CompareGroups(idxs, _group1Count);
+			auto cmp = groupCompareItem.second->Compare(idxs, _group1Count);
 
 			// Pull out the vertices and store then in our counting map
-			for(auto vert : cmp.Vertices)
+			for(auto vert : cmp->Vertices)
 				++nodeCounts[vert];
 		}
 
 		// Calculate how many nodes overlap between all of the data types
-		int maxOverlap = _dataByType.size();
+		int maxOverlap = _groupCompareByType.size();
 		for(auto nc=0; nc<nodeCounts.size();++nc)
 		{
 			_verticesById[nc] = shared_ptr<Vertex>(new Vertex());
@@ -92,45 +99,65 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	}
 
-	void MultiDatatypeCompare::Permute(const vector<vector<int>> &permutations)
+	IAsyncActionWithProgress<int>^ MultiDatatypeCompare::Permute(int permutations)
 	{
-		for(int i=0; i<permutations.size(); i++)
-		//parallel_for_each(begin(permutations), end(permutations), [=, &threshes] (const vector<int> &subIdxs)
-		{	
-			std::vector<int> nodeCounts(_vertices);
+		// Put together a list of idxs representing our two groups
+		vector<int> idxs;
+		for(auto itm : _subIdxsByGroup["group1"])
+			idxs.push_back(itm);
+		for(auto itm : _subIdxsByGroup["group2"])
+			idxs.push_back(itm);
 
-			// Loop through our comparisons and call permute on them passing our new random subject assortement
-			for(auto &dataItem : _dataByType)
-			//parallel_for_each(begin(_dataByType), end(_dataByType), [=, &subIdxs, &threshes, &nodeCounts] (pair<String^, shared_ptr<SingleDatatypeCompare>> item)
-			{
-				// Run the permutation for this index arrangement
-				Component cmp = dataItem.second->Permute(subIdxs, _group1Count);
+		// Keep track of our group 1 size for the permutation step
+		auto group1Count = _subIdxsByGroup["group1"].size();
 
-				// Pull out the vertices and store then in our counting map
-				for(auto vert : cmp.Vertices)
-					++nodeCounts[vert];
-			}//);
+		IAsyncActionWithProgress<int>^ action_with_progress = create_async( [=, &idxs] ( progress_reporter<int> reporter ) 
+		{
+			for(int i=0; i<permutations; i++)
+			//parallel_for_each(begin(permutations), end(permutations), [=, &threshes] (const vector<int> &subIdxs)
+			{	
+				// Shuffle subjects randomly
+				random_shuffle(idxs.begin(), idxs.end());
 
-			// Calculate how many nodes overlap between all of the nodes
-			int permOverlap = 0, maxOverlap = _dataByType.size();
-			for(auto nc=0; nc<nodeCounts.size();++nc)
-			{
-				if(nodeCounts[nc] == maxOverlap)
+				// Vector for counting node overlap
+				std::vector<int> nodeCounts(_vertices);
+
+				// Loop through our comparisons and call permute on them passing our new random subject assortement
+				for(auto &groupCompareItem : _groupCompareByType)
 				{
-					_verticesById[nc]->RandomOverlapCount++;
-					++permOverlap;
+					// Compare the two groups for this data type
+					auto cmp = groupCompareItem.second->Permute(idxs, group1Count);
+
+					// Pull out the vertices and store then in our counting map
+					for(auto vert : cmp->Vertices)
+						++nodeCounts[vert];
 				}
-			}
 
-			if(_overlapDistribution.count(permOverlap) == 0)
-				_overlapDistribution[permOverlap] = 0;
+				// Calculate how many nodes overlap between all of the nodes
+				int permOverlap = 0, maxOverlap = _groupCompareByType.size();
+				for(auto nc=0; nc<nodeCounts.size();++nc)
+				{
+					if(nodeCounts[nc] == maxOverlap)
+					{
+						_verticesById[nc]->RandomOverlapCount++;
+						++permOverlap;
+					}
+				}
+
+				if(_overlapDistribution.count(permOverlap) == 0)
+					_overlapDistribution[permOverlap] = 0;
 			
-			_overlapDistribution[permOverlap]++;
+				_overlapDistribution[permOverlap]++;
 
-			// NBS multimodal compare
-			if(permOverlap >= _realOverlap)
-				++_rightTailOverlapCount;
-		}//);
+				// NBS multimodal compare
+				if(permOverlap >= _realOverlap)
+					++_rightTailOverlapCount;
+
+				reporter.report(permutations);
+			}//);
+		});
+
+		return action_with_progress;
 	}
 
 	//std::unique_ptr<Overlap> MultiDatatypeCompare::GetOverlapResult()

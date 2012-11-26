@@ -91,8 +91,11 @@ namespace BrainGraph.WinStore
 						Threshold t = new Threshold()
 						{
 							DataType = itm.Key,
-							Value = 2
+							Value = 2.1
 						};
+
+						if (t.DataType == "fMRI-mo")
+							t.Value = 5.0;
 
 						dataTypes.Add(t);
 					}
@@ -100,6 +103,7 @@ namespace BrainGraph.WinStore
 
 				_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
 				_computeService.CompareGroups();
+				_computeService.PermuteGroups(5000);
 			}
 			else if (popupType != null)
 			{

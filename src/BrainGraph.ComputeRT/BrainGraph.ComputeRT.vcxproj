@@ -208,6 +208,7 @@
   <ItemGroup>
     <ClInclude Include="BindableBase.h" />
     <ClInclude Include="CompareGraphSupport.h" />
+    <ClInclude Include="SingleDatatypeSupport.h" />
     <ClInclude Include="SubjectGraphEdge.h" />
     <ClInclude Include="MultiDatatypeSupport.h" />
     <ClInclude Include="SingleDatatypeCompare.h" />

@@ -8,13 +8,15 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	using namespace Platform;
 	namespace WFC = Windows::Foundation::Collections;
 
+	ref class Subject;
+
 	public ref class SubjectGraph sealed
 	{
 	public:
 		SubjectGraph(int nVerts);
 		void AddEdge(int i, int j, double val);
-		void AddGraphLines(WFC::IVector<String^>^ lines);
 
+		property Subject^ Subject;
 		property String^ DataType;
 
 	internal:
@@ -22,7 +24,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		float GlobalStrength();
 		void GetMeanVtxStrength(vector<float> &meanVtxStr);
 
-		vector<SubjectGraphEdge> Edges;
+		std::vector<SubjectGraphEdge> Edges;
+		std::vector<SubjectGraphNode> Nodes;
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;

@@ -1,15 +1,11 @@
 #pragma once
-#include "CompareGraphSupport.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	using namespace std;
-	using namespace Platform;
-
 	public ref class Threshold sealed
 	{
 	public:
-		property String^ DataType;
+		property Platform::String^ DataType;
 		property double Value;
 	};
 
@@ -27,15 +23,17 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	};
 
+	struct Component;
+
 	public ref class Overlap sealed
 	{
 		
 	private:
-		vector<shared_ptr<Vertex>> Vertices;
+		std::vector<std::shared_ptr<Vertex>> Vertices;
 		
 		int RightTailOverlapCount;
 		
-		map<String^, vector<Component>> Components;
-		map<int, int> Distribution;
+		std::map<Platform::String^, std::vector<Component>> Components;
+		std::map<int, int> Distribution;
 	};
 }}}

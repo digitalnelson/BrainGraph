@@ -2,24 +2,17 @@
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	using namespace std;
-
-	struct CompareEdge
+	struct TStat
 	{
-		CompareEdge()
+		TStat()
 		{
-			Idx = 0;
 			M1 = 0;
 			M2 = 0;
 			V1 = 0;
 			V2 = 0;
-			TStat = 0;
-			PValue = 0;
-			RightTailCount = 0;
+			Value = 0;
+			TwoTailCount = 0;
 		}
-
-		int Idx;
-		std::pair<int, int> Vertices;
 
 		float M1;
 		float M2;
@@ -27,27 +20,46 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		float V1;
 		float V2;
 	
-		float TStat;
-	
-		float PValue;
-		int RightTailCount;
+		float Value;
+		int TwoTailCount;
 	};
 
-	struct ComponentEdge
+	struct CompareEdge
 	{
-		int ComponentIndex;
+		CompareEdge()
+		{
+			Index = 0;
+			AboveNBSThreshold = false;
+		}
 
-		std::pair<int, int> Edge;
-		int EdgeIndex;
+		int Index;
+		std::pair<int, int> Nodes;
+		bool AboveNBSThreshold;
 
-		shared_ptr<CompareEdge> EdgeValue;
+		TStat Stats;
+	};
+
+	struct CompareNode
+	{
+		CompareNode()
+		{
+			Index = 0;
+		}
+
+		int Index;
+
+		TStat Degree;
+		TStat Strength;
+		TStat Diversity;
 	};
 
 	struct Component
 	{
 		int Identifier;
-		vector<shared_ptr<ComponentEdge>> Edges;
-		vector<int> Vertices;
+		std::vector<std::shared_ptr<CompareEdge>> Edges;
+		//std::vector<std::shared_ptr<CompareNode>> Nodes;
+
+		std::vector<int> Vertices;  // TODO: Deprec
 
 		int RightTailExtent;
 	};

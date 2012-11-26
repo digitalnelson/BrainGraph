@@ -3,10 +3,6 @@
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
-	using namespace Windows::ApplicationModel::Core;
-	using namespace Windows::Foundation;
-	using namespace Windows::UI::Core;
-	using namespace Windows::UI::Xaml;
 
 	void Subject::AddEventId(String^ eventId)
 	{
