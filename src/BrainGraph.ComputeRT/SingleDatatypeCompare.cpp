@@ -13,8 +13,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	SingleDatatypeCompare::SingleDatatypeCompare(int subjectCount, int nodes, int edges, Threshold ^threshold) : 
 		_edges(edges),
-		_nodes(nodes),
-		_globals(subjectCount)
+		_nodes(nodes)
 	{
 		_lu = make_shared<GraphLookup>(nodes);
 		_cmpGraph = make_shared<CompareGraph>(nodes, _lu, (float)threshold->Value);
@@ -23,15 +22,6 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		_subjectCount = subjectCount;
 		_nodeCount = nodes;
 		_edgeCount = edges;
-
-		//// Preallocate our edge mtx
-		//for(auto i=0; i<edges; ++i)
-		//	_edges[i].resize(subjectCount);
-		//// Preallocate our node mtx
-		//for(auto i=0; i<nodes; ++i)
-		//	_nodes[i].resize(subjectCount);
-		//// Preallocate our global mtx
-		//_globals.resize(subjectCount);
 	}
 
 	SingleDatatypeCompare::~SingleDatatypeCompare(void)
@@ -40,6 +30,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	void SingleDatatypeCompare::AddSubject(Subject^ subject)
 	{
 		// TODO: What to do if the graph does not exist?
+
 		// Pull out the graph for this datatype
 		auto graph = subject->Graphs->Lookup(_threshold->DataType);
 
@@ -51,7 +42,10 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		for(auto nodeIdx=0; nodeIdx<_nodeCount; ++nodeIdx)
 			_nodes[nodeIdx].push_back(graph->Nodes[nodeIdx]);
 
-		// TODO: Store our globals
+		// Store our globals
+		SubjectGraphGlobal sgg;
+		sgg.Strength = graph->GlobalStrength();
+		_globals.push_back(sgg);
 	}
 
 	// Calculate a edge stats for the two groups based on the indexes passed in
@@ -115,12 +109,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 				if (idx < szGrp1)
 				{
 					calcDegree.IncludeValue(0, nodeVal.Degree);
-					calcStrength.IncludeValue(0, nodeVal.Strength);
+					calcStrength.IncludeValue(0, nodeVal.TotalStrength);
 				}
 				else
 				{
 					calcDegree.IncludeValue(1, nodeVal.Degree);
-					calcStrength.IncludeValue(1, nodeVal.Strength);
+					calcStrength.IncludeValue(1, nodeVal.TotalStrength);
 				}
 			}
 
@@ -136,6 +130,33 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		return nodeStats;
 	}
 
+	shared_ptr<CompareGlobal> SingleDatatypeCompare::CalcGlobalComparison(vector<int> &idxs, int szGrp1)
+	{
+		// TODO: Probably need to make this thread safe
+		shared_ptr<CompareGlobal> globalStats = make_shared<CompareGlobal>();
+
+		TStatCalc calcStrength;
+		
+		// Loop through the vals we were passed
+		for (int idx = 0; idx < _subjectCount; ++idx)
+		{
+			auto globalVal = _globals[idxs[idx]];
+
+			if (idx < szGrp1)
+			{
+				calcStrength.IncludeValue(0, globalVal.Strength);
+			}
+			else
+			{
+				calcStrength.IncludeValue(1, globalVal.Strength);
+			}
+		}
+			
+		globalStats->Strength = calcStrength.Calculate();
+
+		return globalStats;
+	}
+
 	shared_ptr<CompareGraph> SingleDatatypeCompare::Compare(vector<int> &idxs, int szGrp1)
 	{
 		// Calculate edge group comparison
@@ -147,11 +168,10 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// Calculate NBS components
 		_cmpGraph->ComputeComponents();
 
-		//// COMPUTE GLOBAL ANALYSES
-		// TODO: Global strength
-		// TODO: Global diversity
+		// Calculate global group comparison
+		_cmpGraph->SetGlobal( CalcGlobalComparison(idxs, szGrp1) );
 
-		// Return the largest component
+		// Return our real comparison graph
 		return _cmpGraph;
 	}
 
@@ -169,14 +189,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// Calculate NBS components
 		randomGraph->ComputeComponents();
 
+		// Calculate global group comparison
+		randomGraph->SetGlobal( CalcGlobalComparison(idxs, szGrp1) );
+
 		// Update our edge stats with our random values
 		_cmpGraph->UpdateEdgeStats( randomGraph->Edges );
 
 		//_cmpGraph->UpdateComponentStats( randomGraph->GetLargestComponent() );
 		
-		//_cmpGraph->UpdateGlobalStats( ??? );
+		_cmpGraph->UpdateGlobalStats( randomGraph->Global );
 
-		// TODO: Make these methods more efficient by not searching for largest multiple times
 		// Get the largest components
 		auto lrgstRndmCmp = randomGraph->GetLargestComponent();
 		auto lrgstRealCmp = _cmpGraph->GetLargestComponent();

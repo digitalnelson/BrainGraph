@@ -18,17 +18,12 @@ namespace BrainGraph.WinStore.Services
 		GroupTwo
 	}
 
-	public class PermutationProgress
-	{
-		public int Complete { get; set; }
-	}
-
 	public interface IComputeService
 	{
 		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
-        Task PermuteGroups(int permutations, AsyncActionProgressHandler<int> progressHandler);
-		Overlap GetResults();
+		IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations);
+		void GetResults();
 	}
 
 	public class ComputeService : IComputeService
@@ -46,64 +41,17 @@ namespace BrainGraph.WinStore.Services
 
 		public void CompareGroups()
 		{
-			if (_compare != null)
-				_compare.Compare();
+			_compare.Compare();
 		}
 
-		public Task PermuteGroups(int permutations, AsyncActionProgressHandler<int> progressHandler)
+		public IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations)
 		{
-			var tsk = _compare.PermuteAsyncWithProgress(permutations);
-            tsk.Progress += progressHandler;
-
-            //tsk.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
-            //{
-            //    int i = p;
-            //});
-
-            return tsk.AsTask();
-
-			//if (_compare != null)
-			//{
-			//	int batchSize = 5000;
-			//	int numComplete = 0;
-
-			//	//progress.Report(new PermutationProgress { Complete = 0 });
-
-			//	while(numComplete < permutations)
-			//	{
-			//		int leftOver = permutations - numComplete;
-			//		int nextBatch = batchSize < leftOver ? batchSize : leftOver;
-
-			//		// Generate a bunch of random subject idxs
-			//		List<int> subjects = new List<int>();
-			//		for (int i = 0; i < _filteredSubjectData.Count; i++)
-			//			subjects.Add(i);
-
-			//		Random rnd = new Random();
-			//		var subjPermutations = new List<List<int>>();
-			//		for (int p = 0; p < nextBatch; p++)
-			//		{
-			//			var randomizedList = from item in subjects
-			//								 orderby rnd.Next()
-			//								 select item;
-
-			//			subjPermutations.Add(randomizedList.ToList());
-			//		}
-
-			//		// Run our permutation
-			//		//_compare.Permute(nextBatch, subjPermutations, _dataTypes);
-
-			//		numComplete += nextBatch;
-			//		progress.Report(new PermutationProgress { Complete = numComplete });
-			//	}
-
-			//	//_eventAggregator.Publish(new NBSResultsAvailable());
-			//}
+			return _compare.PermuteAsyncWithProgress(permutations);
 		}
 
-		public Overlap GetResults()
+		public void GetResults()
 		{
-			return null; //_compare.GetResult();
+			_compare.GetResult();
 		}
 	}
 }

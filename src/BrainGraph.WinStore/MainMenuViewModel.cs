@@ -31,7 +31,8 @@ namespace BrainGraph.WinStore
 		private IComputeService _computeService;
 		#endregion
 
-        private RunExperimentViewModel _running = new RunExperimentViewModel();
+        private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
+        private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
 
 		public MainMenuViewModel()
 		{
@@ -47,32 +48,11 @@ namespace BrainGraph.WinStore
 				_computeService = IoC.Get<IComputeService>();
 
 				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
-                Groups.Add(new MenuGroup { Title = "Experiment", Items = { new PermutationViewModel(), _running } });
-				Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
-				Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
-			}
-			//else
-			//{
-			//	Groups.Add(new MenuGroup { Title = "Source", Items = { new RegionsViewModel(), new SubjectsViewModel(), new PermutationViewModel() } });
-			//	Groups.Add(new MenuGroup { Title = "Measures", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, } });
-			//	Groups.Add(new MenuGroup { Title = "NBSm", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, } });
-			//}
-		}
-
-		public async void SetWorkingFolder(RoutedEventArgs eventArgs)
-		{
-			FolderPicker wkPicker = new FolderPicker();
-			wkPicker.ViewMode = PickerViewMode.List;
-			wkPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
-			wkPicker.FileTypeFilter.Add(".txt");
-
-			var folder = await wkPicker.PickSingleFolderAsync();
-			if (folder != null)
-			{
-				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-				roamingSettings.Values["WorkingFolder"] = folder.Path;
-
-				_eventAggregator.Publish(new SettingWorkingFolderUpdated());
+                Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
+				Groups.Add(new MenuGroup { Title = "Global", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Nodal", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Degree" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Edge", Items = { new MenuItem { Title = "Significance" }, new MenuItem { Title = "Associations" }, } });
 			}
 		}
 
@@ -83,38 +63,52 @@ namespace BrainGraph.WinStore
 
 			if (menuItem is RunExperimentViewModel)
 			{
-				var dtItms = _subjectFilterService.GetDataTypeSettings();
+                int permutations = Int32.Parse(_permutations.Permutations);
 
-				List<Threshold> dataTypes = new List<Threshold>();
-				foreach (var itm in dtItms)
-				{
-					if (itm.Value)
-					{
-						Threshold t = new Threshold()
-						{
-							DataType = itm.Key,
-							Value = 2.1
-						};
-
-						if (t.DataType == "fMRI-mo")
-							t.Value = 5.0;
-
-						dataTypes.Add(t);
-					}
-				}
-
-				_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
-				_computeService.CompareGroups();
-				
-                var permutation = _computeService.PermuteGroups(5000, new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+                if (permutations > 0)
                 {
-                    _running.PrimaryValue = p.ToString();
-                }));
+                    var dtItms = _subjectFilterService.GetDataTypeSettings();
 
-                await permutation.ContinueWith( (_) => 
+                    List<Threshold> dataTypes = new List<Threshold>();
+                    foreach (var itm in dtItms)
                     {
-                        _running.PrimaryValue = "5000";
+                        if (itm.Value)
+                        {
+                            Threshold t = new Threshold()
+                            {
+                                DataType = itm.Key,
+                                Value = 2.1
+                            };
+
+                            if (t.DataType == "fMRI-mo")
+                                t.Value = 5.0;
+
+                            dataTypes.Add(t);
+                        }
+                    }
+
+					// Load the subjects into the compute service
+                    _computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
+                    
+					// Compare groups based on real labels
+					_computeService.CompareGroups();
+
+					// Create our async permutation computation to figure out p values
+                    var permutation = _computeService.PermuteGroupsAsync(permutations);
+					
+					// Handle progress reporting
+					permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+                    {
+                        _running.PrimaryValue = p.ToString();
                     });
+
+					// Run the thingy and fix the display when it finishes
+                    await permutation.AsTask().ContinueWith((_) =>
+                    {
+                        _running.PrimaryValue = permutations.ToString();
+						_computeService.GetResults();
+                    });
+                }
 			}
 			else if (popupType != null)
 			{

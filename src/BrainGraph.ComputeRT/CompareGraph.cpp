@@ -16,6 +16,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	CompareGraph::~CompareGraph(void)
 	{}
 
+	// TODO: Consider applying move semantics here
 	void CompareGraph::AddEdges(std::vector<std::shared_ptr<CompareEdge>> &edges)
 	{
 		for(auto edge : edges)
@@ -28,6 +29,11 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			Nodes.push_back(node);
 	}
 
+	void CompareGraph::SetGlobal(std::shared_ptr<CompareGlobal> global)
+	{
+		Global = global;
+	}
+
 	void CompareGraph::UpdateEdgeStats(std::vector<std::shared_ptr<CompareEdge>> &edges)
 	{
 		for(auto idx=0; idx<edges.size(); ++idx)
@@ -36,6 +42,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			if(abs(edges[idx]->Stats.Value) >= abs(this->Edges[idx]->Stats.Value))
 				this->Edges[idx]->Stats.TwoTailCount++;
 		}
+	}
+
+	void CompareGraph::UpdateGlobalStats(std::shared_ptr<CompareGlobal> global)
+	{
+		if(abs(global->Strength.Value) >= abs(Global->Strength.Value))
+			Global->Strength.TwoTailCount++;
 	}
 
 	void CompareGraph::ComputeComponents()

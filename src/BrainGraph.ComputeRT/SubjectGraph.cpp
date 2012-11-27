@@ -31,65 +31,29 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 
 		if(val > 0)
 		{
+			// Update the degree - note: this will only be valid in some data types
 			Nodes[i].Degree += 1;
 			Nodes[j].Degree += 1;
+
+			// Update the total strength
+			Nodes[i].TotalStrength += val;
+			Nodes[j].TotalStrength += val;
 		}
 	}
-
-	//SubjectGraphEdge SubjectGraph::GetEdge(int i, int j)
-	//{
-	//	// TODO: Figure out how to do a lookup on this
-	//	int idx = 0; //_lu->GetEdge(i, j);
-	//	return Edges[idx];
-	//}
 
 	float SubjectGraph::GlobalStrength()
 	{
-		/*std::vector<float> roiStrs;
-
-		for(int vert=0; vert<_nVerts; vert++)
+		if(_nVerts != 0)
 		{
-			float gsRoi = 0;
-			for(int overt=0; overt<_nVerts; overt++)
-			{
-				if(vert != overt)
-				{
-					int idx = _lu->GetEdge(vert, overt);
-					gsRoi += EdgeValues[idx].Value;
-				}
-			}
+			float total = 0;
 
-			roiStrs.push_back(gsRoi / (_nVerts - 1));
+			for(auto node : Nodes)
+				total += ( node.TotalStrength / (_nVerts - 1));
+		
+			return total / _nVerts;
 		}
-
-		float gs = 0;
-
-		for (auto i : roiStrs)
-		{
-			gs += i;
-		}
-
-		return gs / _nVerts;*/
-
-		return 0;
-	}
-
-	void SubjectGraph::GetMeanVtxStrength(std::vector<float> &meanVtxStr)
-	{
-		/*for(int vert=0; vert<_nVerts; vert++)
-		{
-			float gsRoi = 0;
-			for(int overt=0; overt<_nVerts; overt++)
-			{
-				if(vert != overt)
-				{
-					int idx = _lu->GetEdge(vert, overt);
-					gsRoi += EdgeValues[idx].Value;
-				}
-			}
-
-			meanVtxStr.push_back(gsRoi / (_nVerts - 1));
-		}*/
+		else
+			return 0;
 	}
 
 }}}

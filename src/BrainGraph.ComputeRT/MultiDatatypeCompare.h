@@ -20,6 +20,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		void LoadSubjects(WFC::IVector<BCS::Subject^>^ group1, WFC::IVector<BCS::Subject^>^ group2);		
 		void Compare();
 		WF::IAsyncActionWithProgress<int>^ PermuteAsyncWithProgress(int permutations);
+		void GetResult();
 
 	private:
 		void AddSubject(Platform::String^ groupId, BCS::Subject^ itm);

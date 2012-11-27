@@ -22,20 +22,24 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		int Index;
 
 		float Degree;
-		float Strength;
-		float Diversity;
+		float TotalStrength;
 
 		SubjectGraphNode()
 		{
 			Index = 0;
 			Degree = 0;
-			Strength = 0;
-			Diversity = 0;
+			TotalStrength = 0;
 		}
 	};
 
 	struct SubjectGraphGlobal
 	{
+		float Strength;
+
+		SubjectGraphGlobal()
+		{
+			Strength = 0;
+		}
 	};
 
 }}}

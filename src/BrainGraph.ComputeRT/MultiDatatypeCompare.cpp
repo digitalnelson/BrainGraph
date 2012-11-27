@@ -172,6 +172,11 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		return action_with_progress;
 	}
 
+	void MultiDatatypeCompare::GetResult()
+	{
+		int i = 0;
+	}
+
 	//std::unique_ptr<Overlap> MultiDatatypeCompare::GetOverlapResult()
 	//{
 	//	unique_ptr<Overlap> overlap(new Overlap());

@@ -12,7 +12,7 @@
 	xmlns:Extensions="using:WinRTXamlToolkit.Controls.Extensions"
     mc:Ignorable="d">
 
-	<Page.BottomAppBar>
+	<!--<Page.BottomAppBar>
 		<AppBar>
 			<Grid>
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -28,7 +28,7 @@
 				</StackPanel>
 			</Grid>
 		</AppBar>
-	</Page.BottomAppBar>
+	</Page.BottomAppBar>-->
 
 	<UserControl.Resources>
 

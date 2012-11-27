@@ -13,10 +13,12 @@ namespace BrainGraph.WinStore.Screens.Sources
 		private ISubjectFilterService _subjectFilterService = IoC.Get<ISubjectFilterService>();
 		private SubjectsViewModel _svm;
 
-		public DataTypeViewModel(SubjectsViewModel svm)
+		public DataTypeViewModel(SubjectsViewModel svm, string title, bool isIncluded)
 		{
 			_svm = svm;
-			_inlIsIncluded = false;
+
+			_inlTitle = title;
+			_inlIsIncluded = isIncluded;
 		}
 
 		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
@@ -32,6 +34,7 @@ namespace BrainGraph.WinStore.Screens.Sources
 				// TODO: Async these
 
 				_subjectFilterService.AssignDataType(Title, _inlIsIncluded);
+				_subjectFilterService.FilterSubjects();
 
 				NotifyOfPropertyChange(() => IsIncluded);
 			}
@@ -43,10 +46,18 @@ namespace BrainGraph.WinStore.Screens.Sources
 		private ISubjectFilterService _subjectFilterService = IoC.Get<ISubjectFilterService>();
 		private SubjectsViewModel _svm;
 
-		public GroupViewModel(SubjectsViewModel svm)
+		public GroupViewModel(SubjectsViewModel svm, String studyGroup, ComputeGroup computeGroup)
 		{
 			_svm = svm;
-			_inlExperimentGroup = "None";
+
+			_inlStudyGroup = studyGroup;
+
+			if (computeGroup == ComputeGroup.GroupOne)
+				_inlExperimentGroup = "Group 1";
+			else if (computeGroup == ComputeGroup.GroupTwo)
+				_inlExperimentGroup = "Group 2";
+			else
+				_inlExperimentGroup = "None";
 		}
 
 		public string StudyGroup { get { return _inlStudyGroup; } set { _inlStudyGroup = value; NotifyOfPropertyChange(() => StudyGroup); } } private string _inlStudyGroup;

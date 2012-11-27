@@ -1,4 +1,6 @@
-﻿using BrainGraph.WinStore.Screens.Sources;
+﻿using BrainGraph.WinStore.Screens.Experiment;
+using BrainGraph.WinStore.Screens.Selection;
+using BrainGraph.WinStore.Screens.Sources;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using Ninject;
@@ -66,6 +68,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>().InSingletonScope();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
+            _kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
+            _kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)

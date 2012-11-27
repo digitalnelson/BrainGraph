@@ -25,6 +25,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	private:
 		vector<shared_ptr<CompareEdge>> CalcEdgeComparison(std::vector<int> &idxs, int szGrp1);
 		vector<shared_ptr<CompareNode>> CalcNodeComparison(vector<int> &idxs, int szGrp1);
+		shared_ptr<CompareGlobal> SingleDatatypeCompare::CalcGlobalComparison(vector<int> &idxs, int szGrp1);
 
 		int _subjectCount;
 		int _nodeCount;

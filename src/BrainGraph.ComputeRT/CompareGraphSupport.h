@@ -77,4 +77,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	};
 
+	struct CompareGlobal
+	{
+		TStat Strength;
+	};
+
 }}}

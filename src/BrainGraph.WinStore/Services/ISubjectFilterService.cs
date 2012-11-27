@@ -13,6 +13,7 @@ namespace BrainGraph.WinStore.Services
 	{
 		void AddSubject(Subject subject);
 		List<string> GetGroups();
+		Dictionary<string, ComputeGroup> GetGroupSettings();
 		List<string> GetDataTypes();
 		Dictionary<string, bool> GetDataTypeSettings();
 
@@ -42,8 +43,8 @@ namespace BrainGraph.WinStore.Services
 
 		public void AddSubject(Subject subject)
 		{
-			if(!_groupLookup.ContainsKey(subject.GroupId))
-				_groupLookup[subject.GroupId] = ComputeGroup.GroupNone;
+			if(!_groupLookup.ContainsKey(subject.GroupId.ToLower()))
+				_groupLookup[subject.GroupId.ToLower()] = ComputeGroup.GroupNone;
 
 			foreach (var graph in subject.Graphs)
 			{
@@ -59,6 +60,11 @@ namespace BrainGraph.WinStore.Services
 			return _groupLookup.Keys.ToList();
 		}
 
+		public Dictionary<string, ComputeGroup> GetGroupSettings()
+		{
+			return _groupLookup;
+		}
+
 		public List<string> GetDataTypes()
 		{
 			return _dataTypeLookup.Keys.ToList();
@@ -72,15 +78,11 @@ namespace BrainGraph.WinStore.Services
 		public void AssignGroup(string subjectGroup, ComputeGroup computeGroup)
 		{
 			_groupLookup[subjectGroup.ToLower()] = computeGroup;
-
-			// TODO: Save settings
 		}
 
 		public void AssignDataType(string dataType, bool enabled)
 		{
 			_dataTypeLookup[dataType] = enabled;
-
-			// TODO: Save settings
 		}
 
 		public void FilterSubjects()
