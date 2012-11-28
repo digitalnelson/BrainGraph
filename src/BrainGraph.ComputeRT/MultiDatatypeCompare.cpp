@@ -87,6 +87,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			// Pull out the vertices and store then in our counting map
 			for(auto vert : largestComponent->Vertices)
 				++nodeCounts[vert];
+
+			// Store our compare graph as one of our results
+			_compareGraphs[groupCompareItem.first] = compareGraph;
 		}
 
 		// Calculate how many nodes overlap between all of the data types
@@ -117,10 +120,10 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 			// Keep track of our group 1 size for the permutation step
 			auto group1Count = _subIdxsByGroup["group1"].size();
-			auto permCount = 0;
+			int &totalPerms = _permutations;
 
 			//for(int i=0; i<permutations; i++)
-			parallel_for(0, permutations, [=, &idxs, &permCount] (int permutation)
+			parallel_for(0, permutations, [=, &idxs, &totalPerms] (int permutation)
 			{	
 				// Shuffle subjects randomly
 				random_shuffle(idxs.begin(), idxs.end());
@@ -162,19 +165,46 @@ namespace BrainGraph { namespace Compute { namespace Graph
 				if(permOverlap >= _realOverlap)
 					++_rightTailOverlapCount;
 
-				++permCount;
+				++totalPerms;
 
-				if(permCount % 10 == 0)
-					reporter.report(permCount);
+				if(totalPerms % 10 == 0)
+					reporter.report(totalPerms);
 			});
 		});
 
 		return action_with_progress;
 	}
 
-	void MultiDatatypeCompare::GetResult()
+	MultiResult^ MultiDatatypeCompare::GetResult()
 	{
-		int i = 0;
+		auto result = ref new MultiResult();
+
+		for(auto compareGraphItm : _compareGraphs)
+		{
+			auto multiGraph = ref new MultiGraph();
+			multiGraph->Name = compareGraphItm.first;
+			
+			auto compareGraph = compareGraphItm.second;
+
+			for(auto compareNode : compareGraph->Nodes)
+			{
+				multiGraph->AddNode(compareNode);
+			}
+
+			for(auto compareEdge : compareGraph->Edges)
+			{
+				multiGraph->AddEdge(compareEdge);
+			}
+
+			result->AddGraph(multiGraph);
+		}
+
+		return result;
+	}
+
+	int MultiDatatypeCompare::GetPermutations()
+	{
+		return _permutations;
 	}
 
 	//std::unique_ptr<Overlap> MultiDatatypeCompare::GetOverlapResult()

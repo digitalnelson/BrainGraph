@@ -28,9 +28,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		property String^ Sex;
 		
 		property int GraphCount
-        {
-            int get() { return _graphs->Size; }
-        }
+		{
+			int get() { return _graphs->Size; }
+		}
 
 		property IVectorView<String^>^ EventIds
 		{

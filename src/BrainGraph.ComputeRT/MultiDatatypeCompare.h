@@ -20,7 +20,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		void LoadSubjects(WFC::IVector<BCS::Subject^>^ group1, WFC::IVector<BCS::Subject^>^ group2);		
 		void Compare();
 		WF::IAsyncActionWithProgress<int>^ PermuteAsyncWithProgress(int permutations);
-		void GetResult();
+		MultiResult^ GetResult();
+		int GetPermutations();
 
 	private:
 		void AddSubject(Platform::String^ groupId, BCS::Subject^ itm);
@@ -34,7 +35,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		std::map<Platform::String^, std::vector<int>> _subIdxsByGroup;
 		std::map<Platform::String^, std::shared_ptr<SingleDatatypeCompare>> _groupCompareByType;
+		
 		std::vector<Threshold^> _dataThresholds;
+		std::map<Platform::String^, shared_ptr<CompareGraph>> _compareGraphs;
 		
 		int _realOverlap;
 		int _rightTailOverlapCount;

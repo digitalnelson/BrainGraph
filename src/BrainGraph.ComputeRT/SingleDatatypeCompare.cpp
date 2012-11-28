@@ -195,6 +195,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// Update our edge stats with our random values
 		_cmpGraph->UpdateEdgeStats( randomGraph->Edges );
 
+		// Update our edge stats with our random values
+		_cmpGraph->UpdateNodeStats( randomGraph->Nodes );
+
 		//_cmpGraph->UpdateComponentStats( randomGraph->GetLargestComponent() );
 		
 		_cmpGraph->UpdateGlobalStats( randomGraph->Global );

@@ -31,8 +31,8 @@ namespace BrainGraph.WinStore.Screens.Sources
 
 		private const string SETTING_SUBJECT_FILE_TOKEN = "SubjectFileToken";
 		private const string SETTING_SUBJECT_DATA_FOLDER_TOKEN = "SubjectDataFolderToken";
-        private const string SETTING_SUBJECT_GROUPS = "SubjectGroups";
-        private const string SETTING_SELECTED_DATATYPES = "SelectedDataTypes";
+		private const string SETTING_SUBJECT_GROUPS = "SubjectGroups";
+		private const string SETTING_SELECTED_DATATYPES = "SelectedDataTypes";
 
 		private SubjectGroupViewModel _sgGroup1;
 		private SubjectGroupViewModel _sgGroup2;
@@ -205,27 +205,27 @@ namespace BrainGraph.WinStore.Screens.Sources
 					subViewModel.Refresh();
 				}
 
-                Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-                
-                // Load groups preferences
-                if (roamingSettings.Values.ContainsKey(SETTING_SUBJECT_GROUPS))
-                {
-                    var groups = roamingSettings.Values[SETTING_SUBJECT_GROUPS] as Windows.Storage.ApplicationDataCompositeValue;
-                    foreach (var group in groups)
-                        _subjectFilterService.AssignGroup(group.Key, (ComputeGroup)Enum.Parse(typeof(ComputeGroup), group.Value as string));
-                }
+				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+				
+				// Load groups preferences
+				if (roamingSettings.Values.ContainsKey(SETTING_SUBJECT_GROUPS))
+				{
+					var groups = roamingSettings.Values[SETTING_SUBJECT_GROUPS] as Windows.Storage.ApplicationDataCompositeValue;
+					foreach (var group in groups)
+						_subjectFilterService.AssignGroup(group.Key, (ComputeGroup)Enum.Parse(typeof(ComputeGroup), group.Value as string));
+				}
 
 				var subGroups = _subjectFilterService.GetGroupSettings();
 				foreach (var group in subGroups)
 					Groups.Add(new GroupViewModel(this, group.Key, group.Value));
 
-                // Load data type preferences
-                if (roamingSettings.Values.ContainsKey(SETTING_SELECTED_DATATYPES))
-                {
-                    var dataTypes = roamingSettings.Values[SETTING_SELECTED_DATATYPES] as Windows.Storage.ApplicationDataCompositeValue;
+				// Load data type preferences
+				if (roamingSettings.Values.ContainsKey(SETTING_SELECTED_DATATYPES))
+				{
+					var dataTypes = roamingSettings.Values[SETTING_SELECTED_DATATYPES] as Windows.Storage.ApplicationDataCompositeValue;
 					foreach (var dataType in dataTypes)
 						_subjectFilterService.AssignDataType(dataType.Key, (bool)dataType.Value);
-                }
+				}
 
 				var subDataTypes = _subjectFilterService.GetDataTypeSettings();
 				foreach (var dataType in subDataTypes)

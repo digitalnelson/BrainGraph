@@ -44,6 +44,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		}
 	}
 
+	void CompareGraph::UpdateNodeStats(std::vector<std::shared_ptr<CompareNode>> &nodes)
+	{
+		for(auto idx=0; idx<nodes.size(); ++idx)
+		{
+			// Edge level testing - If this tstat is bigger than our grp tstat, increment the count
+			if(abs(nodes[idx]->Strength.Value) >= abs(this->Nodes[idx]->Strength.Value))
+				this->Nodes[idx]->Strength.TwoTailCount++;
+		}
+	}
+
 	void CompareGraph::UpdateGlobalStats(std::shared_ptr<CompareGlobal> global)
 	{
 		if(abs(global->Strength.Value) >= abs(Global->Strength.Value))

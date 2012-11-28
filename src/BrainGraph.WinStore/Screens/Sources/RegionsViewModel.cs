@@ -1,15 +1,10 @@
 ﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Common.Viz;
-using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using OxyPlot;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;

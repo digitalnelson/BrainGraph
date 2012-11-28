@@ -17,6 +17,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		void SetGlobal(std::shared_ptr<CompareGlobal> global);
 
 		void UpdateEdgeStats(std::vector<std::shared_ptr<CompareEdge>> &edges);
+		void UpdateNodeStats(std::vector<std::shared_ptr<CompareNode>> &nodes);
 		void UpdateGlobalStats(std::shared_ptr<CompareGlobal> global);
 		
 		void ComputeComponents();

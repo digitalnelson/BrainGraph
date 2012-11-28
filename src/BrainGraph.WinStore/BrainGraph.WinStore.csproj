@@ -111,6 +111,7 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\Util\GridViewReadySelector.cs" />
+    <Compile Include="Events\PermutationCompleteEvent.cs" />
     <Compile Include="Events\SettingWorkingFolderUpdated.cs" />
     <Compile Include="Events\SubjectsFilteredEvent.cs" />
     <Compile Include="Models\ROI.cs" />
@@ -128,22 +129,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\Experiment\RunExperimentViewModel.cs" />
     <Compile Include="Screens\IMenuItem.cs" />
+    <Compile Include="Screens\Nodal\NodalStrengthViewModel.cs" />
+    <Compile Include="Screens\Nodal\NodalStrengthView.xaml.cs">
+      <DependentUpon>NodalStrengthView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Sources\RegionsView.xaml.cs">
       <DependentUpon>RegionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Sources\RegionsViewModel.cs" />
-    <Compile Include="Screens\Selection\DataTypesPopup.xaml.cs">
+    <Compile Include="Screens\Sources\Selection\DataTypesPopup.xaml.cs">
       <DependentUpon>DataTypesPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Selection\DataTypesViewModel.cs" />
+    <Compile Include="Screens\Sources\Selection\DataTypesViewModel.cs" />
     <Compile Include="Screens\Sources\GroupsPopup.xaml.cs">
       <DependentUpon>GroupsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Selection\GroupsViewModel.cs" />
-    <Compile Include="Screens\Selection\PermutationPopup.xaml.cs">
+    <Compile Include="Screens\Sources\Selection\GroupsViewModel.cs" />
+    <Compile Include="Screens\Sources\Selection\PermutationPopup.xaml.cs">
       <DependentUpon>PermutationPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Selection\PermutationViewModel.cs" />
+    <Compile Include="Screens\Sources\Selection\PermutationViewModel.cs" />
     <Compile Include="Screens\Sources\RegionViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectGroupViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectsFilterViewModels.cs" />
@@ -197,11 +202,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Nodal\NodalStrengthView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Sources\RegionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Selection\DataTypesPopup.xaml">
+    <Page Include="Screens\Sources\Selection\DataTypesPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -209,7 +218,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Selection\PermutationPopup.xaml">
+    <Page Include="Screens\Sources\Selection\PermutationPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -257,6 +266,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Screens\Component\" />
+    <Folder Include="Screens\Edge\" />
+    <Folder Include="Screens\Global\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

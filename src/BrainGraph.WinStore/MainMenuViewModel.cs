@@ -1,22 +1,18 @@
-﻿using BrainGraph.WinStore.Common;
+﻿using BrainGraph.Compute.Graph;
+using BrainGraph.WinStore.Common;
+using BrainGraph.WinStore.Events;
+using BrainGraph.WinStore.Screens;
+using BrainGraph.WinStore.Screens.Experiment;
+using BrainGraph.WinStore.Screens.Nodal;
+using BrainGraph.WinStore.Screens.Selection;
+using BrainGraph.WinStore.Screens.Sources;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using BrainGraph.WinStore.Screens;
-using BrainGraph.WinStore.Screens.Selection;
-using BrainGraph.WinStore.Screens.Sources;
-using Windows.Storage.Pickers;
-using BrainGraph.WinStore.Events;
-using BrainGraph.WinStore.Screens.Experiment;
-using BrainGraph.Compute.Graph;
 
 namespace BrainGraph.WinStore
 {
@@ -31,8 +27,9 @@ namespace BrainGraph.WinStore
 		private IComputeService _computeService;
 		#endregion
 
-        private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
-        private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
+		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
+		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
+		private NodalStrengthViewModel _nodalStrength = IoC.Get<NodalStrengthViewModel>();
 
 		public MainMenuViewModel()
 		{
@@ -48,10 +45,10 @@ namespace BrainGraph.WinStore
 				_computeService = IoC.Get<IComputeService>();
 
 				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
-                Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
+				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
 				Groups.Add(new MenuGroup { Title = "Global", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Nodal", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Degree" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Nodal", Items = { _nodalStrength, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Degree" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Edge", Items = { new MenuItem { Title = "Significance" }, new MenuItem { Title = "Associations" }, } });
 			}
 		}
@@ -63,52 +60,51 @@ namespace BrainGraph.WinStore
 
 			if (menuItem is RunExperimentViewModel)
 			{
-                int permutations = Int32.Parse(_permutations.Permutations);
+				int permutations = Int32.Parse(_permutations.Permutations);
 
-                if (permutations > 0)
-                {
-                    var dtItms = _subjectFilterService.GetDataTypeSettings();
+				if (permutations > 0)
+				{
+					var dtItms = _subjectFilterService.GetDataTypeSettings();
 
-                    List<Threshold> dataTypes = new List<Threshold>();
-                    foreach (var itm in dtItms)
-                    {
-                        if (itm.Value)
-                        {
-                            Threshold t = new Threshold()
-                            {
-                                DataType = itm.Key,
-                                Value = 2.1
-                            };
+					List<Threshold> dataTypes = new List<Threshold>();
+					foreach (var itm in dtItms)
+					{
+						if (itm.Value)
+						{
+							Threshold t = new Threshold()
+							{
+								DataType = itm.Key,
+								Value = 2.1
+							};
 
-                            if (t.DataType == "fMRI-mo")
-                                t.Value = 5.0;
+							if (t.DataType == "fMRI-mo")
+								t.Value = 5.0;
 
-                            dataTypes.Add(t);
-                        }
-                    }
+							dataTypes.Add(t);
+						}
+					}
 
 					// Load the subjects into the compute service
-                    _computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
-                    
+					_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
+					
 					// Compare groups based on real labels
 					_computeService.CompareGroups();
 
 					// Create our async permutation computation to figure out p values
-                    var permutation = _computeService.PermuteGroupsAsync(permutations);
+					var permutation = _computeService.PermuteGroupsAsync(permutations);
 					
 					// Handle progress reporting
 					permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
-                    {
-                        _running.PrimaryValue = p.ToString();
-                    });
+					{
+						_running.PrimaryValue = p.ToString();
+					});
 
 					// Run the thingy and fix the display when it finishes
-                    await permutation.AsTask().ContinueWith((_) =>
-                    {
-                        _running.PrimaryValue = permutations.ToString();
-						_computeService.GetResults();
-                    });
-                }
+					await permutation.AsTask();
+
+					_running.PrimaryValue = permutations.ToString();
+					_eventAggregator.Publish(new PermutationCompleteEvent());
+				}
 			}
 			else if (popupType != null)
 			{

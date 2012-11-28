@@ -1,4 +1,5 @@
 ﻿using BrainGraph.WinStore.Screens.Experiment;
+using BrainGraph.WinStore.Screens.Nodal;
 using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Screens.Sources;
 using BrainGraph.WinStore.Services;
@@ -6,47 +7,38 @@ using Caliburn.Micro;
 using Ninject;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
 namespace BrainGraph.WinStore
 {
-    /// <summary>
-    /// Provides application-specific behavior to supplement the default Application class.
-    /// </summary>
+	/// <summary>
+	/// Provides application-specific behavior to supplement the default Application class.
+	/// </summary>
 	public sealed partial class App
-    {
+	{
 		private IKernel _kernel;
 		private WinRTContainer container;
 
-        /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
-        /// executed, and as such is the logical equivalent of main() or WinMain().
-        /// </summary>
-        public App()
-        {
-            this.InitializeComponent();
+		/// <summary>
+		/// Initializes the singleton application object.  This is the first line of authored code
+		/// executed, and as such is the logical equivalent of main() or WinMain().
+		/// </summary>
+		public App()
+		{
+			this.InitializeComponent();
 
 			Application.Current.DebugSettings.IsBindingTracingEnabled = true;
 			//Application.Current.DebugSettings.IsOverdrawHeatMapEnabled = true;
 			Application.Current.DebugSettings.BindingFailed += DebugSettings_BindingFailed;
-        }
+		}
 
 		void DebugSettings_BindingFailed(object sender, BindingFailedEventArgs e)
-		{}
+		{
+			int i = 0;
+			string str = e.Message;
+		}
 
 		protected override void Configure()
 		{
@@ -66,10 +58,14 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<IComputeService>().To<ComputeService>().InSingletonScope();
 
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
+			
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>().InSingletonScope();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
-            _kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
-            _kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
+			_kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
+			
+			_kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
+
+			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)
@@ -145,5 +141,5 @@ namespace BrainGraph.WinStore
 		//	//TODO: Save application state and stop any background activity
 		//	deferral.Complete();
 		//}
-    }
+	}
 }

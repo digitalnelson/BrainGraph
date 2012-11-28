@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
-using BrainGraph.Compute.Graph;
+﻿using BrainGraph.Compute.Graph;
 using BrainGraph.Compute.Subjects;
-using BrainGraph.WinStore.Services;
+using Caliburn.Micro;
+using System.Collections.Generic;
 using Windows.Foundation;
 
 namespace BrainGraph.WinStore.Services
@@ -23,12 +18,14 @@ namespace BrainGraph.WinStore.Services
 		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
 		IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations);
-		void GetResults();
+		MultiResult GetResults();
+		int GetPermutations();
 	}
 
 	public class ComputeService : IComputeService
 	{
 		private MultiDatatypeCompare _compare;
+		private int _perms;
 
 		public ComputeService()
 		{}
@@ -49,9 +46,14 @@ namespace BrainGraph.WinStore.Services
 			return _compare.PermuteAsyncWithProgress(permutations);
 		}
 
-		public void GetResults()
+		public MultiResult GetResults()
 		{
-			_compare.GetResult();
+			return _compare.GetResult();
+		}
+
+		public int GetPermutations()
+		{
+			return _compare.GetPermutations();
 		}
 	}
 }
