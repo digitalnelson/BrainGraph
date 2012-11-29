@@ -42,6 +42,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		int _realOverlap;
 		int _rightTailOverlapCount;
 		int _permutations;
+
 		std::map<int, std::shared_ptr<Vertex>> _verticesById;
 		std::map<int, int> _overlapDistribution;
 	};

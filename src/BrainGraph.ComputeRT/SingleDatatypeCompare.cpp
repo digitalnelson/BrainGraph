@@ -106,15 +106,17 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			{
 				auto nodeVal = nodeValues[idxs[idx]];
 
+				float avgStrength = nodeVal.TotalStrength / _nodeCount;
+
 				if (idx < szGrp1)
 				{
 					calcDegree.IncludeValue(0, nodeVal.Degree);
-					calcStrength.IncludeValue(0, nodeVal.TotalStrength);
+					calcStrength.IncludeValue(0, avgStrength);
 				}
 				else
 				{
 					calcDegree.IncludeValue(1, nodeVal.Degree);
-					calcStrength.IncludeValue(1, nodeVal.TotalStrength);
+					calcStrength.IncludeValue(1, avgStrength);
 				}
 			}
 

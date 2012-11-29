@@ -8,11 +8,14 @@
     <Filter Include="Subjects">
       <UniqueIdentifier>{67ff26bb-557a-41ed-8250-f8f47e6122eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graph">
-      <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{dbda4698-d4e7-498f-9f05-eec97738e2c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multi">
+      <UniqueIdentifier>{1cc9898f-471d-4933-ad1e-831a52a73ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Single">
+      <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,16 +27,16 @@
       <Filter>Subjects</Filter>
     </ClCompile>
     <ClCompile Include="CompareGraph.cpp">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClCompile>
     <ClCompile Include="SingleDatatypeCompare.cpp">
-      <Filter>Graph</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiDatatypeCompare.cpp">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClCompile>
     <ClCompile Include="BindableBase.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiDatatypeCompare.cpp">
+      <Filter>Multi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,34 +45,40 @@
       <Filter>Subjects</Filter>
     </ClInclude>
     <ClInclude Include="GraphLookup.h">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClInclude>
     <ClInclude Include="SubjectGraph.h">
       <Filter>Subjects</Filter>
     </ClInclude>
     <ClInclude Include="CompareGraph.h">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClInclude>
     <ClInclude Include="SingleDatatypeCompare.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiDatatypeCompare.h">
-      <Filter>Graph</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiDatatypeSupport.h">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClInclude>
     <ClInclude Include="SubjectGraphEdge.h">
       <Filter>Subjects</Filter>
     </ClInclude>
     <ClInclude Include="CompareGraphSupport.h">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
     </ClInclude>
     <ClInclude Include="BindableBase.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="SingleDatatypeSupport.h">
-      <Filter>Graph</Filter>
+      <Filter>Single</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiDatatypeCompare.h">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiDatatypeSupport.h">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiGraph.h">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiTStat.h">
+      <Filter>Multi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -110,6 +110,7 @@
     <Compile Include="Common\GraphComponent.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\Util\StringFormatConverter.cs" />
     <Compile Include="Common\Util\GridViewReadySelector.cs" />
     <Compile Include="Events\PermutationCompleteEvent.cs" />
     <Compile Include="Events\SettingWorkingFolderUpdated.cs" />
@@ -127,6 +128,10 @@
     </Compile>
     <Compile Include="MainMenuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\Edge\EdgeSignificanceView.xaml.cs">
+      <DependentUpon>EdgeSignificanceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Edge\EdgeSignificanceViewModel.cs" />
     <Compile Include="Screens\Experiment\RunExperimentViewModel.cs" />
     <Compile Include="Screens\IMenuItem.cs" />
     <Compile Include="Screens\Nodal\NodalStrengthViewModel.cs" />
@@ -202,6 +207,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Edge\EdgeSignificanceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Nodal\NodalStrengthView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -269,7 +278,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Screens\Component\" />
-    <Folder Include="Screens\Edge\" />
     <Folder Include="Screens\Global\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

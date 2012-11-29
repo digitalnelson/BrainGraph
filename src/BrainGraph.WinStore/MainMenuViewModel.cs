@@ -2,6 +2,7 @@
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Screens;
+using BrainGraph.WinStore.Screens.Edge;
 using BrainGraph.WinStore.Screens.Experiment;
 using BrainGraph.WinStore.Screens.Nodal;
 using BrainGraph.WinStore.Screens.Selection;
@@ -49,7 +50,7 @@ namespace BrainGraph.WinStore
 				Groups.Add(new MenuGroup { Title = "Global", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Nodal", Items = { _nodalStrength, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Degree" }, new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Edge", Items = { new MenuItem { Title = "Significance" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Edge", Items = { IoC.Get<EdgeSignificanceViewModel>(), new MenuItem { Title = "Associations" }, } });
 			}
 		}
 

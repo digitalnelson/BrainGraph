@@ -1,4 +1,5 @@
-﻿using BrainGraph.WinStore.Screens.Experiment;
+﻿using BrainGraph.WinStore.Screens.Edge;
+using BrainGraph.WinStore.Screens.Experiment;
 using BrainGraph.WinStore.Screens.Nodal;
 using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Screens.Sources;
@@ -66,6 +67,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
 
 			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>().InSingletonScope();
+
+			_kernel.Bind<EdgeSignificanceViewModel>().To<EdgeSignificanceViewModel>().InSingletonScope();
 		}
 
 		protected override object GetInstance(Type service, string key)

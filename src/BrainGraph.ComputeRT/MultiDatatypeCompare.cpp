@@ -82,8 +82,6 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			// Pull out the largest component
 			auto largestComponent = compareGraph->GetLargestComponent();
 
-			double dDiff = largestComponent->GetAverageEdgeDifference();
-
 			// Pull out the vertices and store then in our counting map
 			for(auto vert : largestComponent->Vertices)
 				++nodeCounts[vert];
@@ -167,8 +165,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 				++totalPerms;
 
-				if(totalPerms % 10 == 0)
-					reporter.report(totalPerms);
+				int tmpPerms = totalPerms;
+				if(tmpPerms % 100 == 0)
+					reporter.report(tmpPerms);
 			});
 		});
 

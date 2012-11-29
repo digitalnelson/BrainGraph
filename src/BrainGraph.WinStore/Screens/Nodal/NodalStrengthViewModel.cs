@@ -1,19 +1,21 @@
 ﻿using BrainGraph.Compute.Graph;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
-using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BrainGraph.WinStore.Screens.Nodal
 {
 	public class NodalStrengthViewModel : ViewModelBase, IHandle<PermutationCompleteEvent>
 	{
-		private IEventAggregator _eventAggregator;
-		private IRegionService _regionService;
-		private IComputeService _computeService;
+		#region Private Service Vars
+		private IEventAggregator _eventAggregator = IoC.Get<IEventAggregator>();
+		private IRegionService _regionService = IoC.Get<IRegionService>();
+		private IComputeService _computeService = IoC.Get<IComputeService>();
+		#endregion
 
 		public NodalStrengthViewModel()
 		{
@@ -21,23 +23,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			PrimaryValue = "0";
 
 			NodeGroups = new BindableCollection<NodeGroupViewModel>();
-
-			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-			{
-				_eventAggregator = IoC.Get<IEventAggregator>();
-				_regionService = IoC.Get<IRegionService>();
-				_computeService = IoC.Get<IComputeService>();
-				_eventAggregator.Subscribe(this);
-			}
-
-			#region Sample Data
-			if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-			{
-				
-				NodeGroups.Add(new NodeGroupViewModel() { GroupName = "Data Type 1", Nodes = new BindableCollection<NodeViewModel>() { new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { RegionTitle = "This is ", PValue = "0.654", Difference = "-312.023" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" } } });
-				NodeGroups.Add(new NodeGroupViewModel() { GroupName = "Data Type 2", Nodes = new BindableCollection<NodeViewModel>() { new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" }, new NodeViewModel { DisplayName = "Test", RegionTitle = "Test" } } });
-			}
-			#endregion
+			_eventAggregator.Subscribe(this);
 		}
 
 		public void Handle(PermutationCompleteEvent message)
@@ -45,6 +31,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			IsReady = true;
 
 			int total = 0;
+			NodeGroups.Clear();
 
 			var regions = _regionService.GetRegionsByIndex();
 			var results = _computeService.GetResults();
@@ -52,30 +39,25 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 			foreach (var graph in results.Graphs)
 			{
-				NodeGroupViewModel ngvm = new NodeGroupViewModel();
-				ngvm.GroupName = graph.Name;
-				ngvm.Nodes = new BindableCollection<NodeViewModel>();
-
-				List<MultiNode> nodes = new List<MultiNode>();
+				List<NodeViewModel> nodes = new List<NodeViewModel>();
 
 				foreach (var node in graph.Nodes)
 				{
-					var pval = (double)node.Strength.TwoTailCount / (double)permutations;
+					var pval = (float)node.Strength.TwoTailCount / (float)permutations;
 
-					//if (pval < 0.05 && Math.Abs(node.Strength.Value) >= 2.0 )
-					if (pval < 0.05)
+					if (pval < 0.05 && Math.Abs(node.Strength.Value) >= 2.0 )
 					{
-						string strFormat = "####0.0###";
-
-						var nvm = new NodeViewModel();
+						var nvm = new NodeViewModel { RawNode = node };
 						nvm.RegionTitle = regions[node.Index].Name.Replace("_", " ");
-						nvm.Difference = (node.Strength.M1 - node.Strength.M2).ToString(strFormat);
-						nvm.PValue = pval.ToString(strFormat);
-						nvm.TStat = node.Strength.Value.ToString(strFormat);
+						nvm.PValue = pval;
 
-						ngvm.Nodes.Add(nvm);
+						nodes.Add(nvm);
 					}
 				}
+
+				NodeGroupViewModel ngvm = new NodeGroupViewModel();
+				ngvm.GroupName = graph.Name;
+				ngvm.Nodes.AddRange(nodes.OrderBy(n => n.RegionTitle));
 
 				NodeGroups.Add(ngvm);
 
@@ -103,10 +85,10 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 	public class NodeViewModel : Screen
 	{
-		public string RegionTitle { get { return _inlRegionTitle; } set { _inlRegionTitle = value; NotifyOfPropertyChange(() => RegionTitle); } } private string _inlRegionTitle;
-		
-		public string Difference { get { return _inlDifference; } set { _inlDifference = value; NotifyOfPropertyChange(() => Difference); } } private string _inlDifference;
-		public string TStat { get { return _inlTStat; } set { _inlTStat = value; NotifyOfPropertyChange(() => TStat); } } private string _inlTStat;
-		public string PValue { get { return _inlPValue; } set { _inlPValue = value; NotifyOfPropertyChange(() => PValue); } } private string _inlPValue;
+		public string RegionTitle { get; set; }
+		public MultiNode RawNode { get; set; }
+
+		public float PValue { get; set; }
+		public float Difference { get { return RawNode.Strength.M1 - RawNode.Strength.M2; } }
 	}
 }
