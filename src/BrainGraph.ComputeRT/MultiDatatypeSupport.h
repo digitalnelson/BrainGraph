@@ -1,6 +1,5 @@
 #pragma once
 #include "collection.h"
-#include "MultiGraph.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
@@ -14,18 +13,57 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property double Value;
 	};
 
-	struct Vertex
+	struct MultiNode
 	{
 		int Id;
 		bool IsFullOverlap;
 		int RandomOverlapCount;
 
-		Vertex()
+		MultiNode(int id)
 		{
-			Id = 0;
+			Id = id;
 			IsFullOverlap = false;
 			RandomOverlapCount = 0;
 		}
+	};
+
+	struct MultiGraph
+	{
+	public:
+		MultiGraph()
+		{
+			_fullOverlapTotal = 0;
+			_randomGraphOverlapCount = 0;
+		}
+
+		void AddNode(shared_ptr<MultiNode> node)
+		{
+			Nodes.push_back(node);
+			
+			if( node->IsFullOverlap )
+				++_fullOverlapTotal;
+		}
+
+		void IncrementNodalRandomOverlapCount(int index)
+		{
+			this->Nodes[index]->RandomOverlapCount++;
+		}
+
+		int GetTotalNodalOverlapCount()
+		{
+			return _fullOverlapTotal;
+		}
+
+		void IncrementGraphRandomOverlapCount()
+		{
+			++_randomGraphOverlapCount;
+		}
+
+		std::vector<shared_ptr<MultiNode>> Nodes;
+
+	private:
+		int _fullOverlapTotal;
+		int _randomGraphOverlapCount;
 	};
 
 	class Component;
@@ -34,36 +72,11 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	{
 		
 	private:
-		std::vector<std::shared_ptr<Vertex>> Vertices;
+		std::vector<std::shared_ptr<MultiNode>> Vertices;
 		
 		int RightTailOverlapCount;
 		
 		std::map<Platform::String^, std::vector<Component>> Components;
 		std::map<int, int> Distribution;
 	};
-
-	public ref class MultiGlobal sealed
-	{
-	};
-
-	public ref class MultiResult sealed
-	{
-	public:
-		MultiResult()
-		{
-			_graphs = ref new PC::Vector<MultiGraph^>();
-		}
-
-		property WFC::IVectorView<MultiGraph^>^ Graphs { WFC::IVectorView<MultiGraph^>^ get()  {  return _graphs->GetView(); } } 
-
-	internal:
-		void AddGraph(MultiGraph^ graph)
-		{
-			_graphs->Append(graph);
-		}
-
-	private:
-		PC::Vector<MultiGraph^>^ _graphs;
-	};
-
 }}}

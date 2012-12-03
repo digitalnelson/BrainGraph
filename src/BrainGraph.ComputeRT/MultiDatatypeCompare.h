@@ -1,5 +1,6 @@
 #pragma once
 #include "MultiDatatypeSupport.h"
+#include "MultiGraphViewModels.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
@@ -20,7 +21,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		void LoadSubjects(WFC::IVector<BCS::Subject^>^ group1, WFC::IVector<BCS::Subject^>^ group2);		
 		void Compare();
 		WF::IAsyncActionWithProgress<int>^ PermuteAsyncWithProgress(int permutations);
-		MultiResult^ GetResult();
+		MultiGraphViewModel^ GetResult();
 		int GetPermutations();
 
 	private:
@@ -39,12 +40,14 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		std::vector<Threshold^> _dataThresholds;
 		std::map<Platform::String^, shared_ptr<CompareGraph>> _compareGraphs;
 		
-		int _realOverlap;
-		int _rightTailOverlapCount;
+		//int _realOverlap;
+		//int _rightTailOverlapCount;
 		int _permutations;
 
-		std::map<int, std::shared_ptr<Vertex>> _verticesById;
-		std::map<int, int> _overlapDistribution;
+		//std::map<int, std::shared_ptr<Vertex>> _verticesById;
+		//std::map<int, int> _overlapDistribution;
+
+		std::shared_ptr<MultiGraph> _multiGraph;
 	};
 }}}
 

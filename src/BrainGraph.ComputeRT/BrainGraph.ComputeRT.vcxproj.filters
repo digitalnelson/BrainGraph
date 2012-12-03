@@ -74,10 +74,10 @@
     <ClInclude Include="MultiDatatypeSupport.h">
       <Filter>Multi</Filter>
     </ClInclude>
-    <ClInclude Include="MultiGraph.h">
-      <Filter>Multi</Filter>
+    <ClInclude Include="CompareGraphViewModels.h">
+      <Filter>Single</Filter>
     </ClInclude>
-    <ClInclude Include="MultiTStat.h">
+    <ClInclude Include="MultiGraphViewModels.h">
       <Filter>Multi</Filter>
     </ClInclude>
   </ItemGroup>

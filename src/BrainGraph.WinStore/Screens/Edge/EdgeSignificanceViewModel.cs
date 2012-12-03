@@ -21,7 +21,7 @@ namespace BrainGraph.WinStore.Screens.Edge
 			Title = "Significance";
 			PrimaryValue = "0";
 
-			EdgeGroups = new BindableCollection<EdgeGroupViewModel>();
+			EdgeGroups = new BindableCollection<EdgeSigGroupViewModel>();
 			_eventAggregator.Subscribe(this);
 		}
 
@@ -36,17 +36,42 @@ namespace BrainGraph.WinStore.Screens.Edge
 			var results = _computeService.GetResults();
 			int permutations = _computeService.GetPermutations();
 
+			PrimaryValue = "";
+
 			foreach (var graph in results.Graphs)
 			{
-				List<EdgeViewModel> edges = new List<EdgeViewModel>();
+				List<EdgeSigViewModel> edges = new List<EdgeSigViewModel>();
+
+				var pVals = new List<double>();
+				foreach (var edge in graph.Edges)
+				{
+					pVals.Add((double)edge.Weight.TwoTailCount / (double)permutations);
+				}
+
+				var qThresh = -1.0;
+				pVals.Sort();
+				for (var i = 0; i < pVals.Count; i++)
+				{
+					double dIdx = (double)i;
+					double dReg = (double)pVals.Count;
+					double qval = ((dIdx + 1) / dReg) * 0.05;
+
+					if (pVals[i] <= qval)
+					{
+						qThresh = qval;
+						continue;
+					}
+					else
+						break;
+				}
 
 				foreach (var edge in graph.Edges)
 				{
-					var pval = (float)edge.Weight.TwoTailCount / (float)permutations;
+					var pval = (double)edge.Weight.TwoTailCount / (double)permutations;
 
-					if (pval < 0.05 && Math.Abs(edge.Weight.Value) >= 2.0)
+					if (pval < qThresh)
 					{
-						var nvm = new EdgeViewModel { RawEdge = edge };
+						var nvm = new EdgeSigViewModel { RawEdge = edge };
 						nvm.NodeOneTitle = regions[edge.NodeOneIndex].Name.Replace("_", " ");
 						nvm.NodeTwoTitle = regions[edge.NodeTwoIndex].Name.Replace("_", " ");
 						nvm.PValue = pval;
@@ -55,41 +80,46 @@ namespace BrainGraph.WinStore.Screens.Edge
 					}
 				}
 
-				EdgeGroupViewModel gvm = new EdgeGroupViewModel();
+				EdgeSigGroupViewModel gvm = new EdgeSigGroupViewModel();
 				gvm.GroupName = graph.Name;
 				gvm.Edges.AddRange(edges);
 
 				EdgeGroups.Add(gvm);
 
 				total += gvm.Edges.Count;
+
+				if (String.IsNullOrWhiteSpace(PrimaryValue))
+					PrimaryValue += graph.Name + ": " + gvm.Edges.Count.ToString();
+				else
+					PrimaryValue += "\n" + graph.Name + ": " + gvm.Edges.Count.ToString();
 			}
 
-			PrimaryValue = total.ToString();
+			//PrimaryValue = total.ToString();
 		}
 
 		public override Type ViewModelType { get { return typeof(EdgeSignificanceViewModel); } }
 
-		public BindableCollection<EdgeGroupViewModel> EdgeGroups { get; private set; }
+		public BindableCollection<EdgeSigGroupViewModel> EdgeGroups { get; private set; }
 	}
 
-	public class EdgeGroupViewModel
+	public class EdgeSigGroupViewModel
 	{
-		public EdgeGroupViewModel()
+		public EdgeSigGroupViewModel()
 		{
-			Edges = new List<EdgeViewModel>();
+			Edges = new List<EdgeSigViewModel>();
 		}
 
 		public string GroupName { get; set; }
-		public List<EdgeViewModel> Edges { get; set; }
+		public List<EdgeSigViewModel> Edges { get; set; }
 	}
 
-	public class EdgeViewModel
+	public class EdgeSigViewModel
 	{
 		public string NodeOneTitle { get; set; }
 		public string NodeTwoTitle { get; set; }
-		public MultiEdge RawEdge { get; set; }
+		public EdgeViewModel RawEdge { get; set; }
 
-		public float PValue { get; set; }
-		public float Difference { get { return RawEdge.Weight.M1 - RawEdge.Weight.M2; } }
+		public double PValue { get; set; }
+		public double Difference { get { return RawEdge.Weight.M1 - RawEdge.Weight.M2; } }
 	}
 }

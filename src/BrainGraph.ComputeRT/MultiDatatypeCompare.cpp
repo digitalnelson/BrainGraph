@@ -14,7 +14,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	using namespace Windows::Foundation::Collections;
 	using namespace BrainGraph::Compute::Subjects;
 
-	MultiDatatypeCompare::MultiDatatypeCompare(int verts, int edges, IVector<Threshold^>^ thresholds)
+	MultiDatatypeCompare::MultiDatatypeCompare(int verts, int edges, IVector<Threshold^>^ thresholds) : 
+		_multiGraph(new MultiGraph())
 	{
 		_vertices = verts;
 		_edges = edges;
@@ -23,12 +24,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			_dataThresholds.push_back(thresh);
 		
 		_subCounter = 0;
+		_permutations = 0;
 
 		srand((unsigned int)time(0));
-
-		_permutations = 0;
-		_realOverlap = 0;
-		_rightTailOverlapCount = 0;
 	}
 
 	void MultiDatatypeCompare::LoadSubjects(IVector<Subject^>^ group1, IVector<Subject^>^ group2)
@@ -90,18 +88,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			_compareGraphs[groupCompareItem.first] = compareGraph;
 		}
 
-		// Calculate how many nodes overlap between all of the data types
+		// Load up our multi graph
 		int maxOverlap = _groupCompareByType.size();
 		for(auto nc=0; nc<nodeCounts.size();++nc)
 		{
-			_verticesById[nc] = shared_ptr<Vertex>(new Vertex());
-			_verticesById[nc]->Id = nc;
+			auto multiNode = make_shared<MultiNode>(nc);
 
 			if(nodeCounts[nc] == maxOverlap)
-			{
-				_verticesById[nc]->IsFullOverlap = true;
-				++_realOverlap;
-			}
+				multiNode->IsFullOverlap = true;
+
+			_multiGraph->AddNode(multiNode);
 		}
 	}
 
@@ -121,7 +117,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			int &totalPerms = _permutations;
 
 			//for(int i=0; i<permutations; i++)
-			parallel_for(0, permutations, [=, &idxs, &totalPerms] (int permutation)
+			parallel_for(0, permutations, [=, &idxs, &totalPerms] ( int permutation )
 			{	
 				// Shuffle subjects randomly
 				random_shuffle(idxs.begin(), idxs.end());
@@ -135,33 +131,33 @@ namespace BrainGraph { namespace Compute { namespace Graph
 					// Compare the two groups for this data type
 					auto cmp = groupCompareItem.second->Permute(idxs, group1Count);
 
+					// Pull out the vertices and store then in our counting map
 					if(cmp != nullptr)
 					{
-						// Pull out the vertices and store then in our counting map
 						for(auto vert : cmp->Vertices)
 							++nodeCounts[vert];
 					}
 				}
 
+				MultiGraph randomGraph;
+
 				// Calculate how many nodes overlap between all of the nodes
-				int permOverlap = 0, maxOverlap = _groupCompareByType.size();
-				for(auto nc=0; nc<nodeCounts.size();++nc)
+				auto maxOverlap = _groupCompareByType.size();
+				for(auto idx=0; idx<nodeCounts.size(); ++idx)
 				{
-					if(nodeCounts[nc] == maxOverlap)
+					auto multiNode = make_shared<MultiNode>(idx);
+
+					if(nodeCounts[idx] == maxOverlap)
 					{
-						_verticesById[nc]->RandomOverlapCount++;
-						++permOverlap;
+						multiNode->IsFullOverlap = true;
+						_multiGraph->IncrementNodalRandomOverlapCount(idx);
 					}
+
+					randomGraph.AddNode(multiNode);					
 				}
 
-				if(_overlapDistribution.count(permOverlap) == 0)
-					_overlapDistribution[permOverlap] = 0;
-			
-				_overlapDistribution[permOverlap]++;
-
-				// NBS multimodal compare
-				if(permOverlap >= _realOverlap)
-					++_rightTailOverlapCount;
+				if(randomGraph.GetTotalNodalOverlapCount() >= _multiGraph->GetTotalNodalOverlapCount())
+					_multiGraph->IncrementGraphRandomOverlapCount();
 
 				++totalPerms;
 
@@ -174,54 +170,31 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		return action_with_progress;
 	}
 
-	MultiResult^ MultiDatatypeCompare::GetResult()
+	MultiGraphViewModel^ MultiDatatypeCompare::GetResult()
 	{
-		auto result = ref new MultiResult();
+		auto multiGraphVM = ref new MultiGraphViewModel(_multiGraph);
 
 		for(auto compareGraphItm : _compareGraphs)
 		{
-			auto multiGraph = ref new MultiGraph();
-			multiGraph->Name = compareGraphItm.first;
+			auto compareGraphVM = ref new CompareGraphViewModel();
+			compareGraphVM->Name = compareGraphItm.first;
 			
 			auto compareGraph = compareGraphItm.second;
 
 			for(auto compareNode : compareGraph->Nodes)
-			{
-				multiGraph->AddNode(compareNode);
-			}
+				compareGraphVM->AddNode(compareNode);
 
 			for(auto compareEdge : compareGraph->Edges)
-			{
-				multiGraph->AddEdge(compareEdge);
-			}
+				compareGraphVM->AddEdge(compareEdge);
 
-			result->AddGraph(multiGraph);
+			multiGraphVM->AddCompareGraph(compareGraphVM);
 		}
 
-		return result;
+		return multiGraphVM;
 	}
 
 	int MultiDatatypeCompare::GetPermutations()
 	{
 		return _permutations;
 	}
-
-	//std::unique_ptr<Overlap> MultiDatatypeCompare::GetOverlapResult()
-	//{
-	//	unique_ptr<Overlap> overlap(new Overlap());
-
-	//	for(auto &dataItem : _dataByType)
-	//		dataItem.second->GetComponents(overlap->Components[dataItem.first]); // Ask the graph for the components
-
-	//	for(auto vtx : _verticesById)
-	//	{
-	//		if(vtx.second->IsFullOverlap)
-	//			overlap->Vertices.push_back(vtx.second);
-	//	}
-
-	//	overlap->RightTailOverlapCount = _rightTailOverlapCount;
-	//	overlap->Distribution = _overlapDistribution;
-
-	//	return overlap;
-	//}
 }}}

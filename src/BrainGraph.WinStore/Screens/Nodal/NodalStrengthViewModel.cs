@@ -29,9 +29,9 @@ namespace BrainGraph.WinStore.Screens.Nodal
 		public void Handle(PermutationCompleteEvent message)
 		{
 			IsReady = true;
-
-			int total = 0;
 			NodeGroups.Clear();
+
+			PrimaryValue = "";
 
 			var regions = _regionService.GetRegionsByIndex();
 			var results = _computeService.GetResults();
@@ -39,32 +39,47 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 			foreach (var graph in results.Graphs)
 			{
-				List<NodeViewModel> nodes = new List<NodeViewModel>();
-
+				List<NodalViewModel> nodes = new List<NodalViewModel>();
+				
 				foreach (var node in graph.Nodes)
 				{
-					var pval = (float)node.Strength.TwoTailCount / (float)permutations;
+					var nvm = new NodalViewModel { RawNode = node };
+					nvm.RegionTitle = regions[node.Index].Name.Replace("_", " ");
+					nvm.Tail = node.Strength.TwoTailCount;
+					nvm.PValue = (double)node.Strength.TwoTailCount / (double)permutations;
 
-					if (pval < 0.05 && Math.Abs(node.Strength.Value) >= 2.0 )
-					{
-						var nvm = new NodeViewModel { RawNode = node };
-						nvm.RegionTitle = regions[node.Index].Name.Replace("_", " ");
-						nvm.PValue = pval;
-
-						nodes.Add(nvm);
-					}
+					nodes.Add(nvm);
 				}
+
+				var regionCount = regions.Count;
+				var nodesByPVal = from node in nodes
+								  orderby node.PValue
+								  select node;
+
+				var index = 1;
+				foreach(var node in nodesByPVal)
+				{
+					node.QValue = ( (double)index / (double)regionCount ) * 0.05;
+
+					++index;
+				}
+
+				var sigNodes = from node in nodes
+							   where node.PValue <= node.QValue
+							   select node;
 
 				NodeGroupViewModel ngvm = new NodeGroupViewModel();
 				ngvm.GroupName = graph.Name;
-				ngvm.Nodes.AddRange(nodes.OrderBy(n => n.RegionTitle));
-
+				ngvm.Nodes.AddRange(nodes.OrderBy(n => n.PValue));
+				ngvm.SigNodeCount = sigNodes.Count();
+				
 				NodeGroups.Add(ngvm);
 
-				total += ngvm.Nodes.Count;
+				if (String.IsNullOrWhiteSpace(PrimaryValue))
+					PrimaryValue += graph.Name + ": " + ngvm.SigNodeCount.ToString();
+				else
+					PrimaryValue += "\n" + graph.Name + ": " + ngvm.SigNodeCount.ToString();
 			}
-
-			PrimaryValue = total.ToString();
 		}
 
 		public override Type ViewModelType { get { return typeof(NodalStrengthViewModel); } }
@@ -76,19 +91,22 @@ namespace BrainGraph.WinStore.Screens.Nodal
 	{
 		public NodeGroupViewModel()
 		{
-			Nodes = new BindableCollection<NodeViewModel>();
+			Nodes = new BindableCollection<NodalViewModel>();
 		}
 
 		public string GroupName { get { return _inlGroupName; } set { _inlGroupName = value; NotifyOfPropertyChange(() => GroupName); } } private string _inlGroupName;
-		public BindableCollection<NodeViewModel> Nodes { get { return _inlNodes; } set { _inlNodes = value; NotifyOfPropertyChange(() => Nodes); } } private BindableCollection<NodeViewModel> _inlNodes;
+		public BindableCollection<NodalViewModel> Nodes { get { return _inlNodes; } set { _inlNodes = value; NotifyOfPropertyChange(() => Nodes); } } private BindableCollection<NodalViewModel> _inlNodes;
+		public int SigNodeCount { get; set; }
 	}
 
-	public class NodeViewModel : Screen
+	public class NodalViewModel : Screen
 	{
 		public string RegionTitle { get; set; }
-		public MultiNode RawNode { get; set; }
+		public NodeViewModel RawNode { get; set; }
 
-		public float PValue { get; set; }
-		public float Difference { get { return RawNode.Strength.M1 - RawNode.Strength.M2; } }
+		public int Tail { get; set; }
+		public double PValue { get; set; }
+		public double QValue { get; set; }
+		public double Difference { get { return RawNode.Strength.M1 - RawNode.Strength.M2; } }
 	}
 }

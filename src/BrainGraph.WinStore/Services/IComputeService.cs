@@ -1,6 +1,5 @@
 ﻿using BrainGraph.Compute.Graph;
 using BrainGraph.Compute.Subjects;
-using Caliburn.Micro;
 using System.Collections.Generic;
 using Windows.Foundation;
 
@@ -18,7 +17,7 @@ namespace BrainGraph.WinStore.Services
 		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
 		IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations);
-		MultiResult GetResults();
+		MultiGraphViewModel GetResults();
 		int GetPermutations();
 	}
 
@@ -46,7 +45,7 @@ namespace BrainGraph.WinStore.Services
 			return _compare.PermuteAsyncWithProgress(permutations);
 		}
 
-		public MultiResult GetResults()
+		public MultiGraphViewModel GetResults()
 		{
 			return _compare.GetResult();
 		}
