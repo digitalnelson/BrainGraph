@@ -41,11 +41,11 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		}
 	}
 
-	float SubjectGraph::GlobalStrength()
+	double SubjectGraph::GlobalStrength()
 	{
 		if(_nVerts != 0)
 		{
-			float total = 0;
+			double total = 0;
 
 			for(auto node : Nodes)
 				total += ( node.TotalStrength / (_nVerts - 1));

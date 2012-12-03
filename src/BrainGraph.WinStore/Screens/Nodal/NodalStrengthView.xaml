@@ -71,7 +71,7 @@
 
 									<TextBlock Text="{Binding GroupName}" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
 									<TextBlock Text=" (" Grid.Column="1" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
-									<TextBlock Text="{Binding Nodes.Count}" Grid.Column="2" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
+									<TextBlock Text="{Binding SigNodeCount}" Grid.Column="2" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
 									<TextBlock Text=")" Grid.Column="3" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
 								</Grid>
 							</DataTemplate>
@@ -104,12 +104,23 @@
 									<ColumnDefinition Width="Auto" />
 									<ColumnDefinition Width="Auto" />
 								</Grid.ColumnDefinitions>
+								
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="Auto" />
+								</Grid.RowDefinitions>
+								
 								<TextBlock Text="d" Grid.Column="0" />
 								<TextBlock Text="{Binding Difference, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0.0000}'}" Grid.Column="1" Margin="3,0,6,0" />
 								<TextBlock Text="t" Grid.Column="2" />
 								<TextBlock Text="{Binding RawNode.Strength.Value, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0.0000}'}" Grid.Column="3" Margin="3,0,6,0" />
-								<TextBlock Text="p" Grid.Column="4" />
-								<TextBlock Text="{Binding PValue, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0.0000}'}" Grid.Column="5" Margin="3,0,6,0" />
+								<TextBlock Text="q" Grid.Row="0" Grid.Column="4" />
+								<TextBlock Text="{Binding QValue, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0.0000}'}" Grid.Row="0" Grid.Column="5" Margin="3,0,6,0" />
+
+								<TextBlock Text="p" Grid.Row="1" Grid.Column="0" />
+								<TextBlock Text="{Binding PValue, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0.0000}'}" Grid.Row="1" Grid.Column="1" Margin="3,0,6,0" />
+								<TextBlock Text="#" Grid.Row="1" Grid.Column="2" />
+								<TextBlock Text="{Binding Tail, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:##,###,###,##0}'}" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" Margin="3,0,6,0" />
 							</Grid>
 						</Grid>
 					</DataTemplate>

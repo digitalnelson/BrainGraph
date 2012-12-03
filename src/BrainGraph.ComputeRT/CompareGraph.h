@@ -9,7 +9,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	class CompareGraph
 	{
 	public:
-		CompareGraph(int nVerts, shared_ptr<GraphLookup> lu, float nbsThreshold);
+		CompareGraph(int nVerts, shared_ptr<GraphLookup> lu, double nbsThreshold);
 		~CompareGraph(void);
 
 		void AddEdges(std::vector<std::shared_ptr<CompareEdge>> &edges);
@@ -33,7 +33,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		shared_ptr<GraphLookup> _lu;
 		
 		int _nVerts;
-		float _nbsThreshold;
+		double _nbsThreshold;
 
 		int _nLargestComponentId;
 	};

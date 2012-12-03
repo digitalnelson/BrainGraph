@@ -23,8 +23,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		std::vector<SubjectGraphEdge> Edges;
 		std::vector<SubjectGraphNode> Nodes;
 
-		float GlobalStrength();
-		/*std::vector<float> NodalStrength();*/
+		double GlobalStrength();
+		/*std::vector<double> NodalStrength();*/
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;

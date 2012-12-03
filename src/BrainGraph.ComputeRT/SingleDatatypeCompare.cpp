@@ -16,7 +16,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		_nodes(nodes)
 	{
 		_lu = make_shared<GraphLookup>(nodes);
-		_cmpGraph = make_shared<CompareGraph>(nodes, _lu, (float)threshold->Value);
+		_cmpGraph = make_shared<CompareGraph>(nodes, _lu, (double)threshold->Value);
 
 		_threshold = threshold;
 		_subjectCount = subjectCount;
@@ -67,7 +67,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			// Loop through the vals we were passed
 			for (int idx = 0; idx < _subjectCount; ++idx)
 			{
-				float edgeVal = edgeValues[idxs[idx]].Value;
+				double edgeVal = edgeValues[idxs[idx]].Value;
 
 				if (idx < szGrp1)
 					calcEdgeValue.IncludeValue(0, edgeVal);
@@ -106,7 +106,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			{
 				auto nodeVal = nodeValues[idxs[idx]];
 
-				float avgStrength = nodeVal.TotalStrength / _nodeCount;
+				double avgStrength = nodeVal.TotalStrength / _nodeCount;
 
 				if (idx < szGrp1)
 				{
@@ -180,7 +180,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	shared_ptr<Component> SingleDatatypeCompare::Permute(vector<int> &idxs, int szGrp1)
 	{
 		// Create a comparison graph to hold our group comparison results
-		unique_ptr<CompareGraph> randomGraph(new CompareGraph(_nodeCount, _lu, (float)_threshold->Value));
+		unique_ptr<CompareGraph> randomGraph(new CompareGraph(_nodeCount, _lu, (double)_threshold->Value));
 
 		// Calculate edge group comparison
 		randomGraph->AddEdges( CalcEdgeComparison(idxs, szGrp1) );

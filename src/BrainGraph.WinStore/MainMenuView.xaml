@@ -56,7 +56,7 @@
 						<TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource PageSubheaderTextStyle}" Margin="10,5,30,20" VerticalAlignment="Center"/>
 					</StackPanel>
 					<Viewbox Grid.Row="1">
-						<TextBlock TextWrapping="Wrap" Text="{Binding PrimaryValue}" VerticalAlignment="Center" Margin="30,0,2,0" Foreground="#80FFFFFF"/>
+						<TextBlock TextWrapping="Wrap" Text="{Binding PrimaryValue}" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="30,0,2,0" Foreground="#80FFFFFF"/>
 					</Viewbox>
 					<StackPanel Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" VerticalAlignment="Bottom" Grid.Row="2" Height="50">
 						<TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="Wrap" Margin="10,0,30,10" VerticalAlignment="Bottom"/>

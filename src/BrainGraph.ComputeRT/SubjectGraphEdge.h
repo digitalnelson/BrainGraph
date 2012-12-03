@@ -8,7 +8,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		int Index;
 		std::pair<int, int> Vertices;
 
-		float Value;
+		double Value;
 
 		SubjectGraphEdge()
 		{
@@ -21,8 +21,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	{
 		int Index;
 
-		float Degree;
-		float TotalStrength;
+		double Degree;
+		double TotalStrength;
 
 		SubjectGraphNode()
 		{
@@ -34,7 +34,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 
 	struct SubjectGraphGlobal
 	{
-		float Strength;
+		double Strength;
 
 		SubjectGraphGlobal()
 		{

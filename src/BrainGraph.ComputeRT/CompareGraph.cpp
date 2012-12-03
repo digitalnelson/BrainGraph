@@ -4,7 +4,7 @@
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
-	CompareGraph::CompareGraph(int nVerts, shared_ptr<GraphLookup> lu, float nbsThreshold) : 
+	CompareGraph::CompareGraph(int nVerts, shared_ptr<GraphLookup> lu, double nbsThreshold) : 
 		_adjMtx(nVerts), 
 		_lu(lu),
 		_nLargestComponentId(-1)

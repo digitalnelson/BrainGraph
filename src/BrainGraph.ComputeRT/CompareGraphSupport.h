@@ -14,13 +14,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			TwoTailCount = 0;
 		}
 
-		float M1;
-		float M2;
+		double M1;
+		double M2;
 
-		float V1;
-		float V2;
+		double V1;
+		double V2;
 	
-		float Value;
+		double Value;
 		int TwoTailCount;
 	};
 
