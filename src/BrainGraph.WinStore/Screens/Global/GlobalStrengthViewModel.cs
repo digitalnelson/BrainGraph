@@ -23,6 +23,7 @@ namespace BrainGraph.WinStore.Screens.Global
 		{
 			Title = "Strength";
 			PrimaryValue = "0";
+			Subtitle = "Total average measure of connectivity by data type.";
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
@@ -75,9 +76,9 @@ namespace BrainGraph.WinStore.Screens.Global
 				DataItems.Add(itm);
 
 				if (String.IsNullOrWhiteSpace(PrimaryValue))
-					PrimaryValue += graph.Name + ": " + itm.PVal.ToString("0.000");
+					PrimaryValue += graph.Name + ": p" + itm.PVal.ToString("0.000");
 				else
-					PrimaryValue += "\n" + graph.Name + ": " + itm.PVal.ToString("0.000");
+					PrimaryValue += "\n" + graph.Name + ": p" + itm.PVal.ToString("0.000");
 			}
 		}
 

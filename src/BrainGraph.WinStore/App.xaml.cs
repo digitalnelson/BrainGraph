@@ -68,6 +68,7 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
 
 			_kernel.Bind<GlobalStrengthViewModel>().To<GlobalStrengthViewModel>().InSingletonScope();
+			_kernel.Bind<NodalStrengthDataTypeViewModel>().To<NodalStrengthDataTypeViewModel>();
 			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>().InSingletonScope();
 			_kernel.Bind<EdgeSignificanceViewModel>().To<EdgeSignificanceViewModel>().InSingletonScope();
 		}

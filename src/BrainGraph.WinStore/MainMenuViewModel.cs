@@ -31,8 +31,6 @@ namespace BrainGraph.WinStore
 
 		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
 		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
-		private NodalStrengthViewModel _nodalStrength = IoC.Get<NodalStrengthViewModel>();
-		private GlobalStrengthViewModel _globalStrength = IoC.Get<GlobalStrengthViewModel>();
 
 		public MainMenuViewModel()
 		{
@@ -51,7 +49,7 @@ namespace BrainGraph.WinStore
 				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
 				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthDataTypeViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Edge", Items = { IoC.Get<EdgeSignificanceViewModel>(), new MenuItem { Title = "Associations" }, } });
 			}
 		}

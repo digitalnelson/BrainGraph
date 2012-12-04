@@ -21,6 +21,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 		{
 			Title = "Strength";
 			PrimaryValue = "0";
+			Subtitle = "Regional average measure of connectivity by data type.";
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
