@@ -133,6 +133,10 @@
     </Compile>
     <Compile Include="Screens\Edge\EdgeSignificanceViewModel.cs" />
     <Compile Include="Screens\Experiment\RunExperimentViewModel.cs" />
+    <Compile Include="Screens\Global\GlobalStrengthView.xaml.cs">
+      <DependentUpon>GlobalStrengthView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Global\GlobalStrengthViewModel.cs" />
     <Compile Include="Screens\IMenuItem.cs" />
     <Compile Include="Screens\Nodal\NodalStrengthViewModel.cs" />
     <Compile Include="Screens\Nodal\NodalStrengthView.xaml.cs">
@@ -211,6 +215,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Global\GlobalStrengthView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Nodal\NodalStrengthView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -278,7 +286,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Screens\Component\" />
-    <Folder Include="Screens\Global\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

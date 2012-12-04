@@ -22,8 +22,11 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			Title = "Strength";
 			PrimaryValue = "0";
 
-			NodeGroups = new BindableCollection<NodeGroupViewModel>();
-			_eventAggregator.Subscribe(this);
+			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+			{
+				NodeGroups = new BindableCollection<NodeGroupViewModel>();
+				_eventAggregator.Subscribe(this);
+			}
 		}
 
 		public void Handle(PermutationCompleteEvent message)

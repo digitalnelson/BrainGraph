@@ -176,16 +176,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		for(auto compareGraphItm : _compareGraphs)
 		{
-			auto compareGraphVM = ref new CompareGraphViewModel();
+			auto compareGraphVM = ref new CompareGraphViewModel(compareGraphItm.second);
 			compareGraphVM->Name = compareGraphItm.first;
-			
-			auto compareGraph = compareGraphItm.second;
-
-			for(auto compareNode : compareGraph->Nodes)
-				compareGraphVM->AddNode(compareNode);
-
-			for(auto compareEdge : compareGraph->Edges)
-				compareGraphVM->AddEdge(compareEdge);
 
 			multiGraphVM->AddCompareGraph(compareGraphVM);
 		}

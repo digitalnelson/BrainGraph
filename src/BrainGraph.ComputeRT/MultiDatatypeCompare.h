@@ -40,12 +40,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		std::vector<Threshold^> _dataThresholds;
 		std::map<Platform::String^, shared_ptr<CompareGraph>> _compareGraphs;
 		
-		//int _realOverlap;
-		//int _rightTailOverlapCount;
 		int _permutations;
-
-		//std::map<int, std::shared_ptr<Vertex>> _verticesById;
-		//std::map<int, int> _overlapDistribution;
 
 		std::shared_ptr<MultiGraph> _multiGraph;
 	};

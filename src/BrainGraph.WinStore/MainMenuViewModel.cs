@@ -4,6 +4,7 @@ using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Screens;
 using BrainGraph.WinStore.Screens.Edge;
 using BrainGraph.WinStore.Screens.Experiment;
+using BrainGraph.WinStore.Screens.Global;
 using BrainGraph.WinStore.Screens.Nodal;
 using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Screens.Sources;
@@ -31,6 +32,7 @@ namespace BrainGraph.WinStore
 		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
 		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
 		private NodalStrengthViewModel _nodalStrength = IoC.Get<NodalStrengthViewModel>();
+		private GlobalStrengthViewModel _globalStrength = IoC.Get<GlobalStrengthViewModel>();
 
 		public MainMenuViewModel()
 		{
@@ -47,9 +49,9 @@ namespace BrainGraph.WinStore
 
 				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
 				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
-				Groups.Add(new MenuGroup { Title = "Global", Items = { new MenuItem { Title = "Strength" }, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Modularity" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Nodal", Items = { _nodalStrength, new MenuItem { Title = "Diversity" }, new MenuItem { Title = "Clustering" }, new MenuItem { Title = "Degree" }, new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Edge", Items = { IoC.Get<EdgeSignificanceViewModel>(), new MenuItem { Title = "Associations" }, } });
 			}
 		}
