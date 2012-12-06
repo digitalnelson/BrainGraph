@@ -25,6 +25,11 @@ namespace BrainGraph.WinStore.Common.Viz
 			this.roi = roi;
 		}
 
+		public BrainDataPoint(double x, double y, ROI roi, double value) : this(x, y, roi)
+		{
+			//this.Value = value;
+		}
+
 		public double X { get { return this.x; } set { this.x = value; } }
 		public double Y { get { return this.y; } set { this.y = value; } }
 		public ROI ROI { get { return this.roi; } set { this.roi = value; } }
@@ -39,6 +44,22 @@ namespace BrainGraph.WinStore.Common.Viz
 			return this.x + " " + this.y;
 		}
 
+	}
+
+	public class BrainScatterPoint : ScatterPoint
+	{
+		public static readonly DataPoint Undefined = new DataPoint(double.NaN, double.NaN);
+
+		internal ROI roi;
+
+		public BrainScatterPoint(double x, double y, ROI roi, double value) : base(x, y)
+		{
+			this.roi = roi;
+			this.Value = value;
+		}
+
+
+		public ROI ROI { get { return this.roi; } set { this.roi = value; } }
 	}
 
 	public class BrainScatterSeries : ScatterSeries

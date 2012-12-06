@@ -70,35 +70,43 @@
 
 				<GridView.ItemTemplate>
 					<DataTemplate>
-						<Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="4" Width="400">
+						<Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="4">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" />
-								<RowDefinition Height="Auto"/>
 								<RowDefinition/>
 							</Grid.RowDefinitions>
 
-							<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Text="{Binding DataType}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="0,0,0,6" />
-							<Grid Grid.Row="1">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto" />
-									<ColumnDefinition Width="Auto" />
-								</Grid.ColumnDefinitions>
+							<StackPanel Orientation="Horizontal">
+								<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Text="{Binding DataType}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="0,0,0,6" />
+								<TextBlock Text=" ( " />
+								<TextBlock Text="{Binding SigNodeCount}" />
+								<TextBlock Text=" )" />
+							</StackPanel>
+							<VariableSizedWrapGrid Grid.Row="1" ItemHeight="300" ItemWidth="300">
+								<!--<Grid Margin="20">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="Auto" />
+									</Grid.ColumnDefinitions>
 
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto" />
-									<RowDefinition Height="Auto" />
-								</Grid.RowDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="Auto" />
+										<RowDefinition Height="Auto" />
+									</Grid.RowDefinitions>
 
-								<TextBlock Grid.Row="0" Text="Sig Nodes" Style="{StaticResource FieldTitle}" />
-								<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SigNodeCount, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0}'}" Style="{StaticResource FieldValue}" />
+									<TextBlock Grid.Row="0" Text="Sig Nodes" Style="{StaticResource FieldTitle}" />
+									<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SigNodeCount, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0}'}" Style="{StaticResource FieldValue}" />
 
-								<TextBlock Grid.Row="1" Text="Total Nodes" Style="{StaticResource FieldTitle}" />
-								<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalNodeCount, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0}'}" Style="{StaticResource FieldValue}" />
-							</Grid>
-							<VariableSizedWrapGrid Grid.RowSpan="2" Grid.Row="2" ItemHeight="300" ItemWidth="300">
-								<oxy:Plot Background="#00FF0000" Model="{Binding AXPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-								<oxy:Plot Background="#00000000" Model="{Binding CRPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-								<oxy:Plot Background="#00000000" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+									<TextBlock Grid.Row="1" Text="Total Nodes" Style="{StaticResource FieldTitle}" />
+									<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalNodeCount, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:########0}'}" Style="{StaticResource FieldValue}" />
+								</Grid>-->
+								<oxy:Plot Background="#00000000" Model="{Binding AXPlotModelPos}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding CRPlotModelPos}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding SGPlotModelPos}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								
+								<oxy:Plot Background="#00000000" Model="{Binding AXPlotModelNeg}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding CRPlotModelNeg}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding SGPlotModelNeg}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 							</VariableSizedWrapGrid>
 						</Grid>
 					</DataTemplate>

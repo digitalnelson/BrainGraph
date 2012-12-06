@@ -22,7 +22,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 		public NodalStrengthDataTypeViewModel()
 		{
-			Title = "Strength";
+			Title = "Nodal Strength";
 			PrimaryValue = "0";
 			Subtitle = "Regional average measure of connectivity by data type.";
 
@@ -68,16 +68,13 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 			foreach (var graph in results.Graphs)
 			{
-				var itm = new DataItemViewModel();
-
-				itm.DataType = graph.Name;
-
 				List<DtNodalViewModel> nodes = new List<DtNodalViewModel>();
 
 				foreach (var node in graph.Nodes)
 				{
 					var nvm = new DtNodalViewModel { RawNode = node };
 					nvm.RegionTitle = regions[node.Index].Name.Replace("_", " ");
+					nvm.ROI = regions[node.Index];
 					nvm.Tail = node.Strength.TwoTailCount;
 					nvm.PValue = (double)node.Strength.TwoTailCount / (double)permutations;
 
@@ -99,8 +96,35 @@ namespace BrainGraph.WinStore.Screens.Nodal
 				var sigNodes = from node in nodes
 							   where node.PValue <= node.QValue
 							   select node;
-			
+
+				foreach (var node in sigNodes)
+					node.Significant = true;
+
+				var diff = from node in nodes
+						   select node.Difference;
+
+				double max = diff.Max();
+				double min = diff.Min();
+
+				if (max <= 0)
+					max = 1;
+				if (min >= 0)
+					min = -1;
+
+				OxyPalette maxPal = OxyPalette.Interpolate(32, OxyColor.FromArgb(64, 64, 64, 64), OxyColors.Green);
+				OxyPalette minPal = OxyPalette.Interpolate(32, OxyColors.Blue, OxyColor.FromArgb(64, 64, 64, 64)); 
+
+				var itm = new DataItemViewModel();
+				itm.DataType = graph.Name;
 				itm.SigNodeCount = sigNodes.Count();
+
+				itm.AXPlotModelPos = LoadPlotModel(nodes, r => r.X, r => r.Y, max, 0, maxPal);
+				itm.SGPlotModelPos = LoadPlotModel(nodes, r => (100 - r.Y), r => r.Z, max, 0, maxPal);
+				itm.CRPlotModelPos = LoadPlotModel(nodes, r => r.X, r => r.Z, max, 0, maxPal);
+
+				itm.AXPlotModelNeg = LoadPlotModel(nodes, r => r.X, r => r.Y, 0, min, minPal);
+				itm.SGPlotModelNeg = LoadPlotModel(nodes, r => (100 - r.Y), r => r.Z, 0, min, minPal);
+				itm.CRPlotModelNeg = LoadPlotModel(nodes, r => r.X, r => r.Z, 0, min, minPal);
 
 				DataItems.Add(itm);
 
@@ -111,15 +135,16 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			}
 		}
 
-		protected PlotModel LoadPlotModel(Func<ROI, double> horizSelector, Func<ROI, double> vertSelector, List<ROI> regions)
+		protected PlotModel LoadPlotModel(List<DtNodalViewModel> nodes, Func<ROI, double> horizSelector, Func<ROI, double> vertSelector, double max, double min, OxyPalette palette)
 		{
 			var model = new PlotModel() { IsLegendVisible = false };
 			model.PlotMargins = new OxyThickness(0, 0, 0, 0);
-			model.PlotAreaBorderColor = OxyColors.White;
+			model.PlotAreaBorderColor = OxyColors.Transparent;
 			model.PlotType = PlotType.Cartesian;
 
-			var ba = new LinearAxis(AxisPosition.Bottom) { AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
-			var la = new LinearAxis(AxisPosition.Left) { AxislineColor = OxyColors.White, TextColor = OxyColors.White, TicklineColor = OxyColors.White };
+			var ba = new LinearAxis(AxisPosition.Bottom) { IsAxisVisible = false, AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
+			var la = new LinearAxis(AxisPosition.Left) { IsAxisVisible = false, AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
+			var ca = new ColorAxis { TextColor = OxyColors.White, Position = AxisPosition.Right, Palette = palette, Minimum = -1, Maximum = 1, AbsoluteMaximum = max, AbsoluteMinimum = min };
 
 			ba.MinimumPadding = 0.1;
 			ba.MaximumPadding = 0.1;
@@ -128,23 +153,39 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 			model.Axes.Add(ba);
 			model.Axes.Add(la);
+			model.Axes.Add(ca);
 
 			var s1 = new BrainScatterSeries
 			{
 				MarkerType = MarkerType.Circle,
 				MarkerSize = 7,
-				MarkerFill = OxyColor.FromAColor(125, OxyColors.White),
 			};
 
-			foreach (var region in regions)
+			var s2 = new BrainScatterSeries
 			{
-				s1.Points.Add(new BrainDataPoint(horizSelector(region), vertSelector(region), region));
+				MarkerType = MarkerType.Circle,
+				MarkerSize = 7,
+				ColorAxis = null,
+				MarkerFill = OxyColors.Gray,
+			};
+
+			foreach (var node in nodes)
+			{
+				//if (node.Significant)
+				if(node.Difference >= min && node.Difference <= max)
+					s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, node.Difference));
+				else
+					s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
+				//else
+					//s2.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
 			}
 
+			model.Series.Add(s2);
 			model.Series.Add(s1);
 
 			return model;
 		}
+
 
 		protected override void OnActivate()
 		{
@@ -160,6 +201,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 		}
 
 		public override Type ViewModelType { get { return typeof(NodalStrengthDataTypeViewModel); } }
+
 		public BindableCollection<DataItemViewModel> DataItems { get { return _inlDataItems; } set { _inlDataItems = value; NotifyOfPropertyChange(() => DataItems); } } private BindableCollection<DataItemViewModel> _inlDataItems;
 	}
 
@@ -168,19 +210,26 @@ namespace BrainGraph.WinStore.Screens.Nodal
 		public string DataType { get; set; }
 		public int SigNodeCount { get; set; }
 
-		public PlotModel SGPlotModel { get { return _inlSGPlotModel; } set { _inlSGPlotModel = value; NotifyOfPropertyChange(() => SGPlotModel); } } private PlotModel _inlSGPlotModel;
-		public PlotModel AXPlotModel { get { return _inlAXPlotModel; } set { _inlAXPlotModel = value; NotifyOfPropertyChange(() => AXPlotModel); } } private PlotModel _inlAXPlotModel;
-		public PlotModel CRPlotModel { get { return _inlCRPlotModel; } set { _inlCRPlotModel = value; NotifyOfPropertyChange(() => CRPlotModel); } } private PlotModel _inlCRPlotModel;
+		public PlotModel SGPlotModelPos { get { return _inlSGPlotModelPos; } set { _inlSGPlotModelPos = value; NotifyOfPropertyChange(() => SGPlotModelPos); } } private PlotModel _inlSGPlotModelPos;
+		public PlotModel AXPlotModelPos { get { return _inlAXPlotModelPos; } set { _inlAXPlotModelPos = value; NotifyOfPropertyChange(() => AXPlotModelPos); } } private PlotModel _inlAXPlotModelPos;
+		public PlotModel CRPlotModelPos { get { return _inlCRPlotModelPos; } set { _inlCRPlotModelPos = value; NotifyOfPropertyChange(() => CRPlotModelPos); } } private PlotModel _inlCRPlotModelPos;
+
+		public PlotModel SGPlotModelNeg { get { return _inlSGPlotModelNeg; } set { _inlSGPlotModelNeg = value; NotifyOfPropertyChange(() => SGPlotModelNeg); } } private PlotModel _inlSGPlotModelNeg;
+		public PlotModel AXPlotModelNeg { get { return _inlAXPlotModelNeg; } set { _inlAXPlotModelNeg = value; NotifyOfPropertyChange(() => AXPlotModelNeg); } } private PlotModel _inlAXPlotModelNeg;
+		public PlotModel CRPlotModelNeg { get { return _inlCRPlotModelNeg; } set { _inlCRPlotModelNeg = value; NotifyOfPropertyChange(() => CRPlotModelNeg); } } private PlotModel _inlCRPlotModelNeg;
 	}
 
 	public class DtNodalViewModel : Screen
 	{
 		public string RegionTitle { get; set; }
+		public ROI ROI { get; set; }
+
 		public NodeViewModel RawNode { get; set; }
 
 		public int Tail { get; set; }
 		public double PValue { get; set; }
 		public double QValue { get; set; }
 		public double Difference { get { return RawNode.Strength.M1 - RawNode.Strength.M2; } }
+		public bool Significant { get; set; }
 	}
 }
