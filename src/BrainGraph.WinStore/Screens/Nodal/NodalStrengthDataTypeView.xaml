@@ -9,8 +9,27 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:oxy="using:OxyPlot.Metro"
+	xmlns:caliburn="using:Caliburn.Micro"
 	mc:Ignorable="d">
 
+	<Page.BottomAppBar>
+		<AppBar>
+			<Grid>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+					<Button caliburn:Message.Attach="[Event Click] = [SaveCharts($eventArgs)]" >
+						<Button.Style>
+							<Style BasedOn="{StaticResource AppBarButtonStyle}" TargetType="ButtonBase">
+								<Setter Property="AutomationProperties.AutomationId" Value="EditAppBarButton"/>
+								<Setter Property="AutomationProperties.Name" Value="Save Charts"/>
+								<Setter Property="Content" Value="&#xE105;"/>
+							</Style>
+						</Button.Style>
+					</Button>
+				</StackPanel>
+			</Grid>
+		</AppBar>
+	</Page.BottomAppBar>
+	
 	<Page.Resources>
 
 		<CollectionViewSource
@@ -52,7 +71,7 @@
 
 		<Grid Grid.Row="1" Margin="120,0,0,50">
 
-			<GridView ItemsSource="{Binding Source={StaticResource itemsSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" SelectionMode="None">
+			<GridView IsItemClickEnabled="True" caliburn:Message.Attach="[Event ItemClick] = [DataTypeSelected($eventArgs)]" ItemsSource="{Binding Source={StaticResource itemsSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" SelectionMode="None">
 
 				<GridView.ItemsPanel>
 					<ItemsPanelTemplate>

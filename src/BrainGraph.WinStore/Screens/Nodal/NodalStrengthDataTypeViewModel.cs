@@ -9,6 +9,10 @@ using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace BrainGraph.WinStore.Screens.Nodal
 {
@@ -16,6 +20,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 	{
 		#region Private Service Vars
 		private IEventAggregator _eventAggregator;
+		private INavigationService _navService;
 		private IRegionService _regionService;
 		private IComputeService _computeService;
 		#endregion
@@ -29,6 +34,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
 				_eventAggregator = IoC.Get<IEventAggregator>();
+				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
 				_computeService = IoC.Get<IComputeService>();
 
@@ -142,9 +148,9 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			model.PlotAreaBorderColor = OxyColors.Transparent;
 			model.PlotType = PlotType.Cartesian;
 
-			var ba = new LinearAxis(AxisPosition.Bottom) { IsAxisVisible = false, AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
-			var la = new LinearAxis(AxisPosition.Left) { IsAxisVisible = false, AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
-			var ca = new ColorAxis { TextColor = OxyColors.White, Position = AxisPosition.Right, Palette = palette, Minimum = -1, Maximum = 1, AbsoluteMaximum = max, AbsoluteMinimum = min };
+			var ba = new LinearAxis(AxisPosition.Bottom) { IsAxisVisible = false };
+			var la = new LinearAxis(AxisPosition.Left) { IsAxisVisible = false };
+			var ca = new ColorAxis { TextColor = OxyColors.White, TicklineColor = OxyColors.LightGray, Position = AxisPosition.Right, Palette = palette, Minimum = -1, Maximum = 1, AbsoluteMaximum = max, AbsoluteMinimum = min };
 
 			ba.MinimumPadding = 0.1;
 			ba.MaximumPadding = 0.1;
@@ -198,6 +204,51 @@ namespace BrainGraph.WinStore.Screens.Nodal
 		public void Handle(PermutationCompleteEvent message)
 		{
 			LoadResults();
+		}
+
+		private async void SaveChart(StorageFolder outputFolder, string prefix, string dataType, PlotModel plot)
+		{
+			string fileName = "NodalStrengthByDataType_" + "_" + dataType + "_" + prefix + ".svg";
+			var outputFile = await outputFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
+
+			foreach (var axis in plot.Axes)
+				axis.TextColor = OxyColors.Black;
+
+			var contents = plot.ToSvg(300, 300);
+
+			foreach (var axis in plot.Axes)
+				axis.TextColor = OxyColors.White;
+
+			await FileIO.WriteTextAsync(outputFile, contents);
+		}
+
+		public async void SaveCharts(RoutedEventArgs args)
+		{
+			FolderPicker wkPicker = new FolderPicker();
+			wkPicker.ViewMode = PickerViewMode.List;
+			wkPicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+			wkPicker.FileTypeFilter.Add(".svg");
+			wkPicker.FileTypeFilter.Add(".html");
+
+			var outputFolder = await wkPicker.PickSingleFolderAsync();
+			if (outputFolder != null)
+			{
+				foreach (var dataItem in DataItems)
+				{
+					SaveChart(outputFolder, "SG_Neg", dataItem.DataType, dataItem.SGPlotModelNeg);
+					SaveChart(outputFolder, "AX_Neg", dataItem.DataType, dataItem.AXPlotModelNeg);
+					SaveChart(outputFolder, "CR_Neg", dataItem.DataType, dataItem.CRPlotModelNeg);
+
+					SaveChart(outputFolder, "SG_Pos", dataItem.DataType, dataItem.SGPlotModelPos);
+					SaveChart(outputFolder, "AX_Pos", dataItem.DataType, dataItem.AXPlotModelPos);
+					SaveChart(outputFolder, "CR_Pos", dataItem.DataType, dataItem.CRPlotModelPos);
+				}
+			}
+		}
+
+		public void DataTypeSelected(ItemClickEventArgs eventArgs)
+		{
+			_navService.NavigateToViewModel(typeof(NodalStrengthViewModel), ((DataItemViewModel)eventArgs.ClickedItem).DataType);
 		}
 
 		public override Type ViewModelType { get { return typeof(NodalStrengthDataTypeViewModel); } }

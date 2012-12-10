@@ -16,20 +16,15 @@
 		<x:String x:Key="AppName">Nodal Strength</x:String>
 
 		<CollectionViewSource
-			x:Name="groupedItemsViewSource"
-			Source="{Binding NodeGroups}"
-			IsSourceGrouped="true"
-			ItemsPath="Nodes" />
+			x:Name="itemsViewSource"
+			Source="{Binding Nodes}"
+			IsSourceGrouped="false"
+		 />
 
 		<util:StringFormatConverter x:Key="StringFormatConverter" />
 
 	</Page.Resources>
 
-	<!--
-		This grid acts as a root panel for the page that defines two rows:
-		* Row 0 contains the back button and page title
-		* Row 1 contains the rest of the page layout
-	-->
 	<Grid Style="{StaticResource LayoutRootStyle}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="140"/>
@@ -48,41 +43,11 @@
 
 		<Grid Grid.Row="1" Margin="120,0,0,50">
 
-			<GridView ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" SelectionMode="None">
-
-				<GridView.GroupStyle>
-					<GroupStyle>
-
-						<GroupStyle.Panel>
-							<ItemsPanelTemplate>
-								<VariableSizedWrapGrid Margin="0,0,20,0"  Orientation="Vertical" HorizontalChildrenAlignment="Left" HorizontalAlignment="Left" />
-							</ItemsPanelTemplate>
-						</GroupStyle.Panel>
-
-						<GroupStyle.HeaderTemplate>
-							<DataTemplate>
-								<Grid HorizontalAlignment="Stretch" Margin="10">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="Auto" />
-									</Grid.ColumnDefinitions>
-
-									<TextBlock Text="{Binding GroupName}" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
-									<TextBlock Text=" (" Grid.Column="1" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
-									<TextBlock Text="{Binding SigNodeCount}" Grid.Column="2" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
-									<TextBlock Text=")" Grid.Column="3" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontSize="24" Margin="5" FontFamily="Segoe UI" FontWeight="Bold" />
-								</Grid>
-							</DataTemplate>
-						</GroupStyle.HeaderTemplate>
-
-					</GroupStyle>
-				</GridView.GroupStyle>
+			<GridView ItemsSource="{Binding Source={StaticResource itemsViewSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" SelectionMode="None">
 
 				<GridView.ItemsPanel>
 					<ItemsPanelTemplate>
-						<VirtualizingStackPanel Orientation="Horizontal" />
+						<VariableSizedWrapGrid Orientation="Vertical" />
 					</ItemsPanelTemplate>
 				</GridView.ItemsPanel>
 
