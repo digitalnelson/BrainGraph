@@ -132,6 +132,7 @@
       <DependentUpon>EdgeSignificanceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Edge\EdgeSignificanceViewModel.cs" />
+    <Compile Include="Screens\Experiment\RunThresholdTestViewModel.cs" />
     <Compile Include="Screens\Experiment\RunExperimentViewModel.cs" />
     <Compile Include="Screens\Global\GlobalStrengthView.xaml.cs">
       <DependentUpon>GlobalStrengthView.xaml</DependentUpon>

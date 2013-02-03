@@ -80,9 +80,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			// Pull out the largest component
 			auto largestComponent = compareGraph->GetLargestComponent();
 
-			// Pull out the vertices and store then in our counting map
-			for(auto vert : largestComponent->Vertices)
-				++nodeCounts[vert];
+			if(largestComponent != nullptr)
+			{
+				// Pull out the vertices and store then in our counting map
+				for(auto vert : largestComponent->Vertices)
+					++nodeCounts[vert];
+			}
 
 			// Store our compare graph as one of our results
 			_compareGraphs[groupCompareItem.first] = compareGraph;
@@ -116,7 +119,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			auto group1Count = _subIdxsByGroup["group1"].size();
 			int &totalPerms = _permutations;
 
-			//for(int i=0; i<permutations; i++)
+			//for(int permutation=0; permutation<permutations; permutation++)
 			parallel_for(0, permutations, [=, &idxs, &totalPerms] ( int permutation )
 			{	
 				// Shuffle subjects randomly

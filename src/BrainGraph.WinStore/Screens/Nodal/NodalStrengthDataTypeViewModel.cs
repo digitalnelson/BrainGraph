@@ -117,7 +117,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 				if (min >= 0)
 					min = -1;
 
-				OxyPalette maxPal = OxyPalette.Interpolate(32, OxyColor.FromArgb(64, 64, 64, 64), OxyColors.Green);
+				OxyPalette maxPal = OxyPalette.Interpolate(32, OxyColor.FromArgb(64, 64, 64, 64), OxyColors.Red);
 				OxyPalette minPal = OxyPalette.Interpolate(32, OxyColors.Blue, OxyColor.FromArgb(64, 64, 64, 64)); 
 
 				var itm = new DataItemViewModel();

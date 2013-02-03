@@ -12,6 +12,7 @@ using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +31,7 @@ namespace BrainGraph.WinStore
 		#endregion
 
 		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
+		private RunThresholdTestViewModel _runThresholdTest = IoC.Get<RunThresholdTestViewModel>();
 		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
 
 		public MainMenuViewModel()
@@ -46,7 +48,7 @@ namespace BrainGraph.WinStore
 				_computeService = IoC.Get<IComputeService>();
 
 				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
-				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _running } });
+				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _runThresholdTest, _running } });
 				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthDataTypeViewModel>(), new MenuItem { Title = "Associations" }, } });
@@ -59,7 +61,67 @@ namespace BrainGraph.WinStore
 			var menuItem = (IMenuItem)eventArgs.ClickedItem;
 			var popupType = menuItem.PopupType;
 
-			if (menuItem is RunExperimentViewModel)
+			if (menuItem is RunThresholdTestViewModel)
+			{
+				int permutations = Int32.Parse(_permutations.Permutations);
+
+				if (permutations > 0)
+				{
+					for (double thresh = 7; thresh < 8; thresh += 0.05)
+					{
+						var dtItms = _subjectFilterService.GetDataTypeSettings();
+
+						List<Threshold> dataTypes = new List<Threshold>();
+						foreach (var itm in dtItms)
+						{
+							if (itm.Value)
+							{
+								Threshold t = new Threshold()
+								{
+									DataType = itm.Key,
+									Value = thresh
+								};
+
+								dataTypes.Add(t);
+							}
+						}
+
+						// Load the subjects into the compute service
+						_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
+
+						// Compare groups based on real labels
+						_computeService.CompareGroups();
+
+						// Create our async permutation computation to figure out p values
+						var permutation = _computeService.PermuteGroupsAsync(permutations);
+
+						// Handle progress reporting
+						permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+						{
+							_runThresholdTest.PrimaryValue = p.ToString();
+						});
+
+						// Run the thingy and fix the display when it finishes
+						await permutation.AsTask();
+
+						_runThresholdTest.PrimaryValue = thresh.ToString();
+						//_eventAggregator.Publish(new PermutationCompleteEvent());
+
+						var result = _computeService.GetResults();
+
+						Debug.WriteLine("Threshold: " + thresh.ToString());
+						foreach (var graph in result.Graphs)
+						{
+							foreach (var component in graph.Components)
+							{
+								if(component.Edges.Count > 0)
+									Debug.WriteLine("Item: " + graph.Name + " Nodes: " + component.NodeCount.ToString() + " Edges: " + component.Edges.Count.ToString());
+							}
+						}
+					}
+				}
+			}
+			else if (menuItem is RunExperimentViewModel)
 			{
 				int permutations = Int32.Parse(_permutations.Permutations);
 
@@ -87,13 +149,13 @@ namespace BrainGraph.WinStore
 
 					// Load the subjects into the compute service
 					_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
-					
+
 					// Compare groups based on real labels
 					_computeService.CompareGroups();
 
 					// Create our async permutation computation to figure out p values
 					var permutation = _computeService.PermuteGroupsAsync(permutations);
-					
+
 					// Handle progress reporting
 					permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
 					{
@@ -111,7 +173,7 @@ namespace BrainGraph.WinStore
 			{
 				var sender = (GridView)eventArgs.OriginalSource;
 				var clickedUI = sender.ItemContainerGenerator.ContainerFromItem(eventArgs.ClickedItem);
-				
+
 				var popup = (UserControl)Activator.CreateInstance(popupType);
 				popup.DataContext = menuItem;
 

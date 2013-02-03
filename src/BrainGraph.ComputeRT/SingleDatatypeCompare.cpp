@@ -208,7 +208,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		auto lrgstRndmCmp = randomGraph->GetLargestComponent();
 		auto lrgstRealCmp = _cmpGraph->GetLargestComponent();
 
-		if(lrgstRndmCmp != nullptr)
+		if(lrgstRndmCmp != nullptr && lrgstRealCmp != nullptr)
 		{
 			if(lrgstRndmCmp->Edges.size() > lrgstRealCmp->Edges.size())
 				lrgstRealCmp->RightTailExtent++;
