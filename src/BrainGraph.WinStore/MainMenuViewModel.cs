@@ -2,17 +2,18 @@
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Screens;
+using BrainGraph.WinStore.Screens.Config;
 using BrainGraph.WinStore.Screens.Edge;
 using BrainGraph.WinStore.Screens.Experiment;
 using BrainGraph.WinStore.Screens.Global;
 using BrainGraph.WinStore.Screens.Nodal;
-using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Screens.Sources;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,6 +34,7 @@ namespace BrainGraph.WinStore
 		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
 		private RunThresholdTestViewModel _runThresholdTest = IoC.Get<RunThresholdTestViewModel>();
 		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
+		private NBSmConfigViewModel _nbsmConfig = IoC.Get<NBSmConfigViewModel>();
 
 		public MainMenuViewModel()
 		{
@@ -47,8 +49,10 @@ namespace BrainGraph.WinStore
 				_subjectFilterService = IoC.Get<ISubjectFilterService>();
 				_computeService = IoC.Get<IComputeService>();
 
-				Groups.Add(new MenuGroup { Title = "Source", Items = { IoC.Get<RegionsViewModel>(), IoC.Get<SubjectsViewModel>() } });
-				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _runThresholdTest, _running } });
+				var regionsVM = IoC.Get<RegionsViewModel>();
+
+				Groups.Add(new MenuGroup { Title = "Source", Items = { regionsVM, IoC.Get<SubjectsViewModel>() } });
+				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _nbsmConfig, _runThresholdTest, _running } });
 				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Component", Items = { new MenuItem { Title = "Intermodal" }, new MenuItem { Title = "By Type" }, new MenuItem { Title = "Associations" }, } });
 				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthDataTypeViewModel>(), new MenuItem { Title = "Associations" }, } });
