@@ -1,7 +1,6 @@
 ﻿using BrainGraph.Compute.Subjects;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
-using BrainGraph.WinStore.Screens.Selection;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using Callisto.Controls;

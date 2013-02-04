@@ -5,6 +5,7 @@ using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using OxyPlot;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -16,6 +17,7 @@ namespace BrainGraph.WinStore.Screens.Sources
 	public class RegionsViewModel : ViewModelBase
 	{
 		#region Private Service Vars
+		private Windows.Storage.ApplicationDataContainer _roamingSettings;
 		private IEventAggregator _eventAggregator;
 		private INavigationService _navService;
 		private IRegionService _regionService;
@@ -34,16 +36,20 @@ namespace BrainGraph.WinStore.Screens.Sources
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
+				_roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 				_eventAggregator = IoC.Get<IEventAggregator>();
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
 				_eventAggregator.Subscribe(this);
 
-				Task.Factory.StartNew(async () =>
-				{
-					await OpenFileFromCache();
+				// Ask for our regions list
+				var regions = _regionService.GetRegionsByIndex();
 
-				}, new System.Threading.CancellationToken(), TaskCreationOptions.None, TaskScheduler.Default);
+				// Try loading from cache cache if needed, otherwise process them
+				if (regions != null && regions.Count > 0)
+					ProcessRegionsList(regions);
+				else
+					Task.Factory.StartNew(async () => { await OpenFileFromCache(); }, new System.Threading.CancellationToken(), TaskCreationOptions.None, TaskScheduler.Default);
 			}
 
 			#region Sample Data
@@ -77,12 +83,12 @@ namespace BrainGraph.WinStore.Screens.Sources
 
 		public async Task OpenFileFromCache()
 		{
-			Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-			if (roamingSettings.Values.ContainsKey(SETTING_ROI_FILE_TOKEN))
+			if (_roamingSettings.Values.ContainsKey(SETTING_ROI_FILE_TOKEN))
 			{
-				var token = roamingSettings.Values[SETTING_ROI_FILE_TOKEN] as string;
-				StorageFile file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
-				LoadRegionFile(file);
+				var token = _roamingSettings.Values[SETTING_ROI_FILE_TOKEN] as string;
+				StorageFile regionFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
+
+				ProcessRegionsList(await _regionService.Load(regionFile));
 			}
 		}
 
@@ -97,28 +103,24 @@ namespace BrainGraph.WinStore.Screens.Sources
 			if (regionFile != null)
 			{
 				var token = StorageApplicationPermissions.FutureAccessList.Add(regionFile);
+				_roamingSettings.Values[SETTING_ROI_FILE_TOKEN] = token;
 
-				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-				roamingSettings.Values[SETTING_ROI_FILE_TOKEN] = token;
-
-				LoadRegionFile(regionFile);
+				ProcessRegionsList(await _regionService.Load(regionFile));
 			}
 		}
 
-		public async void LoadRegionFile(StorageFile file)
+		public void ProcessRegionsList(List<ROI> regions)
 		{
 			Regions.Clear();
-
-			var regions = await _regionService.Load(file);
 
 			foreach (var region in regions)
 				Regions.Add(new RegionViewModel() { Region = region });
 
 			this.PrimaryValue = regions.Count.ToString();
 
-			//AXPlotModel = LoadPlotModel(r => r.X, r => r.Y);
-			//SGPlotModel = LoadPlotModel(r => (100 - r.Y), r => r.Z);
-			//CRPlotModel = LoadPlotModel(r => r.X, r => r.Z);
+			AXPlotModel = LoadPlotModel(r => r.X, r => r.Y);
+			SGPlotModel = LoadPlotModel(r => (100 - r.Y), r => r.Z);
+			CRPlotModel = LoadPlotModel(r => r.X, r => r.Z);
 		}
 
 		protected PlotModel LoadPlotModel(Func<ROI, double> horizSelector, Func<ROI, double> vertSelector)

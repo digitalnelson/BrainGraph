@@ -128,6 +128,10 @@
     </Compile>
     <Compile Include="MainMenuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\Config\NBSmConfigPopup.xaml.cs">
+      <DependentUpon>NBSmConfigPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Config\NBSmConfigViewModel.cs" />
     <Compile Include="Screens\Edge\EdgeSignificanceView.xaml.cs">
       <DependentUpon>EdgeSignificanceView.xaml</DependentUpon>
     </Compile>
@@ -151,18 +155,16 @@
       <DependentUpon>RegionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Sources\RegionsViewModel.cs" />
-    <Compile Include="Screens\Sources\Selection\DataTypesPopup.xaml.cs">
+    <Compile Include="Screens\Sources\DataTypesPopup.xaml.cs">
       <DependentUpon>DataTypesPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Sources\Selection\DataTypesViewModel.cs" />
     <Compile Include="Screens\Sources\GroupsPopup.xaml.cs">
       <DependentUpon>GroupsPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Sources\Selection\GroupsViewModel.cs" />
-    <Compile Include="Screens\Sources\Selection\PermutationPopup.xaml.cs">
+    <Compile Include="Screens\Config\PermutationPopup.xaml.cs">
       <DependentUpon>PermutationPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Sources\Selection\PermutationViewModel.cs" />
+    <Compile Include="Screens\Config\PermutationViewModel.cs" />
     <Compile Include="Screens\Sources\RegionViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectGroupViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectsFilterViewModels.cs" />
@@ -216,6 +218,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Config\NBSmConfigPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Edge\EdgeSignificanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -236,7 +242,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Sources\Selection\DataTypesPopup.xaml">
+    <Page Include="Screens\Sources\DataTypesPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -244,7 +250,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Sources\Selection\PermutationPopup.xaml">
+    <Page Include="Screens\Config\PermutationPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
