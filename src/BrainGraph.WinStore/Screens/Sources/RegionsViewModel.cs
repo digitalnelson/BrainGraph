@@ -8,6 +8,7 @@ using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OxyPlot.Axes;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;

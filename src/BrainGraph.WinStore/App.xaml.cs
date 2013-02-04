@@ -10,7 +10,11 @@ using Caliburn.Micro;
 using Ninject;
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Activation;
+using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -22,7 +26,7 @@ namespace BrainGraph.WinStore
 	public sealed partial class App
 	{
 		private IKernel _kernel;
-		private WinRTContainer container;
+		private WinRTContainer _container;
 
 		/// <summary>
 		/// Initializes the singleton application object.  This is the first line of authored code
@@ -47,13 +51,12 @@ namespace BrainGraph.WinStore
 		{
 			base.Configure();
 
-			container = new WinRTContainer(RootFrame);
-			container.RegisterWinRTServices();
-
+			_container = new WinRTContainer();
+			_container.RegisterWinRTServices();
+		    
 			_kernel = new StandardKernel();
-			
-			_kernel.Bind<INavigationService>().To<FrameAdapter>().InSingletonScope().WithConstructorArgument("frame", RootFrame);
-			
+            
+		    
 			_kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 			_kernel.Bind<IRegionService>().To<RegionService>().InSingletonScope();
 			_kernel.Bind<ISubjectDataService>().To<SubjectDataService>().InSingletonScope();
@@ -61,7 +64,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<IComputeService>().To<ComputeService>().InSingletonScope();
 
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
-			
+            
+            
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
 			_kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
@@ -75,11 +79,19 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<NodalStrengthDataTypeViewModel>().To<NodalStrengthDataTypeViewModel>();
 			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>();
 			_kernel.Bind<EdgeSignificanceViewModel>().To<EdgeSignificanceViewModel>().InSingletonScope();
+
 		}
 
 		protected override object GetInstance(Type service, string key)
 		{
-			return _kernel.Get(service, key);
+		    if (string.IsNullOrWhiteSpace(key))
+            {
+                return _kernel.Get(service);
+            }
+            else
+            {
+                return _kernel.Get(service, key);
+            }
 		}
 
 		protected override IEnumerable<object> GetAllInstances(Type service)
@@ -89,14 +101,26 @@ namespace BrainGraph.WinStore
 
 		protected override void BuildUp(object instance)
 		{
-			container.BuildUp(instance);
+			_kernel.Inject(instance);
 		}
 
-		protected override Type GetDefaultView()
-		{
-			return typeof(MainMenuView);
-		}
+        protected override void PrepareViewFirst(Frame rootFrame)
+        {
+            _kernel.Bind<INavigationService>().ToConstant(new FrameAdapter(rootFrame));
+        }
 
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            DisplayRootView<MainMenuView>();
+            SettingsPane.GetForCurrentView()
+                        .CommandsRequested += (sender, eventArgs) => eventArgs.Request.ApplicationCommands
+                                                                              .Add(new SettingsCommand("privacypolicy", "Privacy policy",
+                                                                                                       async command =>
+                                                                                                       {
+                                                                                                           await Launcher.LaunchUriAsync(new Uri("http://www.agilemedicine.com/privacy/"));
+                                                                                                       }));
+        }
+        
 		///// <summary>
 		///// Invoked when the application is launched normally by the end user.  Other entry points
 		///// will be used when the application is launched to open a specific file, to display
