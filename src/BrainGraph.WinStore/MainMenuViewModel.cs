@@ -67,9 +67,11 @@ namespace BrainGraph.WinStore
 
 				if (permutations > 0)
 				{
-					for (double thresh = 7; thresh < 8; thresh += 0.05)
+					for (int thresh = 100; thresh < 800; thresh += 5)
 					{
 						var dtItms = _subjectFilterService.GetDataTypeSettings();
+
+						double dThresh = ((double)thresh / (double)100);
 
 						List<Threshold> dataTypes = new List<Threshold>();
 						foreach (var itm in dtItms)
@@ -79,7 +81,7 @@ namespace BrainGraph.WinStore
 								Threshold t = new Threshold()
 								{
 									DataType = itm.Key,
-									Value = thresh
+									Value = dThresh
 								};
 
 								dataTypes.Add(t);
@@ -109,7 +111,7 @@ namespace BrainGraph.WinStore
 
 						var result = _computeService.GetResults();
 
-						Debug.WriteLine("Threshold: " + thresh.ToString());
+						Debug.WriteLine("Threshold: " + dThresh.ToString("0.00"));
 						foreach (var graph in result.Graphs)
 						{
 							foreach (var component in graph.Components)
