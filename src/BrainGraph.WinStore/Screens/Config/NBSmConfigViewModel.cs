@@ -1,5 +1,6 @@
 ﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
+using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace BrainGraph.WinStore.Screens.Config
 {
-	class NBSmConfigViewModel : ViewModelBase, IMenuItem, IHandle<SubjectsLoadedEvent>
+	class NBSmConfigViewModel : ViewModelBase, IMenuItem, IHandle<SubjectsLoadedEvent>, IHandle<SubjectsFilteredEvent>
 	{
 		private IEventAggregator _eventAggregator;
+		private ISubjectFilterService _subjectFilterService = IoC.Get<ISubjectFilterService>();
 
 		private const string SETTING_PERMUTATIONS = "Permutations";
 
@@ -56,6 +58,13 @@ namespace BrainGraph.WinStore.Screens.Config
 			IsReady = true;
 		}
 
+		public void Handle(SubjectsFilteredEvent message)
+		{
+			var dataTypeSettings = _subjectFilterService.GetDataTypeSettings();
+
+			DataTyp
+		}
+
 		public override Type PopupType
 		{
 			get
@@ -63,28 +72,28 @@ namespace BrainGraph.WinStore.Screens.Config
 				return typeof(NBSmConfigPopup);
 			}
 		}
+
 		public BindableCollection<NBSmConfigByDataTypeViewModel> DataTypes { get { return _inlDataTypes; } set { _inlDataTypes = value; NotifyOfPropertyChange(() => DataTypes); } } private BindableCollection<NBSmConfigByDataTypeViewModel> _inlDataTypes;
 	}
 
 	public class NBSmConfigByDataTypeViewModel : Screen
 	{
 		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
-		public string Threshold { get { return _inlThreshold; } set { _inlThreshold = value; NotifyOfPropertyChange(() => Threshold); } } private string _inlThreshold;
-
-		public bool IsIncluded
-		{
-			get { return _inlIsIncluded; }
-			set
-			{
-				_inlIsIncluded = value;
+		public string Threshold 
+		{ 
+			get { return _inlThreshold; } 
+			set 
+			{ 
+				_inlThreshold = value;
 
 				// TODO: Async these
 
-				_subjectFilterService.AssignDataType(Title, _inlIsIncluded);
-				_subjectFilterService.FilterSubjects();
+				//_subjectFilterService.AssignDataType(Title, _inlIsIncluded);
+				//_subjectFilterService.FilterSubjects();
 
-				NotifyOfPropertyChange(() => IsIncluded);
-			}
-		} private bool _inlIsIncluded;
+				NotifyOfPropertyChange(() => Threshold); 
+			} 
+
+		} private string _inlThreshold;
 	}
 }
