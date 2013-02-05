@@ -14,7 +14,7 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBlock Text="Data Types" Grid.Row="0" Foreground="Black" Margin="0,0,0,8" FontSize="18.667" />
+		<TextBlock Text="NBSm Thresholds" Grid.Row="0" Foreground="Black" Margin="0,0,0,8" FontSize="18.667" />
 
 		<ItemsControl ItemsSource="{Binding DataTypes}" Grid.Row="2">
 			<ItemsControl.ItemTemplate>
@@ -23,13 +23,11 @@
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="Auto"/>
 							<ColumnDefinition Width="1*" MinWidth="50"/>
 						</Grid.ColumnDefinitions>
 
-						<CheckBox  Grid.Column="0" Margin="0,0,4,0" HorizontalAlignment="Left" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="1" IsChecked="{Binding IsIncluded, Mode=TwoWay}" />
-						<TextBlock Text="{Binding Title, Mode=TwoWay}" Grid.Column="1" Foreground="Black" FontSize="16" VerticalAlignment="Center" />
-						<TextBox Text="{Binding Threshold, Mode=TwoWay}" Grid.Column="2" />
+						<TextBlock Text="{Binding Title, Mode=TwoWay}" Grid.Column="0" Foreground="Black" FontSize="16" VerticalAlignment="Center" />
+						<TextBox Text="{Binding Threshold, Mode=TwoWay}" Margin="4,2,0,2" Grid.Column="1" BorderThickness="1" BorderBrush="Black" />
 					</Grid>
 
 				</DataTemplate>

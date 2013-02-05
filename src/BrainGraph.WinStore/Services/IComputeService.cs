@@ -14,7 +14,8 @@ namespace BrainGraph.WinStore.Services
 
 	public interface IComputeService
 	{
-		void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2);
+		void SetThreshold(string dataType, string threshold);
+		void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<Subject> group1, List<Subject> group2);
 		void CompareGroups();
 		IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations);
 		MultiGraphViewModel GetResults();
@@ -24,14 +25,26 @@ namespace BrainGraph.WinStore.Services
 	public class ComputeService : IComputeService
 	{
 		private MultiDatatypeCompare _compare;
-		private int _perms;
+		private Dictionary<string, string> _thresholds = new Dictionary<string,string>();
 
 		public ComputeService()
 		{}
 
-		public void LoadSubjects(int nodes, int edges, List<Threshold> dataTypes, List<Subject> group1, List<Subject> group2)
+		public void SetThreshold(string dataType, string threshold)
 		{
-			_compare = new MultiDatatypeCompare(nodes, edges, dataTypes);
+			_thresholds[dataType] = threshold;
+		}
+
+		public void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<Subject> group1, List<Subject> group2)
+		{
+			List<Threshold> thresholds = new List<Threshold>();
+
+			foreach (var dataType in dataTypes)
+			{
+				thresholds.Add(new Threshold { DataType = dataType, Value = double.Parse(_thresholds[dataType]) });
+			}
+
+			_compare = new MultiDatatypeCompare(nodes, edges, thresholds);
 			_compare.LoadSubjects(group1, group2);
 		}
 

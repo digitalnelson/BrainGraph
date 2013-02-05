@@ -12,6 +12,7 @@ using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -67,65 +68,65 @@ namespace BrainGraph.WinStore
 
 			if (menuItem is RunThresholdTestViewModel)
 			{
-				int permutations = Int32.Parse(_permutations.Permutations);
+				//int permutations = Int32.Parse(_permutations.Permutations);
 
-				if (permutations > 0)
-				{
-					for (int thresh = 100; thresh < 800; thresh += 5)
-					{
-						var dtItms = _subjectFilterService.GetDataTypeSettings();
+				//if (permutations > 0)
+				//{
+				//	for (int thresh = 100; thresh < 800; thresh += 5)
+				//	{
+				//		var dtItms = _subjectFilterService.GetDataTypeSettings();
 
-						double dThresh = ((double)thresh / (double)100);
+				//		double dThresh = ((double)thresh / (double)100);
 
-						List<Threshold> dataTypes = new List<Threshold>();
-						foreach (var itm in dtItms)
-						{
-							if (itm.Value)
-							{
-								Threshold t = new Threshold()
-								{
-									DataType = itm.Key,
-									Value = dThresh
-								};
+				//		List<Threshold> dataTypes = new List<Threshold>();
+				//		foreach (var itm in dtItms)
+				//		{
+				//			if (itm.Value)
+				//			{
+				//				Threshold t = new Threshold()
+				//				{
+				//					DataType = itm.Key,
+				//					Value = dThresh
+				//				};
 
-								dataTypes.Add(t);
-							}
-						}
+				//				dataTypes.Add(t);
+				//			}
+				//		}
 
-						// Load the subjects into the compute service
-						_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
+				//		// Load the subjects into the compute service
+				//		_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
 
-						// Compare groups based on real labels
-						_computeService.CompareGroups();
+				//		// Compare groups based on real labels
+				//		_computeService.CompareGroups();
 
-						// Create our async permutation computation to figure out p values
-						var permutation = _computeService.PermuteGroupsAsync(permutations);
+				//		// Create our async permutation computation to figure out p values
+				//		var permutation = _computeService.PermuteGroupsAsync(permutations);
 
-						// Handle progress reporting
-						permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
-						{
-							_runThresholdTest.PrimaryValue = p.ToString();
-						});
+				//		// Handle progress reporting
+				//		permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+				//		{
+				//			_runThresholdTest.PrimaryValue = p.ToString();
+				//		});
 
-						// Run the thingy and fix the display when it finishes
-						await permutation.AsTask();
+				//		// Run the thingy and fix the display when it finishes
+				//		await permutation.AsTask();
 
-						_runThresholdTest.PrimaryValue = thresh.ToString();
-						//_eventAggregator.Publish(new PermutationCompleteEvent());
+				//		_runThresholdTest.PrimaryValue = thresh.ToString();
+				//		//_eventAggregator.Publish(new PermutationCompleteEvent());
 
-						var result = _computeService.GetResults();
+				//		var result = _computeService.GetResults();
 
-						Debug.WriteLine("Threshold: " + dThresh.ToString("0.00"));
-						foreach (var graph in result.Graphs)
-						{
-							foreach (var component in graph.Components)
-							{
-								if(component.Edges.Count > 0)
-									Debug.WriteLine("Item: " + graph.Name + " Nodes: " + component.NodeCount.ToString() + " Edges: " + component.Edges.Count.ToString());
-							}
-						}
-					}
-				}
+				//		Debug.WriteLine("Threshold: " + dThresh.ToString("0.00"));
+				//		foreach (var graph in result.Graphs)
+				//		{
+				//			foreach (var component in graph.Components)
+				//			{
+				//				if(component.Edges.Count > 0)
+				//					Debug.WriteLine("Item: " + graph.Name + " Nodes: " + component.NodeCount.ToString() + " Edges: " + component.Edges.Count.ToString());
+				//			}
+				//		}
+				//	}
+				//}
 			}
 			else if (menuItem is RunExperimentViewModel)
 			{
@@ -133,25 +134,8 @@ namespace BrainGraph.WinStore
 
 				if (permutations > 0)
 				{
-					var dtItms = _subjectFilterService.GetDataTypeSettings();
-
-					List<Threshold> dataTypes = new List<Threshold>();
-					foreach (var itm in dtItms)
-					{
-						if (itm.Value)
-						{
-							Threshold t = new Threshold()
-							{
-								DataType = itm.Key,
-								Value = 2.1
-							};
-
-							if (t.DataType == "fMRI-mo")
-								t.Value = 5.0;
-
-							dataTypes.Add(t);
-						}
-					}
+					// Get our active data types
+					var dataTypes = _subjectFilterService.GetDataTypeSettings().Where(itm => itm.Value == true).Select(itm => itm.Key).ToList();
 
 					// Load the subjects into the compute service
 					_computeService.LoadSubjects(_regionService.GetNodeCount(), _regionService.GetEdgeCount(), dataTypes, _subjectFilterService.GetGroup1(), _subjectFilterService.GetGroup2());
