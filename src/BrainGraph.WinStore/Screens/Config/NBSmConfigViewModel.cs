@@ -62,7 +62,12 @@ namespace BrainGraph.WinStore.Screens.Config
 		{
 			var dataTypeSettings = _subjectFilterService.GetDataTypeSettings();
 
-			DataTyp
+			DataTypes.Clear();
+			foreach (var type in dataTypeSettings)
+			{
+				if(type.Value)
+					DataTypes.Add(new NBSmConfigByDataTypeViewModel { Title = type.Key + " altered" });
+			}
 		}
 
 		public override Type PopupType
