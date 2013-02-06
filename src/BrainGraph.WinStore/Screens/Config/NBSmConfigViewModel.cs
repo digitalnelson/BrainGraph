@@ -20,7 +20,7 @@ namespace BrainGraph.WinStore.Screens.Config
 
 		public NBSmConfigViewModel()
 		{
-			Title = "NBSm Config";
+			Title = "NBSm Thresholds";
 			
 			DataTypes = new BindableCollection<NBSmConfigByDataTypeViewModel>();
 
@@ -33,6 +33,7 @@ namespace BrainGraph.WinStore.Screens.Config
 			IsReady = true;
 
 			var dataTypeSettings = _subjectFilterService.GetDataTypeSettings();
+			StringBuilder sbItems = new StringBuilder();
 
 			DataTypes.Clear();
 			foreach (var type in dataTypeSettings)
@@ -46,8 +47,11 @@ namespace BrainGraph.WinStore.Screens.Config
 						threshold = _roamingSettings.Values[dataTypeKey] as string;
 
 					DataTypes.Add(new NBSmConfigByDataTypeViewModel { Title = type.Key, Threshold = threshold });
+					sbItems.AppendLine(string.Format("{0}: {1}", type.Key, threshold));
 				}
 			}
+
+			PrimaryValue = sbItems.ToString();
 		}
 
 		public override Type PopupType { get { return typeof(NBSmConfigPopup); } }

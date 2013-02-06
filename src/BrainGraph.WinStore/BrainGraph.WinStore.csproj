@@ -128,6 +128,10 @@
     </Compile>
     <Compile Include="MainMenuViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\Component\IntermodalView.xaml.cs">
+      <DependentUpon>IntermodalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Component\IntermodalViewModel.cs" />
     <Compile Include="Screens\Config\NBSmConfigPopup.xaml.cs">
       <DependentUpon>NBSmConfigPopup.xaml</DependentUpon>
     </Compile>
@@ -218,6 +222,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Component\IntermodalView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Screens\Config\NBSmConfigPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -299,9 +307,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Screens\Component\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
   </PropertyGroup>
