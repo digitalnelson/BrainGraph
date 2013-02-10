@@ -2,7 +2,7 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
   <Identity Name="46ae4f62-0fca-46a7-aac7-9c0e2b6f1d85" Publisher="CN=Brent" Version="1.0.0.0" />
   <Properties>
-    <DisplayName>BrainGraph.WinStore</DisplayName>
+    <DisplayName>BrainGraph</DisplayName>
     <PublisherDisplayName>Brent</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -15,17 +15,18 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="BrainGraph.WinStore.App">
-      <VisualElements DisplayName="BrainGraph.WinStore" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="BrainGraph.WinStore" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="allLogos" />
+      <VisualElements DisplayName="BrainGraph" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="An application to support the study of the connectivity of the brain.  It uses graph theory to describe group differences seen in populations." ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="noLogos" WideLogo="Assets\WideLogo.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
+        <InitialRotationPreference>
+          <Rotation Preference="landscape" />
+        </InitialRotationPreference>
       </VisualElements>
       <Extensions>
         <Extension Category="windows.fileTypeAssociation">
           <FileTypeAssociation Name="braingraphdatafiles">
             <SupportedFileTypes>
               <FileType>.txt</FileType>
-              <FileType>.csv</FileType>
-              <FileType>.gz</FileType>
             </SupportedFileTypes>
           </FileTypeAssociation>
         </Extension>

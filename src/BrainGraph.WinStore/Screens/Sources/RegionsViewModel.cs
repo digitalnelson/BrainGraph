@@ -1,5 +1,6 @@
 ﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Common.Viz;
+using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
@@ -10,11 +11,12 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 
 namespace BrainGraph.WinStore.Screens.Sources
 {
-	public class RegionsViewModel : ViewModelBase
+	public class RegionsViewModel : ViewModelBase, IHandle<RegionsLoadedEvent>
 	{
 		#region Private Service Vars
 		private Windows.Storage.ApplicationDataContainer _roamingSettings;
@@ -88,7 +90,11 @@ namespace BrainGraph.WinStore.Screens.Sources
 				var token = _roamingSettings.Values[SETTING_ROI_FILE_TOKEN] as string;
 				StorageFile regionFile = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
 
-				ProcessRegionsList(await _regionService.Load(regionFile));
+				try
+				{
+					ProcessRegionsList(await _regionService.Load(regionFile));
+				}
+				catch (Exception) { } // We just eat up this exception
 			}
 		}
 
@@ -105,7 +111,21 @@ namespace BrainGraph.WinStore.Screens.Sources
 				var token = StorageApplicationPermissions.FutureAccessList.Add(regionFile);
 				_roamingSettings.Values[SETTING_ROI_FILE_TOKEN] = token;
 
-				ProcessRegionsList(await _regionService.Load(regionFile));
+				bool bError = false;
+				try
+				{
+					ProcessRegionsList(await _regionService.Load(regionFile));
+				}
+				catch (Exception ex)
+				{
+					bError = true;
+				}
+
+				if (bError)
+				{ 
+					var messageDlg = new MessageDialog("There was a problem opening the region file.  Are you sure it is in the correct format?");
+					await messageDlg.ShowAsync();
+				}
 			}
 		}
 
@@ -165,5 +185,10 @@ namespace BrainGraph.WinStore.Screens.Sources
 		public PlotModel SGPlotModel { get { return _inlSGPlotModel; } set { _inlSGPlotModel = value; NotifyOfPropertyChange(() => SGPlotModel); } } private PlotModel _inlSGPlotModel;
 		public PlotModel AXPlotModel { get { return _inlAXPlotModel; } set { _inlAXPlotModel = value; NotifyOfPropertyChange(() => AXPlotModel); } } private PlotModel _inlAXPlotModel;
 		public PlotModel CRPlotModel { get { return _inlCRPlotModel; } set { _inlCRPlotModel = value; NotifyOfPropertyChange(() => CRPlotModel); } } private PlotModel _inlCRPlotModel;
+
+		public void Handle(RegionsLoadedEvent message)
+		{
+			this.PrimaryValue = _regionService.GetNodeCount().ToString();
+		}
 	}
 }

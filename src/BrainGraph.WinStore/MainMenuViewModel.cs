@@ -56,10 +56,10 @@ namespace BrainGraph.WinStore
 				Groups.Add(new MenuGroup { Title = "Source", Items = { regionsVM, IoC.Get<SubjectsViewModel>() } });
 				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _nbsmConfig } });
 				Groups.Add(new MenuGroup { Title = "Compute", Items = { _runThresholdTest, _running } });
-				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>(), new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Component", Items = { IoC.Get<IntermodalViewModel>(), IoC.Get<IntraSummaryViewModel>(), new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthDataTypeViewModel>(), new MenuItem { Title = "Associations" }, } });
-				Groups.Add(new MenuGroup { Title = "Edge", Items = { IoC.Get<EdgeSignificanceViewModel>(), new MenuItem { Title = "Associations" }, } });
+				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>() } });
+				Groups.Add(new MenuGroup { Title = "Component", Items = { IoC.Get<IntermodalViewModel>(), IoC.Get<IntraSummaryViewModel>()/*, new MenuItem { Title = "Associations" },*/ } });
+				Groups.Add(new MenuGroup { Title = "Nodal", Items = { IoC.Get<NodalStrengthDataTypeViewModel>() } });
+				Groups.Add(new MenuGroup { Title = "Edge", Items = { IoC.Get<EdgeSignificanceViewModel>() } });
 			}
 		}
 

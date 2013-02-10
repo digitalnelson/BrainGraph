@@ -89,6 +89,7 @@ namespace BrainGraph.WinStore.Screens.Component
 
 					itm.Nodes = new List<NodeSummaryViewModel>();
 					itm.SigNodes = new List<NodeSummaryViewModel>();
+					itm.SigEdges = new List<EdgeSummaryViewModel>();
 
 					foreach (var region in regions)
 						itm.Nodes.Add(new NodeSummaryViewModel { Region = region });
@@ -97,6 +98,8 @@ namespace BrainGraph.WinStore.Screens.Component
 					{
 						itm.Nodes[edge.NodeOneIndex].Significant = true;
 						itm.Nodes[edge.NodeTwoIndex].Significant = true;
+
+						itm.SigEdges.Add(new EdgeSummaryViewModel());
 					}
 
 					foreach (var node in itm.Nodes)
@@ -123,11 +126,14 @@ namespace BrainGraph.WinStore.Screens.Component
 		{
 			var model = new PlotModel() { IsLegendVisible = false };
 			model.PlotMargins = new OxyThickness(0, 0, 0, 0);
-			model.PlotAreaBorderColor = OxyColors.Transparent;
+			model.PlotAreaBorderColor = OxyColors.White;
 			model.PlotType = PlotType.Cartesian;
 
-			var ba = new LinearAxis(AxisPosition.Bottom) { IsAxisVisible = false };
-			var la = new LinearAxis(AxisPosition.Left) { IsAxisVisible = false };
+			//var ba = new LinearAxis(AxisPosition.Bottom) { IsAxisVisible = false };
+			//var la = new LinearAxis(AxisPosition.Left) { IsAxisVisible = false };
+
+			var ba = new LinearAxis(AxisPosition.Bottom) { AxislineColor = OxyColors.White, TextColor = OxyColors.White, MajorGridlineColor = OxyColors.White, TicklineColor = OxyColors.White };
+			var la = new LinearAxis(AxisPosition.Left) { AxislineColor = OxyColors.White, TextColor = OxyColors.White, TicklineColor = OxyColors.White };
 
 			ba.MinimumPadding = 0.1;
 			ba.MaximumPadding = 0.1;
@@ -259,7 +265,9 @@ namespace BrainGraph.WinStore.Screens.Component
 		public int SigNodeCount { get; set; }
 
 		public List<NodeSummaryViewModel> Nodes { get; set; }
+
 		public List<NodeSummaryViewModel> SigNodes { get; set; }
+		public List<EdgeSummaryViewModel> SigEdges { get; set; }
 
 		public PlotModel SGPlotModel { get { return _inlSGPlotModel; } set { _inlSGPlotModel = value; NotifyOfPropertyChange(() => SGPlotModel); } } private PlotModel _inlSGPlotModel;
 		public PlotModel AXPlotModel { get { return _inlAXPlotModel; } set { _inlAXPlotModel = value; NotifyOfPropertyChange(() => AXPlotModel); } } private PlotModel _inlAXPlotModel;

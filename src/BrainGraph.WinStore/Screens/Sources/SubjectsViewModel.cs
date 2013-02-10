@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -101,8 +102,12 @@ namespace BrainGraph.WinStore.Screens.Sources
 			{
 				var token = roamingSettings.Values[SETTING_SUBJECT_FILE_TOKEN] as string;
 				StorageFile file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token);
-				
-				await LoadSubjectsFile(file);
+
+				try
+				{
+					await LoadSubjectsFile(file);
+				}
+				catch (Exception) { }
 			}
 		}
 
@@ -121,11 +126,26 @@ namespace BrainGraph.WinStore.Screens.Sources
 				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 				roamingSettings.Values[SETTING_SUBJECT_FILE_TOKEN] = token;
 
-				await LoadSubjectsFile(file);
+				bool bError = false;
+				try
+				{
+					await LoadSubjectsFile(file);
+				}
+				catch (Exception ex)
+				{
+					bError = true;
+				}
+
+				if (bError)
+				{
+					var messageDlg = new MessageDialog("There was a problem opening the subjects file.  Are you sure it is in the correct format?");
+					await messageDlg.ShowAsync();
+				}
 
 				// Try to pull the data for the subjects based on the cached data folder
 				// It's ok if it fails miserably.
-				await OpenFolderFromCache();
+				if(!bError)
+					await OpenFolderFromCache();
 			}
 		}
 
@@ -160,8 +180,12 @@ namespace BrainGraph.WinStore.Screens.Sources
 			{
 				var token = roamingSettings.Values[SETTING_SUBJECT_DATA_FOLDER_TOKEN] as string;
 				StorageFolder folder = await StorageApplicationPermissions.FutureAccessList.GetFolderAsync(token);
-				
-				await LoadSubjectsFolder(folder);
+
+				try
+				{
+					await LoadSubjectsFolder(folder);
+				}
+				catch (Exception) { }
 			}
 		}
 
@@ -180,10 +204,25 @@ namespace BrainGraph.WinStore.Screens.Sources
 				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 				roamingSettings.Values[SETTING_SUBJECT_DATA_FOLDER_TOKEN] = token;
 
-				await LoadSubjectsFolder(folder);
+				bool bError = false;
+				try
+				{
+					await LoadSubjectsFolder(folder);
+				}
+				catch (Exception ex)
+				{
+					bError = true;
+				}
+
+				if (bError)
+				{
+					var messageDlg = new MessageDialog("There was a problem opening the subjects folder.  Are you sure the files are in the correct format?");
+					await messageDlg.ShowAsync();
+				}
 			}
 		}
 
+		// TODO: Need to handle a bunch of errors here and display them in the views
 		public async Task LoadSubjectsFolder(StorageFolder folder)
 		{
 			if (_sgRemaining.Subjects.Count > 0)

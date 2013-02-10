@@ -203,10 +203,51 @@
     <Content Include="Assets\Atlases\AAL.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Logo.png" />
-    <Content Include="Assets\SmallLogo.png" />
-    <Content Include="Assets\SplashScreen.png" />
-    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo16x16.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo24x24.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo256x256.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo30x30.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo32x32.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo42x42.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo48x48.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo50x50.png" />
+    <Content Include="Assets\Images\ExtraSmallLogo54x54.png" />
+    <Content Include="Assets\Images\Icon120x120.png" />
+    <Content Include="Assets\Images\Icon150x150.png" />
+    <Content Include="Assets\Images\Icon210x210.png" />
+    <Content Include="Assets\Images\Icon270x270.png" />
+    <Content Include="Assets\Images\SmallLogo50x50.png" />
+    <Content Include="Assets\Images\SmallLogo70x70.png" />
+    <Content Include="Assets\Images\SmallLogo90x90.png" />
+    <Content Include="Assets\Images\SplashScreen1116x540.png" />
+    <Content Include="Assets\Images\SplashScreen620x300.png" />
+    <Content Include="Assets\Images\SplashScreen868x420.png" />
+    <Content Include="Assets\Images\WideLogo248x120.png" />
+    <Content Include="Assets\Images\WideLogo310x150.png" />
+    <Content Include="Assets\Images\WideLogo434x210.png" />
+    <Content Include="Assets\Images\WideLogo558x270.png" />
+    <Content Include="Assets\Logo.scale-100.png" />
+    <Content Include="Assets\Logo.scale-140.png" />
+    <Content Include="Assets\Logo.scale-180.png" />
+    <Content Include="Assets\Logo.scale-80.png" />
+    <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Assets\SmallLogo.scale-140.png" />
+    <Content Include="Assets\SmallLogo.scale-180.png" />
+    <Content Include="Assets\SmallLogo.scale-80.png" />
+    <Content Include="Assets\SmallLogo.targetsize-16.png" />
+    <Content Include="Assets\SmallLogo.targetsize-256.png" />
+    <Content Include="Assets\SmallLogo.targetsize-32.png" />
+    <Content Include="Assets\SmallLogo.targetsize-48.png" />
+    <Content Include="Assets\SplashScreen.scale-100.png" />
+    <Content Include="Assets\SplashScreen.scale-140.png" />
+    <Content Include="Assets\SplashScreen.scale-180.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-140.png" />
+    <Content Include="Assets\StoreLogo.scale-180.png" />
+    <Content Include="Assets\WideLogo.scale-100.png" />
+    <Content Include="Assets\WideLogo.scale-140.png" />
+    <Content Include="Assets\WideLogo.scale-180.png" />
+    <Content Include="Assets\WideLogo.scale-80.png" />
     <Content Include="Common\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

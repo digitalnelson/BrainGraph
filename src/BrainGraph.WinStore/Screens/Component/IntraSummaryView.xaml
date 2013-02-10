@@ -91,28 +91,46 @@
 						<Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="4">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" />
-								<RowDefinition/>
+								<RowDefinition />
 							</Grid.RowDefinitions>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
 
-							<VariableSizedWrapGrid Grid.Row="1" ItemHeight="300" ItemWidth="300">
+							<StackPanel Orientation="Horizontal" Grid.Row="0">
+								<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Text="{Binding DataType}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="0,0,0,6" />
+								<TextBlock Text=" - " HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
+								<TextBlock Text="{Binding SigNodeCount}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
+								<TextBlock Text="/" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
+								<TextBlock Text="{Binding SigEdges.Count}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
+							</StackPanel>
 
-								<StackPanel Orientation="Vertical">
-									<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Text="{Binding DataType}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="0,0,0,6" />
-									<TextBlock Text="{Binding SigNodeCount}" FontSize="20" />
-								</StackPanel>
-
-								<oxy:Plot Background="#660000dd" Model="{Binding AXPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-								<oxy:Plot Background="#660000dd" Model="{Binding CRPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-								<oxy:Plot Background="#660000dd" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />							
-								
-								<ItemsControl ItemsSource="{Binding SigNodes}">
-									<ItemsControl.ItemTemplate>
-										<DataTemplate>
-											<TextBlock Text="{Binding Region.Name}"/>
-										</DataTemplate>
-									</ItemsControl.ItemTemplate>
-								</ItemsControl>
+							<VariableSizedWrapGrid Grid.Row="1" ItemHeight="250" ItemWidth="250">
+								<oxy:Plot Background="#00000000" Model="{Binding AXPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding CRPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<oxy:Plot Background="#00000000" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />							
 							</VariableSizedWrapGrid>
+
+							<GridView ItemsSource="{Binding SigNodes}" Grid.Row="1" Grid.Column="1">
+								<GridView.ItemTemplate>
+									<DataTemplate>
+										<Grid HorizontalAlignment="Left" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+											<Grid.RowDefinitions>
+												<RowDefinition/>
+												<RowDefinition/>
+											</Grid.RowDefinitions>
+											<TextBlock TextWrapping="Wrap" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Width="200" VerticalAlignment="Center" Text="{Binding Region.Name}" HorizontalAlignment="Left" FontFamily="Segoe UI" FontSize="18.667" Style="{StaticResource TitleTextStyle}" />
+											<StackPanel Orientation="Horizontal" Grid.Row="1">
+												<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Region.Ident}" VerticalAlignment="Top" Foreground="White" Margin="0,0,4,0" Style="{StaticResource SubtitleTextStyle}"/>
+												<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="(" VerticalAlignment="Top" Foreground="White" Style="{StaticResource SubtitleTextStyle}" />
+												<TextBlock TextWrapping="Wrap" Text="{Binding Region.Index}" Foreground="White" Style="{StaticResource SubtitleTextStyle}" />
+												<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text=")" VerticalAlignment="Top" Foreground="White" Style="{StaticResource SubtitleTextStyle}" />
+											</StackPanel>
+										</Grid>
+									</DataTemplate>
+								</GridView.ItemTemplate>
+							</GridView>
 						</Grid>
 					</DataTemplate>
 				</GridView.ItemTemplate>
