@@ -32,10 +32,9 @@
 	<UserControl.Resources>
 		<CollectionViewSource
 			x:Name="groupedItemsViewSource"
-			Source="{Binding Regions}"
+			Source="{Binding OverlapRegions}"
 			IsSourceGrouped="false"
-			ItemsPath="Items" 
-			d:Source="{Binding Regions, Source={d:DesignInstance Type=local:RegionsViewModel, IsDesignTimeCreatable=True}}"/>
+			ItemsPath="Items" />
 	</UserControl.Resources>
 
 	<!--
@@ -56,7 +55,7 @@
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
 			<Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="Brain Regions" Style="{StaticResource PageHeaderTextStyle}"/>
+			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="Intermodal Component" Style="{StaticResource PageHeaderTextStyle}"/>
 		</Grid>
 
 		<Grid Grid.Row="1" Grid.Column="0" Margin="120,0,0,0">

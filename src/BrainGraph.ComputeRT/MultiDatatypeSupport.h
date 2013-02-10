@@ -65,18 +65,4 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		int _fullOverlapTotal;
 		int _randomGraphOverlapCount;
 	};
-
-	//class Component;
-
-	//public ref class Overlap sealed
-	//{
-	//	
-	//private:
-	//	std::vector<std::shared_ptr<MultiNode>> Vertices;
-	//	
-	//	int RightTailOverlapCount;
-	//	
-	//	std::map<Platform::String^, std::vector<Component>> Components;
-	//	std::map<int, int> Distribution;
-	//};
 }}}

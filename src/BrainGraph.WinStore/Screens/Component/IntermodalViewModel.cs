@@ -30,11 +30,12 @@ namespace BrainGraph.WinStore.Screens.Component
 		public IntermodalViewModel()
 		{
 			Regions = new BindableCollection<RegionViewModel>();
+			OverlapRegions = new BindableCollection<RegionViewModel>();
 
-			Title = "Inter-modal Component";
+			Title = "Intermodal";
 			PrimaryValue = "0";
 			Subtitle = "";
-			IsReady = true;
+			IsReady = false;
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
@@ -42,29 +43,52 @@ namespace BrainGraph.WinStore.Screens.Component
 				_eventAggregator = IoC.Get<IEventAggregator>();
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
+				_computeService = IoC.Get<IComputeService>();
 				_eventAggregator.Subscribe(this);
 			}
 		}
 
-		public void Handle(PermutationCompleteEvent message)
+		public void LoadData()
 		{
+			IsReady = true;
+
 			var regions = _regionService.GetRegionsByIndex();
 			var results = _computeService.GetResults();
 			int permutations = _computeService.GetPermutations();
-		}
 
-		public void ProcessRegionsList(List<ROI> regions)
-		{
 			Regions.Clear();
 
 			foreach (var region in regions)
 				Regions.Add(new RegionViewModel() { Region = region });
 
-			this.PrimaryValue = regions.Count.ToString();
+			int overlapCount = 0;
+			foreach (var multiNode in results.MultiNodes)
+			{
+				if (multiNode.IsFullOverlap)
+				{
+					Regions[multiNode.Id].IsOverlap = multiNode.IsFullOverlap;
+					OverlapRegions.Add(Regions[multiNode.Id]);
+					overlapCount++;
+				}
+			}
+
+			this.PrimaryValue = overlapCount.ToString();
 
 			AXPlotModel = LoadPlotModel(r => r.X, r => r.Y);
 			SGPlotModel = LoadPlotModel(r => (100 - r.Y), r => r.Z);
 			CRPlotModel = LoadPlotModel(r => r.X, r => r.Z);
+		}
+
+		protected override void OnActivate()
+		{
+			LoadData();
+
+			base.OnActivate();
+		}
+
+		public void Handle(PermutationCompleteEvent message)
+		{
+			LoadData();
 		}
 
 		protected PlotModel LoadPlotModel(Func<ROI, double> horizSelector, Func<ROI, double> vertSelector)
@@ -92,12 +116,23 @@ namespace BrainGraph.WinStore.Screens.Component
 				MarkerFill = OxyColor.FromAColor(125, OxyColors.White),
 			};
 
+			var s2 = new BrainScatterSeries
+			{
+				MarkerType = MarkerType.Circle,
+				MarkerSize = 7,
+				MarkerFill = OxyColor.FromAColor(125, OxyColors.Red),
+			};
+
 			foreach (var rvm in Regions)
 			{
-				s1.Points.Add(new BrainDataPoint(horizSelector(rvm.Region), vertSelector(rvm.Region), rvm.Region));
+				if(rvm.IsOverlap)
+					s2.Points.Add(new BrainDataPoint(horizSelector(rvm.Region), vertSelector(rvm.Region), rvm.Region));
+				else
+					s1.Points.Add(new BrainDataPoint(horizSelector(rvm.Region), vertSelector(rvm.Region), rvm.Region));
 			}
 
 			model.Series.Add(s1);
+			model.Series.Add(s2);
 
 			return model;
 		}
@@ -105,6 +140,7 @@ namespace BrainGraph.WinStore.Screens.Component
 		public override Type ViewModelType { get { return typeof(IntermodalViewModel); } }
 		
 		public BindableCollection<RegionViewModel> Regions { get; private set; }
+		public BindableCollection<RegionViewModel> OverlapRegions { get; private set; }
 
 		public PlotModel SGPlotModel { get { return _inlSGPlotModel; } set { _inlSGPlotModel = value; NotifyOfPropertyChange(() => SGPlotModel); } } private PlotModel _inlSGPlotModel;
 		public PlotModel AXPlotModel { get { return _inlAXPlotModel; } set { _inlAXPlotModel = value; NotifyOfPropertyChange(() => AXPlotModel); } } private PlotModel _inlAXPlotModel;
@@ -118,5 +154,7 @@ namespace BrainGraph.WinStore.Screens.Component
 
 		public string Title { get { return Region.Name; } }
 		public string Index { get { return Region.Index.ToString(); } }
+
+		public bool IsOverlap { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
-﻿using BrainGraph.WinStore.Screens.Config;
+﻿using BrainGraph.WinStore.Screens.Component;
+using BrainGraph.WinStore.Screens.Config;
 using BrainGraph.WinStore.Screens.Edge;
 using BrainGraph.WinStore.Screens.Experiment;
 using BrainGraph.WinStore.Screens.Global;
@@ -69,6 +70,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<RunExperimentViewModel>().To<RunExperimentViewModel>().InSingletonScope();
 
 			_kernel.Bind<GlobalStrengthViewModel>().To<GlobalStrengthViewModel>().InSingletonScope();
+			_kernel.Bind<IntermodalViewModel>().To<IntermodalViewModel>();
+			_kernel.Bind<IntraSummaryViewModel>().To<IntraSummaryViewModel>();
 			_kernel.Bind<NodalStrengthDataTypeViewModel>().To<NodalStrengthDataTypeViewModel>();
 			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>();
 			_kernel.Bind<EdgeSignificanceViewModel>().To<EdgeSignificanceViewModel>().InSingletonScope();

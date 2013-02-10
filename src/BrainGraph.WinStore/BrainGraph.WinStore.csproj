@@ -132,6 +132,10 @@
       <DependentUpon>IntermodalView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Component\IntermodalViewModel.cs" />
+    <Compile Include="Screens\Component\IntraSummaryView.xaml.cs">
+      <DependentUpon>IntraSummaryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Component\IntraSummaryViewModel.cs" />
     <Compile Include="Screens\Config\NBSmConfigPopup.xaml.cs">
       <DependentUpon>NBSmConfigPopup.xaml</DependentUpon>
     </Compile>
@@ -223,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Component\IntermodalView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Screens\Component\IntraSummaryView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
