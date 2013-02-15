@@ -39,9 +39,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		std::vector<std::vector<BCS::SubjectGraphEdge>> _edges;  // Mtx of edge vs subject  e.g. 4005x58
 		std::vector<std::vector<BCS::SubjectGraphNode>> _nodes;	// Mtx of node vs subject  e.g. 90x58
 		std::vector<BCS::SubjectGraphGlobal> _globals;			// Arr of subject values  e.g. 1x58
-		std::map<std::wstring, std::vector<double>> _attrs;  // Map of attr names and subject values NAttrx58
 		
-		std::map<std::wstring, PearsonCompare> _assocs; // TODO: Need to make this optimized
+		std::vector<std::vector<double>> _attrs;  // Vector of attr names and subject values NAttrx58
 	};
 
 }}}

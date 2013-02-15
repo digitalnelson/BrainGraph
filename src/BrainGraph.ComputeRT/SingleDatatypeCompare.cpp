@@ -47,11 +47,16 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		sgg.Strength = graph->GlobalStrength();
 		_globals.push_back(sgg);
 
+		if(_attrs.size() < subject->Attributes->Size)
+			_attrs.resize(subject->Attributes->Size);
+
+		// TODO: Ensure this is the same order
 		// Store our attrs
+		int i = 0;
 		for(auto itm : subject->Attributes)
 		{
-			std::wstring key = std::wstring(itm->Key->Data());
-			_attrs[key].push_back(itm->Value);
+			_attrs[i].push_back(itm->Value);
+			++i;
 		}
 	}
 
@@ -158,14 +163,20 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			calcStrength.IncludeValue(grpId, subjectGlobals.Strength);
 				
 			// TODO: Loop here and include the associated global values
+			int attrIdx = 0;
 			for(auto attr : _attrs)
 			{
-				if(attr.second.size() == _subjectCount)
-					_assocs[attr.first].IncludeValue(grpId, subjectGlobals.Strength, attr.second[idx]);
+				if(globalStats->StregnthItm.Associations.size() < _attrs.size())
+					globalStats->StregnthItm.Associations.resize(_attrs.size());
+
+				if(idx < attr.size())
+					globalStats->StregnthItm.Associations[attrIdx].IncludeValue(grpId, subjectGlobals.Strength, attr[idx]);
+
+				++attrIdx;
 			}
 		}
 			
-		globalStats->Strength = calcStrength.Calculate();
+		globalStats->StregnthItm.Stat = calcStrength.Calculate();
 
 		return globalStats;
 	}
@@ -184,11 +195,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// Calculate global group comparison
 		_cmpGraph->SetGlobal( CalcGlobalComparison(idxs, szGrp1) );
 
-		for(auto assoc : _assocs)
+		for(auto assoc : _cmpGraph->Global->StregnthItm.Associations)
 		{
-			double dRAll = assoc.second.All.Calculate();
-			double dRG1 = assoc.second.Group1.Calculate();
-			double dRG2 = assoc.second.Group2.Calculate();
+			double dRAll = assoc.All.Calculate();
+			double dRG1 = assoc.Group1.Calculate();
+			double dRG2 = assoc.Group2.Calculate();
+			
+			OutputDebugString(L"");
 		}
 
 		// Return our real comparison graph
