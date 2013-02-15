@@ -75,7 +75,13 @@ namespace BraingGraph.Services.Loaders
 							subject.AddEventId(propVal);
 							break;
 						default:
-							subject.AddAttribute(headers[i], fields[i]);
+							{
+								double value;								
+								bool isNumber = Double.TryParse(fields[i], out value);
+								
+								if(isNumber)
+									subject.AddAttribute(headers[i], value);
+							}
 							break;
 					}	
 				}

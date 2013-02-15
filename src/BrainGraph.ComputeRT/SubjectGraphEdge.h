@@ -42,4 +42,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		}
 	};
 
+	struct SubjectGraphAttribute
+	{
+		double Value;
+	};
+
 }}}
