@@ -78,7 +78,19 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	struct CompareItem
 	{
-		TStat Stat;
+		CompareItem()
+		{
+		}
+
+		void IncludePearsonValue(int associationId, int groupId, double x, double y)
+		{
+			if(Associations.size() <= associationId)
+				Associations.push_back(PearsonCompare());
+
+			Associations[associationId].IncludeValue(groupId, x, y);
+		}
+
+		TStat Stats;
 		std::vector<PearsonCompare> Associations;
 	};
 
@@ -137,8 +149,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	struct CompareGlobal
 	{
-		TStat Strength;
-		CompareItem StregnthItm;
+		CompareItem Strength;
 	};
 
 }}}

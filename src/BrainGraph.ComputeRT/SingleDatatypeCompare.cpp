@@ -120,16 +120,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 				double avgStrength = nodeVal.TotalStrength / _nodeCount;
 
-				if (idx < szGrp1)
-				{
-					calcDegree.IncludeValue(0, nodeVal.Degree);
-					calcStrength.IncludeValue(0, avgStrength);
-				}
-				else
-				{
-					calcDegree.IncludeValue(1, nodeVal.Degree);
-					calcStrength.IncludeValue(1, avgStrength);
-				}
+				int grpId = 1;
+				if(idx < szGrp1)
+					grpId = 0;
+
+				calcDegree.IncludeValue(0, nodeVal.Degree);
+				calcStrength.IncludeValue(0, avgStrength);
 			}
 
 			auto node = make_shared<CompareNode>();
@@ -149,8 +145,6 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// TODO: Probably need to make this thread safe
 		shared_ptr<CompareGlobal> globalStats = make_shared<CompareGlobal>();
 
-		TStatCalc calcStrength;
-		
 		// Loop through the vals we were passed
 		for (int idx = 0; idx < _subjectCount; ++idx)
 		{
@@ -159,25 +153,18 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			int grpId = 1;
 			if(idx < szGrp1)
 				grpId = 0;
-
-			calcStrength.IncludeValue(grpId, subjectGlobals.Strength);
 				
 			// TODO: Loop here and include the associated global values
 			int attrIdx = 0;
 			for(auto attr : _attrs)
 			{
-				if(globalStats->StregnthItm.Associations.size() < _attrs.size())
-					globalStats->StregnthItm.Associations.resize(_attrs.size());
-
 				if(idx < attr.size())
-					globalStats->StregnthItm.Associations[attrIdx].IncludeValue(grpId, subjectGlobals.Strength, attr[idx]);
+					globalStats->Strength.IncludePearsonValue(attrIdx, grpId, subjectGlobals.Strength, attr[idx]);
 
 				++attrIdx;
 			}
 		}
-			
-		globalStats->StregnthItm.Stat = calcStrength.Calculate();
-
+	
 		return globalStats;
 	}
 
@@ -194,15 +181,6 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		// Calculate global group comparison
 		_cmpGraph->SetGlobal( CalcGlobalComparison(idxs, szGrp1) );
-
-		for(auto assoc : _cmpGraph->Global->StregnthItm.Associations)
-		{
-			double dRAll = assoc.All.Calculate();
-			double dRG1 = assoc.Group1.Calculate();
-			double dRG2 = assoc.Group2.Calculate();
-			
-			OutputDebugString(L"");
-		}
 
 		// Return our real comparison graph
 		return _cmpGraph;

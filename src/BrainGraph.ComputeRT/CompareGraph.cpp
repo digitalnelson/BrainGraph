@@ -56,8 +56,8 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	void CompareGraph::UpdateGlobalStats(std::shared_ptr<CompareGlobal> global)
 	{
-		if(abs(global->Strength.Value) >= abs(Global->Strength.Value))
-			Global->Strength.TwoTailCount++;
+		if(abs(global->Strength.Stats.Value) >= abs(Global->Strength.Stats.Value))
+			Global->Strength.Stats.TwoTailCount++;
 	}
 
 	void CompareGraph::ComputeComponents()
