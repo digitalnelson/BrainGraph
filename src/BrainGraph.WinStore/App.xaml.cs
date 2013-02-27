@@ -24,7 +24,7 @@ namespace BrainGraph.WinStore
 	public sealed partial class App
 	{
 		private IKernel _kernel;
-		private WinRTContainer container;
+		private WinRTContainer _container;
 
 		/// <summary>
 		/// Initializes the singleton application object.  This is the first line of authored code
@@ -49,13 +49,12 @@ namespace BrainGraph.WinStore
 		{
 			base.Configure();
 
-			container = new WinRTContainer();
-			container.RegisterWinRTServices();
-
+			_container = new WinRTContainer();
+			_container.RegisterWinRTServices();
+		    
 			_kernel = new StandardKernel();
-			
-			_kernel.Bind<INavigationService>().To<FrameAdapter>().InSingletonScope().WithConstructorArgument("frame", RootFrame);
-			
+            
+		    
 			_kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 			_kernel.Bind<IRegionService>().To<RegionService>().InSingletonScope();
 			_kernel.Bind<ISubjectDataService>().To<SubjectDataService>().InSingletonScope();
@@ -63,8 +62,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<IComputeService>().To<ComputeService>().InSingletonScope();
 
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
-            container.PerRequest<MainMenuViewModel>();
-
+            
+            
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
 			_kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
@@ -78,11 +77,19 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<NodalStrengthDataTypeViewModel>().To<NodalStrengthDataTypeViewModel>();
 			_kernel.Bind<NodalStrengthViewModel>().To<NodalStrengthViewModel>();
 			_kernel.Bind<EdgeSignificanceViewModel>().To<EdgeSignificanceViewModel>().InSingletonScope();
+
 		}
 
 		protected override object GetInstance(Type service, string key)
 		{
-			return _kernel.Get(service, key);
+		    if (string.IsNullOrWhiteSpace(key))
+            {
+                return _kernel.Get(service);
+            }
+            else
+            {
+                return _kernel.Get(service, key);
+            }
 		}
 
 		protected override IEnumerable<object> GetAllInstances(Type service)
@@ -92,19 +99,19 @@ namespace BrainGraph.WinStore
 
 		protected override void BuildUp(object instance)
 		{
-			container.BuildUp(instance);
+			_kernel.Inject(instance);
 		}
 
         protected override void PrepareViewFirst(Frame rootFrame)
         {
-            container.RegisterNavigationService(RootFrame);
+            _kernel.Bind<INavigationService>().ToConstant(new FrameAdapter(rootFrame));
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            DisplayRootViewFor<MainMenuViewModel>();
+            DisplayRootView<MainMenuView>();
         }
-
+        
 		///// <summary>
 		///// Invoked when the application is launched normally by the end user.  Other entry points
 		///// will be used when the application is launched to open a specific file, to display
