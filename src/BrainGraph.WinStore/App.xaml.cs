@@ -10,7 +10,9 @@ using Caliburn.Micro;
 using Ninject;
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -47,7 +49,7 @@ namespace BrainGraph.WinStore
 		{
 			base.Configure();
 
-			container = new WinRTContainer(RootFrame);
+			container = new WinRTContainer();
 			container.RegisterWinRTServices();
 
 			_kernel = new StandardKernel();
@@ -61,7 +63,8 @@ namespace BrainGraph.WinStore
 			_kernel.Bind<IComputeService>().To<ComputeService>().InSingletonScope();
 
 			_kernel.Bind<MainMenuViewModel>().To<MainMenuViewModel>().InSingletonScope();
-			
+            container.PerRequest<MainMenuViewModel>();
+
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
 			_kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
@@ -92,10 +95,15 @@ namespace BrainGraph.WinStore
 			container.BuildUp(instance);
 		}
 
-		protected override Type GetDefaultView()
-		{
-			return typeof(MainMenuView);
-		}
+        protected override void PrepareViewFirst(Frame rootFrame)
+        {
+            container.RegisterNavigationService(RootFrame);
+        }
+
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        {
+            DisplayRootViewFor<MainMenuViewModel>();
+        }
 
 		///// <summary>
 		///// Invoked when the application is launched normally by the end user.  Other entry points

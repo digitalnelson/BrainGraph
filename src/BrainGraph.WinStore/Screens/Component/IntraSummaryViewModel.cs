@@ -9,6 +9,8 @@ using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
