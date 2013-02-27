@@ -12,9 +12,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>BrainGraph.WinStore_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>BrainGraph.WinStore_StoreKey.pfx</PackageCertificateKeyFile>
     <ExpressionBlendVersion>5.0.30924.0</ExpressionBlendVersion>
-    <PackageCertificateThumbprint>ABD728B580E0E36FE0C313931F8337CF7303B579</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>F2E0C9DBB85A60F1092823546D3FF2AC26744E4D</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -197,6 +198,7 @@
     </AppxManifest>
     <None Include="Assets\BrainLab Icon.design" />
     <None Include="Assets\BrainLab Logo.design" />
+    <None Include="BrainGraph.WinStore_StoreKey.pfx" />
     <None Include="BrainGraph.WinStore_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -250,6 +252,7 @@
     <Content Include="Assets\WideLogo.scale-180.png" />
     <Content Include="Assets\WideLogo.scale-80.png" />
     <Content Include="Common\ReadMe.txt" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

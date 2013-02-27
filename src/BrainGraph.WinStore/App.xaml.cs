@@ -11,6 +11,8 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Activation;
+using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -110,6 +112,13 @@ namespace BrainGraph.WinStore
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             DisplayRootView<MainMenuView>();
+            SettingsPane.GetForCurrentView()
+                        .CommandsRequested += (sender, eventArgs) => eventArgs.Request.ApplicationCommands
+                                                                              .Add(new SettingsCommand("privacypolicy", "Privacy policy",
+                                                                                                       async command =>
+                                                                                                       {
+                                                                                                           await Launcher.LaunchUriAsync(new Uri("http://www.agilemedicine.com/privacy/"));
+                                                                                                       }));
         }
         
 		///// <summary>
