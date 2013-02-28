@@ -1,4 +1,4 @@
 BrainGraph
 ==========
 
-BrainLab meets the Windows Store.
+![](https://github.com/digitalnelson/BrainGraph/blob/Assoc/images/logo.png)
