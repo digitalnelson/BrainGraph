@@ -9,7 +9,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		_eventIds->Append(eventId);
 	}
 
-	void Subject::AddAttribute(String^ name, String^ value)
+	void Subject::AddAttribute(String^ name, double value)
 	{
 		_attributes->Insert(name, value); // TODO: Dedupe
 	}

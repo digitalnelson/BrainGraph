@@ -111,7 +111,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			_global = make_shared<CompareGlobal>();
 		}
 
-		property TStatViewModel^ Strength { TStatViewModel^ get() { return ref new TStatViewModel(_global->Strength); } }
+		property TStatViewModel^ Strength { TStatViewModel^ get() { return ref new TStatViewModel(_global->Strength.Stats); } }
 
 	internal:
 		GlobalViewModel(shared_ptr<CompareGlobal> global)

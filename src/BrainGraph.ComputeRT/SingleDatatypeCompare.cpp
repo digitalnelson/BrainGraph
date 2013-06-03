@@ -46,6 +46,18 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		SubjectGraphGlobal sgg;
 		sgg.Strength = graph->GlobalStrength();
 		_globals.push_back(sgg);
+
+		if(_attrs.size() < subject->Attributes->Size)
+			_attrs.resize(subject->Attributes->Size);
+
+		// TODO: Ensure this is the same order
+		// Store our attrs
+		int i = 0;
+		for(auto itm : subject->Attributes)
+		{
+			_attrs[i].push_back(itm->Value);
+			++i;
+		}
 	}
 
 	// Calculate a edge stats for the two groups based on the indexes passed in
@@ -108,16 +120,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 				double avgStrength = nodeVal.TotalStrength / _nodeCount;
 
-				if (idx < szGrp1)
-				{
-					calcDegree.IncludeValue(0, nodeVal.Degree);
-					calcStrength.IncludeValue(0, avgStrength);
-				}
-				else
-				{
-					calcDegree.IncludeValue(1, nodeVal.Degree);
-					calcStrength.IncludeValue(1, avgStrength);
-				}
+				int grpId = 1;
+				if(idx < szGrp1)
+					grpId = 0;
+
+				calcDegree.IncludeValue(0, nodeVal.Degree);
+				calcStrength.IncludeValue(0, avgStrength);
 			}
 
 			auto node = make_shared<CompareNode>();
@@ -137,25 +145,26 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		// TODO: Probably need to make this thread safe
 		shared_ptr<CompareGlobal> globalStats = make_shared<CompareGlobal>();
 
-		TStatCalc calcStrength;
-		
 		// Loop through the vals we were passed
 		for (int idx = 0; idx < _subjectCount; ++idx)
 		{
-			auto globalVal = _globals[idxs[idx]];
+			auto subjectGlobals = _globals[idxs[idx]];
 
-			if (idx < szGrp1)
+			int grpId = 1;
+			if(idx < szGrp1)
+				grpId = 0;
+				
+			// TODO: Loop here and include the associated global values
+			int attrIdx = 0;
+			for(auto attr : _attrs)
 			{
-				calcStrength.IncludeValue(0, globalVal.Strength);
-			}
-			else
-			{
-				calcStrength.IncludeValue(1, globalVal.Strength);
+				if(idx < attr.size())
+					globalStats->Strength.IncludePearsonValue(attrIdx, grpId, subjectGlobals.Strength, attr[idx]);
+
+				++attrIdx;
 			}
 		}
-			
-		globalStats->Strength = calcStrength.Calculate();
-
+	
 		return globalStats;
 	}
 

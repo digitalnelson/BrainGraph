@@ -24,6 +24,76 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		int TwoTailCount;
 	};
 
+	class Pearson
+	{
+	public:
+		Pearson()
+		{
+			SumX = SumY = SumProdXY = SumXSqu = SumYSqu = Count = 0;
+		}
+
+		void Include(double x, double y)
+		{
+			SumX += x;
+			SumY += y;
+			SumProdXY += x * y;
+			SumXSqu += pow(x, 2);
+			SumYSqu += pow(y, 2);
+
+			++Count;
+		}
+
+		double Calculate()
+		{
+			return ( ( Count * SumProdXY ) - ( SumX * SumY ) ) / sqrt ( (Count * SumXSqu - pow(SumX, 2)) * (Count * SumYSqu - pow(SumY, 2)) );
+		}
+
+	private:
+		double SumX;
+		double SumY;
+		double SumProdXY;
+		double SumXSqu;
+		double SumYSqu;
+		int Count;
+	};
+
+	class PearsonCompare
+	{
+	public:
+		PearsonCompare()
+		{}
+
+		void IncludeValue(int groupId, double x, double y)
+		{
+			All.Include(x, y);
+			
+			if(groupId == 0)
+				Group1.Include(x, y);
+			else
+				Group2.Include(x, y);
+		}
+		
+		Pearson All, Group1, Group2;
+	};
+
+	struct CompareItem
+	{
+		CompareItem()
+		{
+		}
+
+		void IncludePearsonValue(int associationId, int groupId, double x, double y)
+		{
+			if(Associations.size() <= associationId)
+				Associations.push_back(PearsonCompare());
+
+			Associations[associationId].IncludeValue(groupId, x, y);
+		}
+
+		TStat Stats;
+		std::vector<PearsonCompare> Associations;
+	};
+
 	struct CompareEdge
 	{
 		CompareEdge()
@@ -79,7 +149,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	struct CompareGlobal
 	{
-		TStat Strength;
+		CompareItem Strength;
 	};
 
 }}}

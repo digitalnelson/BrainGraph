@@ -14,12 +14,12 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		Subject()
 		{
 			_eventIds = ref new Vector<String^>();
-			_attributes = ref new Map<String^, String^>();
+			_attributes = ref new Map<String^, double>();
 			_graphs = ref new Map<String^, SubjectGraph^>();
 		}
 
 		void AddEventId(String^ eventId);
-		void AddAttribute(String^ name, String^ value);
+		void AddAttribute(String^ name, double value);
 		void AddGraph(SubjectGraph^ graph);
 
 		property String^ SubjectId;
@@ -37,9 +37,9 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			IVectorView<String^>^ get() { return _eventIds->GetView(); }
 		}
 
-		property IMapView<String^, String^>^ Attributes
+		property IMapView<String^, double>^ Attributes
 		{
-			IMapView<String^, String^>^ get() { return _attributes->GetView(); }
+			IMapView<String^, double>^ get() { return _attributes->GetView(); }
 		}
 
 		property IMapView<String^, SubjectGraph^>^ Graphs
@@ -49,7 +49,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	
 	private:
 		Vector<String^>^ _eventIds;
-		Map<String^, String^>^ _attributes;
+		Map<String^, double>^ _attributes;
 		Map<String^, SubjectGraph^>^ _graphs;
 	};
 
