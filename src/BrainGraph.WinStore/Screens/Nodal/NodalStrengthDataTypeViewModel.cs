@@ -9,6 +9,8 @@ using OxyPlot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OxyPlot.Axes;
+using OxyPlot.Metro;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
@@ -214,7 +216,7 @@ namespace BrainGraph.WinStore.Screens.Nodal
 			foreach (var axis in plot.Axes)
 				axis.TextColor = OxyColors.Black;
 
-			var contents = plot.ToSvg(300, 300);
+			var contents = plot.ToSvg(300, 300, false, new MetroRenderContext(new Canvas()));
 
 			foreach (var axis in plot.Axes)
 				axis.TextColor = OxyColors.White;

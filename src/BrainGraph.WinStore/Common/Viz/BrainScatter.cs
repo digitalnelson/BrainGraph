@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using OxyPlot;
 using BrainGraph.Storage;
 using BrainGraph.WinStore.Models;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 
 namespace BrainGraph.WinStore.Common.Viz

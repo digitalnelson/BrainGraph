@@ -30,7 +30,7 @@
     <ProjectGuid>{6756aaf2-df88-4fe3-a833-736ee3861afd}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>BrainGraph.ComputeRT</ProjectName>
-    <RootNamespace>BrainGraph_ComputeRT</RootNamespace>
+    <RootNamespace>BrainGraph.Compute</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

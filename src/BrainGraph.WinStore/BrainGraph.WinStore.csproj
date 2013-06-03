@@ -12,8 +12,10 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>BrainGraph.WinStore_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>BrainGraph.WinStore_StoreKey.pfx</PackageCertificateKeyFile>
     <ExpressionBlendVersion>5.0.30924.0</ExpressionBlendVersion>
+    <PackageCertificateThumbprint>F2E0C9DBB85A60F1092823546D3FF2AC26744E4D</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -196,6 +198,7 @@
     </AppxManifest>
     <None Include="Assets\BrainLab Icon.design" />
     <None Include="Assets\BrainLab Logo.design" />
+    <None Include="BrainGraph.WinStore_StoreKey.pfx" />
     <None Include="BrainGraph.WinStore_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -249,6 +252,7 @@
     <Content Include="Assets\WideLogo.scale-180.png" />
     <Content Include="Assets\WideLogo.scale-80.png" />
     <Content Include="Common\ReadMe.txt" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -317,11 +321,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\packages\Caliburn.Micro\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.1.4.1\lib\win8\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Extensions">
-      <HintPath>..\packages\Caliburn.Micro\Caliburn.Micro.Extensions.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Extensions, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.1.4.1\lib\win8\Caliburn.Micro.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Callisto">
       <HintPath>..\packages\Callisto.1.2.5\lib\winrt45\Callisto.dll</HintPath>
@@ -332,16 +338,17 @@
     <Reference Include="Ninject.WinRT">
       <HintPath>packages\Portable.Ninject.3.0.2.0\lib\winrt45\Ninject.WinRT.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot, Version=2012.4.28.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+    <Reference Include="OxyPlot, Version=2013.1.32.1, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\oxyplot debug\OxyPlot.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Core.2013.1.32.1\lib\portable-net4+sl4+wp71+win8\OxyPlot.dll</HintPath>
     </Reference>
-    <Reference Include="OxyPlot.Metro, Version=2012.4.28.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OxyPlot.Metro, Version=2013.1.32.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\oxyplot debug\OxyPlot.Metro.dll</HintPath>
+      <HintPath>..\packages\OxyPlot.Metro.2013.1.32.1\lib\NetCore45\OxyPlot.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="Windows.UI.Interactivity">
-      <HintPath>..\packages\Caliburn.Micro\Windows.UI.Interactivity.dll</HintPath>
+    <Reference Include="Windows.UI.Interactivity, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Windows.UI.Interactivity.1.1.0.0\lib\win\Windows.UI.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="WinRTXamlToolkit">
       <HintPath>..\packages\winrtxamltoolkit.1.3.5.1\lib\netcore45\WinRTXamlToolkit.dll</HintPath>
