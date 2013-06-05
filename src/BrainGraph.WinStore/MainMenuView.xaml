@@ -37,7 +37,7 @@
 			Source="{Binding Groups}"
 			IsSourceGrouped="True"
 			ItemsPath="Items" 
-			d:Source="{Binding Groups, Source={d:DesignInstance Type=data:MainMenuViewModel, IsDesignTimeCreatable=True}}"/>
+			d:Source="{Binding Groups, Source={d:DesignInstance Type=data:MainMenuDesignData, IsDesignTimeCreatable=True}}"/>
 
 
 		<DataTemplate x:Key="ReadyTemplate">
@@ -118,8 +118,7 @@
 		</Grid.RowDefinitions>
 
 		<Path CacheMode="BitmapCache" Stretch="Fill" Data="F1 M 690.13,0C 615.086,0 554.254,60.8359 554.254,135.88C 554.254,162.969 562.212,188.185 575.873,209.378L 458.33,372.718L 459.305,373.418C 423.226,374.135 392.057,394.803 376.365,424.857L 205.195,452.871C 183.862,427.593 151.964,411.519 116.298,411.519C 52.0668,411.519 -1.52588e-005,463.586 -1.52588e-005,527.813C -1.52588e-005,592.042 52.0668,644.109 116.298,644.109C 173.556,644.109 221.118,602.71 230.769,548.221L 382.455,523.393C 395.542,542.338 415.274,556.323 438.29,561.986L 452.215,667.119C 412.029,694.161 385.588,740.057 385.588,792.128C 385.588,875.289 453.006,942.7 536.164,942.7C 619.323,942.7 686.733,875.289 686.733,792.128C 686.733,712.954 625.609,648.094 547.979,642.059L 534.106,537.29L 527.404,538.177C 545.593,520.755 556.936,496.246 556.936,469.072C 556.936,451.744 552.307,435.506 544.254,421.486L 655.258,267.228C 666.389,270.176 678.072,271.764 690.13,271.764C 765.175,271.764 826.014,210.924 826.014,135.88C 826.014,60.8359 765.175,0 690.13,0 Z " UseLayoutRounding="False" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="750" Height="750" Margin="0,0,-100,-100" Grid.Row="1" Fill="#0CFFFFFF"/>
-
-
+		
 <!-- Horizontal scrolling grid used in most view states  -->
 		<GridView
 			x:Name="itemGridView"
@@ -162,7 +161,8 @@
 			<GridView.ItemTemplate>
 				
 				<DataTemplate>
-					<Grid HorizontalAlignment="Left" Width="250" Height="250" Extensions:GridViewItemExtensions.IsEnabled="{Binding IsReady}">
+					<!--Extensions:GridViewItemExtensions.IsEnabled="{Binding IsReady}"-->
+					<Grid HorizontalAlignment="Left" Width="250" Height="250" >
 						<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
 							<Image Stretch="UniformToFill" />
 						</Border>
@@ -195,25 +195,53 @@
 			AutomationProperties.AutomationId="ItemsListView"
 			AutomationProperties.Name="Items"
 			TabIndex="1"
+			Grid.Row="1"
 			Grid.RowSpan="2"
 			Visibility="Collapsed"
-			Margin="0,-10,0,0"
+			Margin="0,0,0,0"
 			Padding="10,0,0,60"
 			ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-			ItemTemplate="{StaticResource Standard80ItemTemplate}"
+			
 			SelectionMode="None"
 			IsSwipeEnabled="false"
 			caliburn:Message.Attach="[Event ItemClick] = [MenuItemSelected($eventArgs)]"
-			/>
+			>
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<!--Extensions:GridViewItemExtensions.IsEnabled="{Binding IsReady}"-->
+					<Grid HorizontalAlignment="Left" Width="250" Height="250" >
+						<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+							<Image Stretch="UniformToFill" />
+						</Border>
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition/>
+								<RowDefinition Height="Auto"/>
+							</Grid.RowDefinitions>
+							<StackPanel VerticalAlignment="Top" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" Margin="0">
+								<TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource PageSubheaderTextStyle}" Margin="10,5,30,20" VerticalAlignment="Center"/>
+							</StackPanel>
+							<Viewbox Grid.Row="1">
+								<TextBlock TextWrapping="Wrap" Text="{Binding PrimaryValue}" VerticalAlignment="Center" Margin="30,0,2,0" Foreground="#80FFFFFF" FontFamily="Segoe UI Symbol"/>
+							</Viewbox>
+							<StackPanel Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}" VerticalAlignment="Bottom" Grid.Row="2" Height="50">
+								<TextBlock Text="{Binding Subtitle}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="Wrap" Margin="10,0,30,10" VerticalAlignment="Bottom"/>
+							</StackPanel>
+						</Grid>
+					</Grid>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
 
-<!-- Back button and page title -->
+		<!-- Back button and page title -->
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<Button  x:Name="GoBack" Style="{StaticResource BackButtonStyle}" Visibility="Collapsed"/>
-			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="BRAINGRAPH" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" Margin="120,0,30,40" VerticalAlignment="Bottom"/>
+			<Button x:Name="GoBack" Style="{StaticResource BackButtonStyle}" Visibility="Collapsed"/>
+			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="BRAINGRAPH" IsHitTestVisible="false" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,30,40" VerticalAlignment="Bottom"/>
 		</Grid>
 
 		<VisualStateManager.VisualStateGroups>
@@ -226,7 +254,7 @@
 				<!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
 				<VisualState x:Name="FullScreenPortrait">
 					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GoBack" Storyboard.TargetProperty="Style">
 							<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
 						</ObjectAnimationUsingKeyFrames>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Padding">
@@ -241,7 +269,7 @@
 				-->
 				<VisualState x:Name="Snapped">
 					<Storyboard>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="GoBack" Storyboard.TargetProperty="Style">
 							<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
 						</ObjectAnimationUsingKeyFrames>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">

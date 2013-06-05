@@ -1,7 +1,7 @@
-﻿using BrainGraph.Compute.Graph;
-using BrainGraph.WinStore.Common;
+﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Screens;
+using BrainGraph.WinStore.Screens.Component;
 using BrainGraph.WinStore.Screens.Config;
 using BrainGraph.WinStore.Screens.Edge;
 using BrainGraph.WinStore.Screens.Experiment;
@@ -11,14 +11,10 @@ using BrainGraph.WinStore.Screens.Sources;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using BrainGraph.WinStore.Screens.Component;
 
 namespace BrainGraph.WinStore
 {
@@ -33,10 +29,10 @@ namespace BrainGraph.WinStore
 		private IComputeService _computeService;
 		#endregion
 
-		private RunExperimentViewModel _running = IoC.Get<RunExperimentViewModel>();
-		private RunThresholdTestViewModel _runThresholdTest = IoC.Get<RunThresholdTestViewModel>();
-		private PermutationViewModel _permutations = IoC.Get<PermutationViewModel>();
-		private NBSmConfigViewModel _nbsmConfig = IoC.Get<NBSmConfigViewModel>();
+		private RunExperimentViewModel _running;
+		private RunThresholdTestViewModel _runThresholdTest;
+		private PermutationViewModel _permutations;
+		private NBSmConfigViewModel _nbsmConfig;
 
 		public MainMenuViewModel()
 		{
@@ -44,6 +40,11 @@ namespace BrainGraph.WinStore
 
 			if (!Windows.ApplicationModel.DesignMode.DesignModeEnabled)
 			{
+				_running = IoC.Get<RunExperimentViewModel>();
+				_runThresholdTest = IoC.Get<RunThresholdTestViewModel>();
+				_permutations = IoC.Get<PermutationViewModel>();
+				_nbsmConfig = IoC.Get<NBSmConfigViewModel>();
+
 				_eventAggregator = IoC.Get<IEventAggregator>();
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
@@ -196,5 +197,17 @@ namespace BrainGraph.WinStore
 	{
 		public string Title { get { return _inlTitle; } set { _inlTitle = value; NotifyOfPropertyChange(() => Title); } } private string _inlTitle;
 		public BindableCollection<IMenuItem> Items { get { return _inlItems; } set { _inlItems = value; NotifyOfPropertyChange(() => Items); } } private BindableCollection<IMenuItem> _inlItems = new BindableCollection<IMenuItem>();
+	}
+
+	public class MainMenuDesignData : Screen
+	{
+		public MainMenuDesignData()
+		{
+			Groups = new BindableCollection<MenuGroup>();
+			Groups.Add(new MenuGroup { Title = "One", Items = { new MenuItem { Title = "First Item" }, new MenuItem { Title = "Second Item" }, new MenuItem { Title = "Third Item" } } });
+			Groups.Add(new MenuGroup { Title = "Two", Items = { new MenuItem { Title = "Fourth Item" }, new MenuItem { Title = "Fifth Item" }, new MenuItem { Title = "Sixth Item" } } });
+		}
+
+		public BindableCollection<MenuGroup> Groups { get { return _inlGroups; } set { _inlGroups = value; NotifyOfPropertyChange(() => Groups); } } private BindableCollection<MenuGroup> _inlGroups;
 	}
 }
