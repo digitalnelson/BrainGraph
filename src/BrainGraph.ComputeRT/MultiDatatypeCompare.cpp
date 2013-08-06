@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "collection.h"
 #include "Subject.h"
-#include "SubjectGraphEdge.h"
+//#include "SubjectGraphEdge.h"
 #include "SingleDatatypeCompare.h"
 #include "MultiDatatypeCompare.h"
 

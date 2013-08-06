@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <algorithm>
 #include "Subject.h"
-#include "SubjectGraphEdge.h"
+#include "SubjectGraphSupport.h"
 #include "SingleDatatypeCompare.h"
 #include "MultiDatatypeSupport.h"
 
@@ -27,12 +27,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	SingleDatatypeCompare::~SingleDatatypeCompare(void)
 	{}
 
-	void SingleDatatypeCompare::AddSubject(Subject^ subject)
+	void SingleDatatypeCompare::AddSubject(Subject^ subject) // TODO: Icky!  Need to make this regular c++ shared_ptr
 	{
 		// TODO: What to do if the graph does not exist?
 
 		// Pull out the graph for this datatype
-		auto graph = subject->Graphs->Lookup(_threshold->DataType);
+		auto graph = subject->Graphs->Lookup(_threshold->DataType);  // TODO: Yuk!  Should not be reaching into this property like this.
 
 		// Store our edges
 		for(auto edgeIdx=0; edgeIdx<_edgeCount; ++edgeIdx)
@@ -79,7 +79,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			// Loop through the vals we were passed
 			for (int idx = 0; idx < _subjectCount; ++idx)
 			{
-				double edgeVal = edgeValues[idxs[idx]].Value;
+				double edgeVal = edgeValues[idxs[idx]]->Value;
 
 				if (idx < szGrp1)
 					calcEdgeValue.IncludeValue(0, edgeVal);
@@ -118,13 +118,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			{
 				auto nodeVal = nodeValues[idxs[idx]];
 
-				double avgStrength = nodeVal.TotalStrength / _nodeCount;
+				double avgStrength = nodeVal->TotalStrength / _nodeCount;
 
 				int grpId = 1;
 				if(idx < szGrp1)
 					grpId = 0;
 
-				calcDegree.IncludeValue(0, nodeVal.Degree);
+				calcDegree.IncludeValue(0, nodeVal->Degree);
 				calcStrength.IncludeValue(0, avgStrength);
 			}
 

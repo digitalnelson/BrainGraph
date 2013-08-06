@@ -29,14 +29,14 @@ namespace BrainGraph.WinStore.Services
 		private readonly IEventAggregator _eventAggregator;
 
 		private List<Subject> _subjects;
-		private Dictionary<string, List<Subject>> _subjectsByGroup;
+		//private Dictionary<string, List<Subject>> _subjectsByGroup;
 		private Dictionary<string, Subject> _subjectsByEventId;
 
 		public SubjectDataService()
 		{
 			_eventAggregator = IoC.Get<IEventAggregator>();
 			_subjects = new List<Subject>();
-			_subjectsByGroup = new Dictionary<string, List<Subject>>();
+			//_subjectsByGroup = new Dictionary<string, List<Subject>>();
 			_subjectsByEventId = new Dictionary<string, Subject>();
 		}
 
@@ -46,10 +46,10 @@ namespace BrainGraph.WinStore.Services
 
 			foreach (var sub in _subjects)
 			{
-				if (!_subjectsByGroup.ContainsKey(sub.GroupId))
-					_subjectsByGroup[sub.GroupId] = new List<Subject>();
+				//if (!_subjectsByGroup.ContainsKey(sub.GroupId))
+				//	_subjectsByGroup[sub.GroupId] = new List<Subject>();
 					
-				_subjectsByGroup[sub.GroupId].Add(sub);
+				//_subjectsByGroup[sub.GroupId].Add(sub);
 
 				foreach (var eventId in sub.EventIds)
 					_subjectsByEventId[eventId] = sub;
@@ -148,7 +148,7 @@ namespace BrainGraph.WinStore.Services
 		{
 			_subjects.Clear();
 			_subjectsByEventId.Clear();
-			_subjectsByGroup.Clear();
+			//_subjectsByGroup.Clear();
 		}
 	}
 }

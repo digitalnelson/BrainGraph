@@ -1,5 +1,6 @@
 #pragma once
 #include "collection.h"
+#include "SubjectGraphViewModels.h"
 #include "CompareGraphViewModels.h"
 
 namespace BrainGraph { namespace Compute { namespace Graph

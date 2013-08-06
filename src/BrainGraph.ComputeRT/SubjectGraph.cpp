@@ -20,24 +20,29 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 
 		boost::add_edge(i, j, _adjMtx);
 
-		SubjectGraphEdge edge;
-		edge.Vertices = std::pair<int, int>(i, j);
-		edge.Value = val;
+		std::shared_ptr<SubjectGraphEdge> edge = std::make_shared<SubjectGraphEdge>();
+		edge->Vertices = std::pair<int, int>(i, j);
+		edge->Value = val;
 
 		Edges.push_back(edge);
 
-		Nodes[i].Index = i;
-		Nodes[j].Index = j;
+		if(Nodes[i] == nullptr)
+			Nodes[i] = std::make_shared<SubjectGraphNode>();
+		if(Nodes[j] == nullptr)
+			Nodes[j] = std::make_shared<SubjectGraphNode>();
+
+		Nodes[i]->Index = i;
+		Nodes[j]->Index = j;
 
 		if(val > 0)
 		{
 			// Update the degree - note: this will only be valid in some data types
-			Nodes[i].Degree += 1;
-			Nodes[j].Degree += 1;
+			Nodes[i]->Degree += 1;
+			Nodes[j]->Degree += 1;
 
 			// Update the total strength
-			Nodes[i].TotalStrength += val;
-			Nodes[j].TotalStrength += val;
+			Nodes[i]->TotalStrength += val;
+			Nodes[j]->TotalStrength += val;
 		}
 	}
 
@@ -48,7 +53,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			double total = 0;
 
 			for(auto node : Nodes)
-				total += ( node.TotalStrength / (_nVerts - 1));
+				total += ( node->TotalStrength / (_nVerts - 1));
 		
 			return total / _nVerts;
 		}

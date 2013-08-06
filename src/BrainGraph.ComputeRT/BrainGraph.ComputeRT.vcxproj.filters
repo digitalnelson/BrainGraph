@@ -56,9 +56,6 @@
     <ClInclude Include="SingleDatatypeCompare.h">
       <Filter>Single</Filter>
     </ClInclude>
-    <ClInclude Include="SubjectGraphEdge.h">
-      <Filter>Subjects</Filter>
-    </ClInclude>
     <ClInclude Include="CompareGraphSupport.h">
       <Filter>Single</Filter>
     </ClInclude>
@@ -79,6 +76,12 @@
     </ClInclude>
     <ClInclude Include="MultiGraphViewModels.h">
       <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectGraphSupport.h">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectGraphViewModels.h">
+      <Filter>Subjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,5 @@
 #pragma once
-#include "SubjectGraphEdge.h"
-#include <collection.h>
+#include "SubjectGraphSupport.h"
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
@@ -19,9 +18,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 		property String^ DataType;
 
 	internal:
-
-		std::vector<SubjectGraphEdge> Edges;
-		std::vector<SubjectGraphNode> Nodes;
+		std::vector<std::shared_ptr<SubjectGraphEdge>> Edges;
+		std::vector<std::shared_ptr<SubjectGraphNode>> Nodes;
 
 		double GlobalStrength();
 		/*std::vector<double> NodalStrength();*/

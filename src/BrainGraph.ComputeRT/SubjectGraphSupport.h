@@ -1,20 +1,20 @@
 #pragma once
+#include "collection.h"
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
-	
 	struct SubjectGraphEdge
 	{
-		int Index;
-		std::pair<int, int> Vertices;
-
-		double Value;
-
 		SubjectGraphEdge()
 		{
 			Index = 0;
 			Value = 0;
 		}
+
+		int Index;
+		std::pair<int, int> Vertices;
+
+		double Value;
 	};
 
 	struct SubjectGraphNode

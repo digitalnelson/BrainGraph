@@ -137,6 +137,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalUsingDirectories>$(WindowsSDK_WindowsMetadata);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +145,9 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <WindowsMetadataFile>$(OutDir)BrainGraph.Compute.winmd</WindowsMetadataFile>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -212,7 +216,7 @@
     <ClInclude Include="CompareGraphViewModels.h" />
     <ClInclude Include="MultiGraphViewModels.h" />
     <ClInclude Include="SingleDatatypeSupport.h" />
-    <ClInclude Include="SubjectGraphEdge.h" />
+    <ClInclude Include="SubjectGraphSupport.h" />
     <ClInclude Include="MultiDatatypeSupport.h" />
     <ClInclude Include="SingleDatatypeCompare.h" />
     <ClInclude Include="MultiDatatypeCompare.h" />
@@ -221,6 +225,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="SubjectGraph.h" />
+    <ClInclude Include="SubjectGraphViewModels.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BindableBase.cpp" />

@@ -13,6 +13,8 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
+using BrainGraph.Compute.Subjects;
+using System.Diagnostics;
 
 namespace BrainGraph.WinStore.Screens.Component
 {
@@ -24,6 +26,8 @@ namespace BrainGraph.WinStore.Screens.Component
 		private INavigationService _navService;
 		private IRegionService _regionService;
 		private IComputeService _computeService;
+		private ISubjectFilterService _filterService;
+		private ISubjectDataService _dataService;
 		#endregion
 
 		private const string SETTING_ROI_FILE_TOKEN = "ROIFileToken";
@@ -45,6 +49,8 @@ namespace BrainGraph.WinStore.Screens.Component
 				_navService = IoC.Get<INavigationService>();
 				_regionService = IoC.Get<IRegionService>();
 				_computeService = IoC.Get<IComputeService>();
+				_filterService = IoC.Get<ISubjectFilterService>();
+				_dataService = IoC.Get<ISubjectDataService>();
 				_eventAggregator.Subscribe(this);
 			}
 		}
@@ -72,6 +78,33 @@ namespace BrainGraph.WinStore.Screens.Component
 					overlapCount++;
 				}
 			}
+
+			// Get the data types
+			var dataTypes = _filterService.GetDataTypes();
+			// Get the subject data
+			var grp1 = _filterService.GetGroup1();
+			var grp2 = _filterService.GetGroup2();
+
+			// Loop through datatypes and calc avg str for intermodal cpt for each subj
+			foreach (var dataType in dataTypes)
+			{
+				foreach (var sub in grp1)
+				{
+					var subGraphVM = new SubjectGraphViewModel(sub.Graphs[dataType]);
+					var dTotal = 0.0;
+					var dRegCount = 0.0;
+
+					foreach (var reg in OverlapRegions)
+					{
+						var nodeVM = subGraphVM.Nodes[Int32.Parse(reg.Index)];  // TODO: Why is index a string?
+
+						dTotal += ((double)nodeVM.TotalStrength / (double)nodeVM.Degree);
+						dRegCount++;
+					}
+
+					Debug.WriteLine(string.Format("{0},{1},{2},{3}", dataType, dTotal / dRegCount, sub.Attributes["CogMem"], sub.GroupId));
+				}
+			}			
 
 			this.PrimaryValue = overlapCount.ToString();
 
