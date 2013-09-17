@@ -25,7 +25,9 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 		vector<shared_ptr<CompareEdge>> Edges;
 		vector<shared_ptr<CompareNode>> Nodes;
+		
 		vector<shared_ptr<Component>> Components;
+		
 		shared_ptr<CompareGlobal> Global;
 
 	private:

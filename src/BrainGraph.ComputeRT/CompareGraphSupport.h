@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
@@ -126,16 +127,36 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	class Component
 	{
 	public:
-		Component() : Identifier(0)
-		{}
+		Component() : Identifier(0), RightTailExtent(0)
+		{
+			//RandomDistribution.resize(4005);
+		}
 
 		int Identifier;
-		std::vector<std::shared_ptr<CompareEdge>> Edges;
-		//std::vector<std::shared_ptr<CompareNode>> Nodes;
 
+		std::vector<std::shared_ptr<CompareEdge>> Edges;
+		std::vector<std::shared_ptr<CompareNode>> Nodes;
 		std::vector<int> Vertices;  // TODO: Deprec
 
+		std::mutex lockRandomDist;
+		std::vector<concurrency::combinable<int>> RandomDistribution;
 		int RightTailExtent;
+
+		void AddRandomExtentValue(int randomEdgeCount)
+		{
+			if(randomEdgeCount > Edges.size())
+				RightTailExtent++;
+
+			if(RandomDistribution.size() <= randomEdgeCount)
+			{
+				std::lock_guard<std::mutex> mtx(lockRandomDist);
+
+				if(RandomDistribution.size() <= randomEdgeCount)
+					RandomDistribution.resize(randomEdgeCount + 1);
+			}
+
+			RandomDistribution[randomEdgeCount].local()++;
+		}
 
 		double GetAverageEdgeDifference()
 		{

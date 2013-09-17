@@ -29,6 +29,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	public:
 		property WFC::IVectorView<MultiNodeViewModel^>^ MultiNodes { WFC::IVectorView<MultiNodeViewModel^>^ get()  {  return _multiNodes->GetView(); } }
 		property WFC::IVectorView<CompareGraphViewModel^>^ Graphs { WFC::IVectorView<CompareGraphViewModel^>^ get()  {  return _graphs->GetView(); } } 
+		property WFC::IVectorView<int>^ RandomDistribution { WFC::IVectorView<int>^ get() { return _randomDistribution->GetView(); } }
 
 	internal:
 		MultiGraphViewModel(shared_ptr<MultiGraph> multiGraph)
@@ -40,6 +41,12 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 			for(auto node : _multiGraph->Nodes)
 				_multiNodes->Append(ref new MultiNodeViewModel(node));
+
+			_randomDistribution = ref new PC::Vector<int>();
+			for(auto distVal : _multiGraph->RandomDistribution)
+			{
+				_randomDistribution->Append(distVal.combine(plus<int>()));
+			}
 
 			// TODO: Spin through the compare graphs and add to the collection and delete the AddCompareGraph method
 		}
@@ -54,6 +61,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		
 		PC::Vector<MultiNodeViewModel^>^ _multiNodes;
 		PC::Vector<CompareGraphViewModel^>^ _graphs;
+		PC::Vector<int>^ _randomDistribution;
 	};
 	
 }}}

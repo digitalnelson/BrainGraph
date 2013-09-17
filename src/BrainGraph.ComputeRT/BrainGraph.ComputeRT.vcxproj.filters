@@ -17,6 +17,9 @@
     <Filter Include="Single">
       <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ViewModels">
+      <UniqueIdentifier>{75b9c36c-e1b2-42be-93e1-ac01b81f3dda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -71,17 +74,17 @@
     <ClInclude Include="MultiDatatypeSupport.h">
       <Filter>Multi</Filter>
     </ClInclude>
-    <ClInclude Include="CompareGraphViewModels.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiGraphViewModels.h">
-      <Filter>Multi</Filter>
-    </ClInclude>
     <ClInclude Include="SubjectGraphSupport.h">
       <Filter>Subjects</Filter>
     </ClInclude>
+    <ClInclude Include="MultiGraphViewModels.h">
+      <Filter>ViewModels</Filter>
+    </ClInclude>
+    <ClInclude Include="CompareGraphViewModels.h">
+      <Filter>ViewModels</Filter>
+    </ClInclude>
     <ClInclude Include="SubjectGraphViewModels.h">
-      <Filter>Subjects</Filter>
+      <Filter>ViewModels</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

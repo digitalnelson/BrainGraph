@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace BrainGraph.WinStore.Screens.Component
 {
@@ -74,6 +75,14 @@ namespace BrainGraph.WinStore.Screens.Component
 			var results = _computeService.GetResults();
 			int permutations = _computeService.GetPermutations();
 
+			int i = 0;
+			Debug.WriteLine("InterModal");
+			foreach (var val in results.RandomDistribution)
+			{
+				Debug.WriteLine(i + " " + val);
+				++i;
+			}
+
 			foreach (var graph in results.Graphs)
 			{
 				ComponentViewModel lrgCmp = null;
@@ -85,9 +94,19 @@ namespace BrainGraph.WinStore.Screens.Component
 
 				if (lrgCmp != null)
 				{
+					Debug.WriteLine(graph.Name);
+
 					var itm = new DataItemViewModel();
 					itm.DataType = graph.Name;
 					itm.SigNodeCount = lrgCmp.NodeCount;
+
+					i = 0;
+					foreach (var val in lrgCmp.RandomDistribution)
+					{
+						Debug.WriteLine(i + " " + val);
+
+						++i;
+					}
 
 					itm.Nodes = new List<NodeSummaryViewModel>();
 					itm.SigNodes = new List<NodeSummaryViewModel>();

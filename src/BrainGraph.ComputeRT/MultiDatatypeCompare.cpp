@@ -159,8 +159,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 					randomGraph.AddNode(multiNode);					
 				}
 
-				if(randomGraph.GetTotalNodalOverlapCount() >= _multiGraph->GetTotalNodalOverlapCount())
-					_multiGraph->IncrementGraphRandomOverlapCount();
+				_multiGraph->AddRandomOverlapValue(randomGraph.GetTotalNodalOverlapCount());
 
 				++totalPerms;
 

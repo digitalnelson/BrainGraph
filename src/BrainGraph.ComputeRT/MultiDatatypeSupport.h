@@ -54,15 +54,29 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			return _fullOverlapTotal;
 		}
 
-		void IncrementGraphRandomOverlapCount()
+		void AddRandomOverlapValue(int randomOverlapCount)
 		{
-			++_randomGraphOverlapCount;
+			if(randomOverlapCount >= _fullOverlapTotal)
+				++_randomGraphOverlapCount;
+
+			if(RandomDistribution.size() <= randomOverlapCount)
+			{
+				std::lock_guard<std::mutex> mtx(lockRandomDist);
+
+				if(RandomDistribution.size() <= randomOverlapCount)
+					RandomDistribution.resize(randomOverlapCount + 1);
+			}
+
+			RandomDistribution[randomOverlapCount].local()++;
 		}
 
 		std::vector<shared_ptr<MultiNode>> Nodes;
+		std::vector<concurrency::combinable<int>> RandomDistribution;
 
 	private:
 		int _fullOverlapTotal;
+
+		std::mutex lockRandomDist;
 		int _randomGraphOverlapCount;
 	};
 }}}
