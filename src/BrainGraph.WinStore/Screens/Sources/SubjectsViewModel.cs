@@ -283,7 +283,7 @@ namespace BrainGraph.WinStore.Screens.Sources
 			popup.DataContext = this;
 
 			// Flyout is a ContentControl so set your content within it.
-			Flyout f = new Flyout();
+            Callisto.Controls.Flyout f = new Callisto.Controls.Flyout();
 			f.Background = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.White);
 			f.Content = popup;
 			f.Placement = PlacementMode.Top;
@@ -300,7 +300,7 @@ namespace BrainGraph.WinStore.Screens.Sources
 			popup.DataContext = this;
 
 			// Flyout is a ContentControl so set your content within it.
-			Flyout f = new Flyout();
+            Callisto.Controls.Flyout f = new Callisto.Controls.Flyout();
 			f.Background = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.White);
 			f.Content = popup;
 			f.Placement = PlacementMode.Top;

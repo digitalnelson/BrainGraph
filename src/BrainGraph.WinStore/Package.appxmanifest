@@ -1,27 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="AgileMedicine.BrainGraph" Publisher="CN=4584EE3B-39C1-4D63-8F25-1BA22D6C8853" Version="1.0.0.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="AgileMedicine.BrainGraph" Publisher="CN=4584EE3B-39C1-4D63-8F25-1BA22D6C8853" Version="1.1.0.0" />
   <Properties>
     <DisplayName>BrainGraph</DisplayName>
     <PublisherDisplayName>AgileMedicine</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
-    <OSMinVersion>6.2.1</OSMinVersion>
-    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
   </Prerequisites>
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="BrainGraph.WinStore.App">
-      <VisualElements DisplayName="BrainGraph" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="An application to support the study of the connectivity of the brain.  It uses graph theory to describe group differences seen in populations." ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="noLogos" WideLogo="Assets\WideLogo.png" ShortName="BrainGraph" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
-        <InitialRotationPreference>
-          <Rotation Preference="landscape" />
-        </InitialRotationPreference>
-      </VisualElements>
       <Extensions>
         <Extension Category="windows.fileTypeAssociation">
           <FileTypeAssociation Name="braingraphdatafiles">
@@ -31,6 +24,14 @@
           </FileTypeAssociation>
         </Extension>
       </Extensions>
+      <m2:VisualElements DisplayName="BrainGraph" Description="An application to support the study of the connectivity of the brain.  It uses graph theory to describe group differences seen in populations." BackgroundColor="#464646" ForegroundText="light" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png">
+        <m2:DefaultTile ShortName="BrainGraph" Wide310x150Logo="Assets\WideLogo.png">
+        </m2:DefaultTile>
+        <m2:InitialRotationPreference>
+          <m2:Rotation Preference="landscape" />
+        </m2:InitialRotationPreference>
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      </m2:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
