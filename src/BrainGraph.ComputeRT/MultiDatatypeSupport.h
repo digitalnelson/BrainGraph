@@ -17,7 +17,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	{
 		int Id;
 		bool IsFullOverlap;
-		int RandomOverlapCount;
+		std::atomic<int> RandomOverlapCount;
 
 		MultiNode(int id)
 		{
@@ -77,6 +77,6 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		int _fullOverlapTotal;
 
 		std::mutex lockRandomDist;
-		int _randomGraphOverlapCount;
+		std::atomic<int> _randomGraphOverlapCount;
 	};
 }}}

@@ -48,8 +48,8 @@ namespace BrainGraph.WinStore.Services
 
 			foreach (var graph in subject.Graphs)
 			{
-				if (!_dataTypeLookup.ContainsKey(graph.Value.DataType))
-					_dataTypeLookup[graph.Value.DataType] = false;
+				if (!_dataTypeLookup.ContainsKey(graph.Key))
+                    _dataTypeLookup[graph.Key] = false;
 			}
 
 			_all.Add(subject);

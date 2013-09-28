@@ -34,7 +34,7 @@ namespace BrainLab.Services.Loaders
 			//var desc = fileParts[2];
 
 			SubjectGraph subjectGraph = new SubjectGraph(vertexCount);
-			subjectGraph.DataType = adjType;
+			//subjectGraph.DataType = adjType;
 
 			// Read in all the lines
 			var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
@@ -57,7 +57,7 @@ namespace BrainLab.Services.Loaders
 				}
 			}
 
-			subject.AddGraph(subjectGraph);
+			subject.AddGraph(adjType, subjectGraph);
 
 			DateTime dtFinish = DateTime.Now;
 			TimeSpan tsDiff = dtFinish - dtStart;
@@ -96,7 +96,7 @@ namespace BrainLab.Services.Loaders
 					subject = subjectsByEventId[eventId];
 
 				SubjectGraph subjectGraph = new SubjectGraph(vertexCount);
-				subjectGraph.DataType = adjType;
+				//subjectGraph.DataType = adjType;
 
 				// Read in all the lines
 				var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
@@ -119,7 +119,7 @@ namespace BrainLab.Services.Loaders
 					}
 				}
 
-				subject.AddGraph(subjectGraph);
+				subject.AddGraph(adjType, subjectGraph);
 
 				return subjectGraph;
 			});

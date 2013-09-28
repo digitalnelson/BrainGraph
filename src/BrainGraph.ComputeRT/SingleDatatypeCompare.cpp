@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <algorithm>
-#include "Subject.h"
-#include "SubjectGraphSupport.h"
+#include "SubjectViewModel.hpp"
+#include "SubjectGraph.hpp"
 #include "SingleDatatypeCompare.h"
 #include "MultiDatatypeSupport.h"
 

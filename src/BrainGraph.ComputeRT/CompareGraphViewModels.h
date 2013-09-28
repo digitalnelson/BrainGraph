@@ -22,7 +22,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			_stat.V1 = v1;
 			_stat.V2 = v2;
 			_stat.Value = value;
-			_stat.TwoTailCount = twotailcount;
+			_stat.TwoTailCount.exchange(twotailcount);
 		}
 
 		property double M1 { double get() { return _stat.M1; } void set(double val) { _stat.M1 = val; } }

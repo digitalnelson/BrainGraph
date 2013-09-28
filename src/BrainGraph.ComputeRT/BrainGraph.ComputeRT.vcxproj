@@ -99,7 +99,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\..\..\boost_1_50_0;..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>..\BrainGraph.Compute;..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.Compute\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <GenerateManifest>false</GenerateManifest>
@@ -218,15 +219,13 @@
     <ClInclude Include="CompareGraphViewModels.h" />
     <ClInclude Include="MultiGraphViewModels.h" />
     <ClInclude Include="SingleDatatypeSupport.h" />
-    <ClInclude Include="SubjectGraphSupport.h" />
+    <ClInclude Include="SubjectViewModel.hpp" />
     <ClInclude Include="MultiDatatypeSupport.h" />
     <ClInclude Include="SingleDatatypeCompare.h" />
     <ClInclude Include="MultiDatatypeCompare.h" />
     <ClInclude Include="GraphLookup.h" />
     <ClInclude Include="CompareGraph.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Subject.h" />
-    <ClInclude Include="SubjectGraph.h" />
     <ClInclude Include="SubjectGraphViewModels.h" />
   </ItemGroup>
   <ItemGroup>
@@ -242,10 +241,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Subject.cpp" />
-    <ClCompile Include="SubjectGraph.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\cpprestsdk.redist.1.2.0\build\native\cpprestsdk.redist.targets" Condition="Exists('..\packages\cpprestsdk.redist.1.2.0\build\native\cpprestsdk.redist.targets')" />
+    <Import Project="..\packages\cpprestsdk.1.2.0\build\native\cpprestsdk.targets" Condition="Exists('..\packages\cpprestsdk.1.2.0\build\native\cpprestsdk.targets')" />
   </ImportGroup>
 </Project>

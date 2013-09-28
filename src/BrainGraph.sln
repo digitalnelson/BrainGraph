@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.20827.3
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrainGraph.ComputeRT", "BrainGraph.ComputeRT\BrainGraph.ComputeRT.vcxproj", "{6756AAF2-DF88-4FE3-A833-736EE3861AFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrainGraph.WinStore", "BrainGraph.WinStore\BrainGraph.WinStore.csproj", "{60C99C58-6D72-4378-BDCA-52C8DA4B4E63}"
@@ -8,6 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1E3BC78C-3A94-44B1-AD83-580D44B822CE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrainGraph.ComputeRT.Test", "BrainGraph.ComputeRT.Test\BrainGraph.ComputeRT.Test.vcxproj", "{D0126F37-4001-4F3F-851C-5E3534525407}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrainGraph.Compute", "BrainGraph.Compute\BrainGraph.Compute.vcxproj", "{2FD88B17-FD81-44F5-B133-12331C6167AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +119,24 @@ Global
 		{D0126F37-4001-4F3F-851C-5E3534525407}.Release|x86.ActiveCfg = Release|Win32
 		{D0126F37-4001-4F3F-851C-5E3534525407}.Release|x86.Build.0 = Release|Win32
 		{D0126F37-4001-4F3F-851C-5E3534525407}.Release|x86.Deploy.0 = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|ARM.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|Win32.Build.0 = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|x64.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Debug|x86.Build.0 = Debug|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|Any CPU.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|ARM.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|Win32.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|Win32.Build.0 = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|x64.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|x86.ActiveCfg = Release|Win32
+		{2FD88B17-FD81-44F5-B133-12331C6167AD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

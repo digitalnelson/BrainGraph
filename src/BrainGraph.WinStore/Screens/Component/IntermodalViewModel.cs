@@ -1,19 +1,13 @@
-﻿using BrainGraph.WinStore.Common;
+﻿using BrainGraph.Compute.Subjects;
+using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Common.Viz;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using OxyPlot;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using OxyPlot.Axes;
-using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using BrainGraph.Compute.Subjects;
+using System;
 using System.Diagnostics;
 
 namespace BrainGraph.WinStore.Screens.Component

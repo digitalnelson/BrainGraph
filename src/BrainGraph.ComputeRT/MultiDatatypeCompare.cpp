@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "collection.h"
-#include "Subject.h"
+#include "SubjectViewModel.hpp"
 //#include "SubjectGraphEdge.h"
 #include "SingleDatatypeCompare.h"
 #include "MultiDatatypeCompare.h"
+#include <random>
 
 namespace BrainGraph { namespace Compute { namespace Graph
 {
@@ -106,70 +107,99 @@ namespace BrainGraph { namespace Compute { namespace Graph
 
 	IAsyncActionWithProgress<int>^ MultiDatatypeCompare::PermuteAsyncWithProgress(int permutations)
 	{
-		IAsyncActionWithProgress<int>^ action_with_progress = create_async( [=] ( progress_reporter<int> reporter ) 
+		try
 		{
-			// Put together a list of idxs representing our two groups
-			vector<int> idxs;
-			for(auto itm : _subIdxsByGroup["group1"])
-				idxs.push_back(itm);
-			for(auto itm : _subIdxsByGroup["group2"])
-				idxs.push_back(itm);
-
-			// Keep track of our group 1 size for the permutation step
-			auto group1Count = _subIdxsByGroup["group1"].size();
-			int &totalPerms = _permutations;
-
-			//for(int permutation=0; permutation<permutations; permutation++)
-			parallel_for(0, permutations, [=, &idxs, &totalPerms] ( int permutation )
-			{	
-				// Shuffle subjects randomly
-				random_shuffle(idxs.begin(), idxs.end());
-
-				// Vector for counting node overlap
-				std::vector<int> nodeCounts(_vertices);
-
-				// Loop through our comparisons and call permute on them passing our new random subject assortement
-				for(auto &groupCompareItem : _groupCompareByType)
+			IAsyncActionWithProgress<int>^ action_with_progress = create_async( [=] ( progress_reporter<int> reporter ) 
+			{
+				try
 				{
-					// Compare the two groups for this data type
-					auto cmp = groupCompareItem.second->Permute(idxs, group1Count);
+					// Put together a list of idxs representing our two groups
+					vector<int> idxs;
+					for(auto itm : _subIdxsByGroup["group1"])
+						idxs.push_back(itm);
+					for(auto itm : _subIdxsByGroup["group2"])
+						idxs.push_back(itm);
 
-					// Pull out the vertices and store then in our counting map
-					if(cmp != nullptr)
+					// Keep track of our group 1 size for the permutation step
+					auto group1Count = _subIdxsByGroup["group1"].size();
+					//int &totalPerms = _permutations;
+
+					std::atomic<int> permCount(0);
+
+					for(int permutation=0; permutation<permutations; permutation++)
+					//parallel_for(0, permutations, [=, &idxs, &permCount](int permutation)
 					{
-						for(auto vert : cmp->Vertices)
-							++nodeCounts[vert];
-					}
+						//try
+						//{
+							vector<int> idxCpy(idxs);
+
+							std::random_device rndDev;
+							std::default_random_engine engRand(rndDev());
+
+							// Shuffle subjects randomly
+							std::shuffle(begin(idxCpy), end(idxCpy), engRand);
+
+							// Vector for counting node overlap
+							std::vector<int> nodeCounts(_vertices);
+
+							// Loop through our comparisons and call permute on them passing our new random subject assortement
+							for (auto &groupCompareItem : _groupCompareByType)
+							{
+								// Compare the two groups for this data type
+								auto cmp = groupCompareItem.second->Permute(idxCpy, group1Count);
+
+								// Pull out the vertices and store then in our counting map
+								if (cmp != nullptr)
+								{
+									for (auto vert : cmp->Vertices)
+										++nodeCounts[vert];
+								}
+							}
+					
+							MultiGraph randomGraph;
+
+							// Calculate how many nodes overlap between all of the nodes
+							auto maxOverlap = _groupCompareByType.size();
+							for (auto idx = 0; idx < nodeCounts.size(); ++idx)
+							{
+								auto multiNode = make_shared<MultiNode>(idx);
+
+								if (nodeCounts[idx] == maxOverlap)
+								{
+									multiNode->IsFullOverlap = true;
+									_multiGraph->IncrementNodalRandomOverlapCount(idx);
+								}
+
+								randomGraph.AddNode(multiNode);
+							}
+
+							_multiGraph->AddRandomOverlapValue(randomGraph.GetTotalNodalOverlapCount());
+
+							permCount++;
+
+							if (permCount % 100 == 0)
+								reporter.report(permCount);
+
+						//}
+						//catch (Exception^ e)
+						//{
+						//	throw ref new Exception(E_FAIL, "Bad multigraph.");
+						//}
+					}//);
+
 				}
-
-				MultiGraph randomGraph;
-
-				// Calculate how many nodes overlap between all of the nodes
-				auto maxOverlap = _groupCompareByType.size();
-				for(auto idx=0; idx<nodeCounts.size(); ++idx)
+				catch (Exception^ e)
 				{
-					auto multiNode = make_shared<MultiNode>(idx);
-
-					if(nodeCounts[idx] == maxOverlap)
-					{
-						multiNode->IsFullOverlap = true;
-						_multiGraph->IncrementNodalRandomOverlapCount(idx);
-					}
-
-					randomGraph.AddNode(multiNode);					
+					throw ref new Exception(E_FAIL, "Something bad happened.");
 				}
-
-				_multiGraph->AddRandomOverlapValue(randomGraph.GetTotalNodalOverlapCount());
-
-				++totalPerms;
-
-				int tmpPerms = totalPerms;
-				if(tmpPerms % 100 == 0)
-					reporter.report(tmpPerms);
 			});
-		});
 
-		return action_with_progress;
+			return action_with_progress;
+		}
+		catch (Exception^ e)
+		{
+			throw ref new Exception(E_FAIL, "Something really bad happened.");
+		}
 	}
 
 	MultiGraphViewModel^ MultiDatatypeCompare::GetResult()

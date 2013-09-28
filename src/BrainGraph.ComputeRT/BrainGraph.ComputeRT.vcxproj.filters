@@ -23,12 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Subject.cpp">
-      <Filter>Subjects</Filter>
-    </ClCompile>
-    <ClCompile Include="SubjectGraph.cpp">
-      <Filter>Subjects</Filter>
-    </ClCompile>
     <ClCompile Include="CompareGraph.cpp">
       <Filter>Single</Filter>
     </ClCompile>
@@ -44,14 +38,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Subject.h">
-      <Filter>Subjects</Filter>
-    </ClInclude>
     <ClInclude Include="GraphLookup.h">
       <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectGraph.h">
-      <Filter>Subjects</Filter>
     </ClInclude>
     <ClInclude Include="CompareGraph.h">
       <Filter>Single</Filter>
@@ -74,9 +62,6 @@
     <ClInclude Include="MultiDatatypeSupport.h">
       <Filter>Multi</Filter>
     </ClInclude>
-    <ClInclude Include="SubjectGraphSupport.h">
-      <Filter>Subjects</Filter>
-    </ClInclude>
     <ClInclude Include="MultiGraphViewModels.h">
       <Filter>ViewModels</Filter>
     </ClInclude>
@@ -86,5 +71,11 @@
     <ClInclude Include="SubjectGraphViewModels.h">
       <Filter>ViewModels</Filter>
     </ClInclude>
+    <ClInclude Include="SubjectViewModel.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -98,7 +98,7 @@ namespace BrainGraph.WinStore.Services
 					AdjFile adj = new AdjFile();
 					adj.File = file;
 					adj.Graph = new SubjectGraph(vertexLimit);
-					adj.Graph.DataType = sbAdjType.ToString();
+					adj.DataType = sbAdjType.ToString();
 
 					_adjBySubjectId[subject.SubjectId].Add(adj);
 				}
@@ -134,7 +134,7 @@ namespace BrainGraph.WinStore.Services
 						}
 					}
 
-					subject.AddGraph(adj.Graph);
+					subject.AddGraph(adj.DataType, adj.Graph);
 				}
 			}
 		}

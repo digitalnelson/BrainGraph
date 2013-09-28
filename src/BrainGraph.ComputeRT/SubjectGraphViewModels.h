@@ -1,13 +1,11 @@
 #pragma once
-#include "SubjectGraphSupport.h"
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
 	using namespace Platform;
 	namespace PC = Platform::Collections;
 	namespace WFC = Windows::Foundation::Collections;
-	ref class SubjectGraph;
-
+	
 	public ref class EdgeViewModel sealed
 	{
 	public:
@@ -46,9 +44,12 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 	public:
 		property WFC::IVectorView<NodeViewModel^>^ Nodes { WFC::IVectorView<NodeViewModel^>^ get() { return _nodes->GetView(); } }
 		property WFC::IVectorView<EdgeViewModel^>^ Edges { WFC::IVectorView<EdgeViewModel^>^ get() { return _edges->GetView(); } } 
+		
+		SubjectGraphViewModel()
+		{}
 
-	
-		SubjectGraphViewModel(SubjectGraph^ graph)
+	internal:
+		SubjectGraphViewModel(std::shared_ptr<SubjectGraph> graph)
 		{
 			//_graph = graph;
 
@@ -59,15 +60,14 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			//	AddComponent(compareComponent);
 
 			_nodes = ref new PC::Vector<NodeViewModel^>();
-			for(auto compareNode : graph->Nodes)
+			for (auto compareNode : graph->Nodes)
 				AddNode(compareNode);
 
 			_edges = ref new PC::Vector<EdgeViewModel^>();
-			for(auto compareEdge : graph->Edges)
+			for (auto compareEdge : graph->Edges)
 				AddEdge(compareEdge);
 		}
-
-	internal:
+		
 		void AddNode(std::shared_ptr<SubjectGraphNode> node)
 		{
 			_nodes->Append(ref new NodeViewModel(node));

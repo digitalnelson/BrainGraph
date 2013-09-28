@@ -8,7 +8,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 {
 	namespace BCS = BrainGraph::Compute::Subjects;
 
-	ref class BCS::Subject;
+	ref class BCS::SubjectViewModel;
 	ref class Threshold;
 	struct BCS::SubjectGraphEdge;
 

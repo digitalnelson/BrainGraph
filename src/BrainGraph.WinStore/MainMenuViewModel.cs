@@ -149,14 +149,21 @@ namespace BrainGraph.WinStore
 					// Create our async permutation computation to figure out p values
 					var permutation = _computeService.PermuteGroupsAsync(permutations);
 
-					// Handle progress reporting
-					permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
-					{
-						_running.PrimaryValue = p.ToString();
-					});
+                    // Handle progress reporting
+                    permutation.Progress += new Windows.Foundation.AsyncActionProgressHandler<int>((_, p) =>
+                    {
+                        _running.PrimaryValue = p.ToString();
+                    });
 
-					// Run the thingy and fix the display when it finishes
-					await permutation.AsTask();
+                    try
+                    {
+                        // Run the thingy and fix the display when it finishes
+                        await permutation.AsTask();
+                    }
+                    catch(Exception ex)
+                    {
+                        int i = 0;
+                    }
 
 					_running.PrimaryValue = permutations.ToString();
 					_eventAggregator.Publish(new PermutationCompleteEvent());
