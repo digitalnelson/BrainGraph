@@ -1,14 +1,14 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "..\BrainGraph.ComputeRT\CompareGraphSupport.h"
-#include "..\BrainGraph.ComputeRT\SingleDatatypeSupport.h"
+//#include "..\BrainGraph.ComputeRT\CompareGraphSupport.h"
+//#include "..\BrainGraph.ComputeRT\SingleDatatypeSupport.h"
 
-using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-namespace BCG = BrainGraph::Compute::Graph;
+//using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+//namespace BCG = BrainGraph::Compute::Graph;
 
 namespace BrainGraph_ComputeRT_Test
 {
-	TEST_CLASS(SingleDatatypeTest)
+	/*TEST_CLASS(SingleDatatypeTest)
 	{
 	public:
 		TEST_METHOD(PearsonCalcTest1)
@@ -26,5 +26,5 @@ namespace BrainGraph_ComputeRT_Test
 
 			Assert::AreEqual( expected, actual, 0.00001);
 		}
-	};
+	};*/
 }

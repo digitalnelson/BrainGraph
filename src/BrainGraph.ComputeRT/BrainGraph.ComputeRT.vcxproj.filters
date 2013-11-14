@@ -14,65 +14,47 @@
     <Filter Include="Multi">
       <UniqueIdentifier>{1cc9898f-471d-4933-ad1e-831a52a73ea9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Single">
-      <UniqueIdentifier>{56516cdc-efa0-4adf-b296-7c7d8cc56087}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ViewModels">
+    <Filter Include="Group">
       <UniqueIdentifier>{75b9c36c-e1b2-42be-93e1-ac01b81f3dda}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="CompareGraph.cpp">
-      <Filter>Single</Filter>
-    </ClCompile>
-    <ClCompile Include="SingleDatatypeCompare.cpp">
-      <Filter>Single</Filter>
-    </ClCompile>
-    <ClCompile Include="BindableBase.cpp">
+    <ClCompile Include="PackageExports.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="MultiDatatypeCompare.cpp">
-      <Filter>Multi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="GraphLookup.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="CompareGraph.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="SingleDatatypeCompare.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="CompareGraphSupport.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="BindableBase.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="SingleDatatypeSupport.h">
-      <Filter>Single</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiDatatypeCompare.h">
-      <Filter>Multi</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiDatatypeSupport.h">
-      <Filter>Multi</Filter>
-    </ClInclude>
-    <ClInclude Include="MultiGraphViewModels.h">
-      <Filter>ViewModels</Filter>
-    </ClInclude>
-    <ClInclude Include="CompareGraphViewModels.h">
-      <Filter>ViewModels</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectGraphViewModels.h">
-      <Filter>ViewModels</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectViewModel.hpp">
+    <ClInclude Include="Subjects\NodeViewModel.hpp">
       <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\GraphViewModel.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\ComponentViewModel.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Multi\MultiDatatypeCompare.hpp">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\ThresholdViewModel.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Multi\MultiViewModels.hpp">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\GroupViewModels.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\SubjectViewModel.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\EdgeViewModel.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="PackageExports.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

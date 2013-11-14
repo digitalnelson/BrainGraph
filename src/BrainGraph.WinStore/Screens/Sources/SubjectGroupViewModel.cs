@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using BrainGraph.ComputeRT.Subjects;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;

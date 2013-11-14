@@ -1,4 +1,4 @@
-﻿using BrainGraph.Compute.Graph;
+﻿using BrainGraph.ComputeRT.Group;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Services;

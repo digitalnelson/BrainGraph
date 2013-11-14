@@ -77,9 +77,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GraphLookup.hpp" />
+    <ClInclude Include="Group\Compare.hpp" />
+    <ClInclude Include="Group\Item.hpp" />
+    <ClInclude Include="Group\Component.hpp" />
+    <ClInclude Include="Group\Edge.hpp" />
+    <ClInclude Include="Group\Global.hpp" />
+    <ClInclude Include="Group\Graph.hpp" />
+    <ClInclude Include="Group\Node.hpp" />
+    <ClInclude Include="Group\Pearson.hpp" />
+    <ClInclude Include="Group\PearsonCompare.hpp" />
+    <ClInclude Include="Group\Threshold.hpp" />
+    <ClInclude Include="Group\TStat.hpp" />
+    <ClInclude Include="Group\TStatCalc.hpp" />
+    <ClInclude Include="Multi\Compare.hpp" />
+    <ClInclude Include="Multi\Graph.hpp" />
+    <ClInclude Include="Multi\Node.hpp" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Subject.hpp" />
-    <ClInclude Include="SubjectGraph.hpp" />
+    <ClInclude Include="Subjects\Attribute.hpp" />
+    <ClInclude Include="Subjects\Edge.hpp" />
+    <ClInclude Include="Subjects\Global.hpp" />
+    <ClInclude Include="Subjects\Node.hpp" />
+    <ClInclude Include="Subjects\Subject.hpp" />
+    <ClInclude Include="Subjects\Graph.hpp" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>

@@ -68,6 +68,7 @@ namespace BrainGraph.WinStore
             
 			_kernel.Bind<RegionsViewModel>().To<RegionsViewModel>();
 			_kernel.Bind<SubjectsViewModel>().To<SubjectsViewModel>().InSingletonScope();
+            _kernel.Bind<GroupsViewModel>().To<GroupsViewModel>().InSingletonScope();
 			_kernel.Bind<PermutationViewModel>().To<PermutationViewModel>().InSingletonScope();
 			_kernel.Bind<NBSmConfigViewModel>().To<NBSmConfigViewModel>();
 			

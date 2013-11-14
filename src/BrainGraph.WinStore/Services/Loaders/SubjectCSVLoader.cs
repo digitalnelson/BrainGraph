@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BrainGraph.Compute.Subjects;
+using BrainGraph.ComputeRT.Subjects;
 using Windows.Storage;
 
-namespace BraingGraph.Services.Loaders
+namespace BrainGraph.Services.Loaders
 {
 	class SubjectCSVLoader
 	{
-		public static async Task<List<Subject>> LoadSubjectFile(StorageFile file)
+        public static async Task<List<SubjectViewModel>> LoadSubjectFile(StorageFile file)
 		{
 			// Read in all the lines
 			var lines = await Windows.Storage.FileIO.ReadLinesAsync(file);
@@ -32,7 +32,7 @@ namespace BraingGraph.Services.Loaders
 			}
 
 			// This will be our lookup by subject id
-			var subjects = new Dictionary<string, Subject>();
+			var subjects = new Dictionary<string, SubjectViewModel>();
 
 			// Loop through lines of subject file
 			foreach (var line in lines.Skip(1))
@@ -45,11 +45,7 @@ namespace BraingGraph.Services.Loaders
 
 				// Create subject if they do not exist
 				if (!subjects.ContainsKey(subId))
-				{
-					var sub = new Subject();
-					subjects[subId] = sub;
-					subjects[subId].SubjectId = subId;
-				}
+					subjects[subId] = new SubjectViewModel(subId);
 
 				// Get the subject
 				var subject = subjects[subId];

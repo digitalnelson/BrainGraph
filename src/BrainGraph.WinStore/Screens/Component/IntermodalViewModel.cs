@@ -1,4 +1,4 @@
-﻿using BrainGraph.Compute.Subjects;
+﻿using BrainGraph.ComputeRT.Subjects;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Common.Viz;
 using BrainGraph.WinStore.Events;
@@ -84,7 +84,7 @@ namespace BrainGraph.WinStore.Screens.Component
 			{
 				foreach (var sub in grp1)
 				{
-					var subGraphVM = new SubjectGraphViewModel(sub.Graphs[dataType]);
+					var subGraphVM = sub.Graphs[dataType];
 					var dTotal = 0.0;
 					var dRegCount = 0.0;
 

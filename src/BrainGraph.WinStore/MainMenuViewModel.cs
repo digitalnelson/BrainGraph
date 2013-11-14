@@ -54,7 +54,7 @@ namespace BrainGraph.WinStore
 
 				var regionsVM = IoC.Get<RegionsViewModel>();
 
-				Groups.Add(new MenuGroup { Title = "Source", Items = { regionsVM, IoC.Get<SubjectsViewModel>() } });
+				Groups.Add(new MenuGroup { Title = "Source", Items = { regionsVM, IoC.Get<SubjectsViewModel>(), IoC.Get<GroupsViewModel>() } });
 				Groups.Add(new MenuGroup { Title = "Config", Items = { _permutations, _nbsmConfig } });
 				Groups.Add(new MenuGroup { Title = "Compute", Items = { _runThresholdTest, _running } });
 				Groups.Add(new MenuGroup { Title = "Global", Items = { IoC.Get<GlobalStrengthViewModel>() } });

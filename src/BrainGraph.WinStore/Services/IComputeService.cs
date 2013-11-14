@@ -1,5 +1,6 @@
-﻿using BrainGraph.Compute.Graph;
-using BrainGraph.Compute.Subjects;
+﻿using BrainGraph.ComputeRT.Group;
+using BrainGraph.ComputeRT.Subjects;
+using BrainGraph.ComputeRT.Multi;
 using System.Collections.Generic;
 using Windows.Foundation;
 
@@ -15,7 +16,7 @@ namespace BrainGraph.WinStore.Services
 	public interface IComputeService
 	{
 		void SetThreshold(string dataType, string threshold);
-		void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<Subject> group1, List<Subject> group2);
+        void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<SubjectViewModel> group1, List<SubjectViewModel> group2);
 		void CompareGroups();
 		IAsyncActionWithProgress<int> PermuteGroupsAsync(int permutations);
 		MultiGraphViewModel GetResults();
@@ -35,13 +36,13 @@ namespace BrainGraph.WinStore.Services
 			_thresholds[dataType] = threshold;
 		}
 
-		public void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<Subject> group1, List<Subject> group2)
+        public void LoadSubjects(int nodes, int edges, List<string> dataTypes, List<SubjectViewModel> group1, List<SubjectViewModel> group2)
 		{
-			List<Threshold> thresholds = new List<Threshold>();
+			List<ThresholdViewModel> thresholds = new List<ThresholdViewModel>();
 
 			foreach (var dataType in dataTypes)
 			{
-				thresholds.Add(new Threshold { DataType = dataType, Value = double.Parse(_thresholds[dataType]) });
+				thresholds.Add(new ThresholdViewModel { DataType = dataType, Value = double.Parse(_thresholds[dataType]) });
 			}
 
 			_compare = new MultiDatatypeCompare(nodes, edges, thresholds);

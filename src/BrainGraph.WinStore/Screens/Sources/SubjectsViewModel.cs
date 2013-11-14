@@ -1,4 +1,4 @@
-﻿using BrainGraph.Compute.Subjects;
+﻿using BrainGraph.ComputeRT.Subjects;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Services;
@@ -161,16 +161,9 @@ namespace BrainGraph.WinStore.Screens.Sources
 			_subjectFilterService.Clear();
 			//_subjectService.Clear();
 
-			var subjects = await _subjectService.LoadSubjects(file);
+			_sgRemaining.Subjects.AddRange( await _subjectService.LoadSubjects(file) );
 
-			foreach (var subject in subjects)
-			{
-				var subViewModel = new SubjectViewModel { Subject = subject };
-
-				_sgRemaining.Subjects.Add(subViewModel);
-			}
-
-			this.PrimaryValue = subjects.Count.ToString();
+            this.PrimaryValue = _sgRemaining.Subjects.Count.ToString();
 		}
 
 		public async Task OpenFolderFromCache()
@@ -234,13 +227,13 @@ namespace BrainGraph.WinStore.Screens.Sources
 					// TODO: What happens if data can't be loaded?
 
 					// Make sure the subjects data is loaded
-					await _subjectService.LoadSubjectData(subViewModel.Subject, _regionService.GetNodeCount());
+					await _subjectService.LoadSubjectData(subViewModel, _regionService.GetNodeCount());
 
 					// Add our subject so it can be included (or excluded) by the filters
-					_subjectFilterService.AddSubject(subViewModel.Subject);
+					_subjectFilterService.AddSubject(subViewModel);
 
 					// Allow UI to update
-					subViewModel.Refresh();
+					//subViewModel.Refresh();
 				}
 
 				Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
@@ -318,13 +311,13 @@ namespace BrainGraph.WinStore.Screens.Sources
 			_sgGroup2.Subjects.Clear();
 
 			foreach (var subject in _subjectFilterService.GetGroup1())
-				_sgGroup1.Subjects.Add(new SubjectViewModel { Subject = subject });
+				_sgGroup1.Subjects.Add(subject);
 
 			foreach (var subject in _subjectFilterService.GetGroup2())
-				_sgGroup2.Subjects.Add(new SubjectViewModel { Subject = subject });
+				_sgGroup2.Subjects.Add(subject);
 
 			foreach (var subject in _subjectFilterService.GetRemaining())
-				_sgRemaining.Subjects.Add(new SubjectViewModel { Subject = subject });
+				_sgRemaining.Subjects.Add(subject);
 
 			Windows.Storage.ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 

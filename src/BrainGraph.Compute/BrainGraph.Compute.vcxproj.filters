@@ -1,12 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="SubjectGraph.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Subject.hpp" />
+    <ClInclude Include="Multi\Graph.hpp">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="Multi\Node.hpp">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\Subject.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\Graph.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphLookup.hpp" />
+    <ClInclude Include="Subjects\Attribute.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Component.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\Edge.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Edge.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\Global.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Global.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Graph.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Item.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Node.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Subjects\Node.hpp">
+      <Filter>Subjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Pearson.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\PearsonCompare.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\TStat.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Compare.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Multi\Compare.hpp">
+      <Filter>Multi</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\Threshold.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
+    <ClInclude Include="Group\TStatCalc.hpp">
+      <Filter>Group</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Subjects">
+      <UniqueIdentifier>{3bb4e3a1-e51f-4e67-91c9-aab06e135e90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Multi">
+      <UniqueIdentifier>{6c1c12a1-4094-4926-945c-21e43feb67ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Group">
+      <UniqueIdentifier>{7a0312c0-f6a7-457e-b86d-2358d076d043}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

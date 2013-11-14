@@ -3,75 +3,34 @@
 #include <utility>
 #include <vector>
 #include "boost/graph/adjacency_matrix.hpp"
+#include "Edge.hpp"
+#include "Node.hpp"
+#include "Global.hpp"
 
 namespace BrainGraph { namespace Compute { namespace Subjects
 {
-	struct SubjectGraphEdge
-	{
-		SubjectGraphEdge()
-		{
-			Index = 0;
-			Value = 0;
-		}
-
-		int Index;
-		std::pair<int, int> Vertices;
-
-		double Value;
-	};
-
-	struct SubjectGraphNode
-	{
-		int Index;
-
-		double Degree;
-		double TotalStrength;
-
-		SubjectGraphNode()
-		{
-			Index = 0;
-			Degree = 0;
-			TotalStrength = 0;
-		}
-	};
-
-	struct SubjectGraphGlobal
-	{
-		double Strength;
-
-		SubjectGraphGlobal()
-		{
-			Strength = 0;
-		}
-	};
-
-	struct SubjectGraphAttribute
-	{
-		double Value;
-	};
-
-	class SubjectGraph
+	class Graph
 	{
 	public:
-		SubjectGraph::SubjectGraph(int nVerts) : _adjMtx(nVerts), Nodes(nVerts)
+		Graph(int nVerts) : _adjMtx(nVerts), Nodes(nVerts)
 		{
 			_nVerts = nVerts;
 		}
 
-		void SubjectGraph::AddEdge(int i, int j, double val)
+		void AddEdge(int i, int j, double val)
 		{
 			boost::add_edge(i, j, _adjMtx);
 
-			std::shared_ptr<SubjectGraphEdge> edge = std::make_shared<SubjectGraphEdge>();
+			std::shared_ptr<Edge> edge = std::make_shared<Edge>();
 			edge->Vertices = std::pair<int, int>(i, j);
 			edge->Value = val;
 
 			Edges.push_back(edge);
 
 			if (Nodes[i] == nullptr)
-				Nodes[i] = std::make_shared<SubjectGraphNode>();
+				Nodes[i] = std::make_shared<Node>();
 			if (Nodes[j] == nullptr)
-				Nodes[j] = std::make_shared<SubjectGraphNode>();
+				Nodes[j] = std::make_shared<Node>();
 
 			Nodes[i]->Index = i;
 			Nodes[j]->Index = j;
@@ -88,7 +47,7 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 			}
 		}
 
-		double SubjectGraph::GlobalStrength()
+		double GlobalStrength()
 		{
 			if (_nVerts != 0)
 			{
@@ -103,8 +62,8 @@ namespace BrainGraph { namespace Compute { namespace Subjects
 				return 0;
 		}
 
-		std::vector<std::shared_ptr<SubjectGraphEdge>> Edges;
-		std::vector<std::shared_ptr<SubjectGraphNode>> Nodes;
+		std::vector<std::shared_ptr<Edge>> Edges;
+		std::vector<std::shared_ptr<Node>> Nodes;
 
 	private:
 		boost::adjacency_matrix<boost::undirectedS> _adjMtx;

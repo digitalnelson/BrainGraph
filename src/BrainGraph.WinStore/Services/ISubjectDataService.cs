@@ -1,25 +1,21 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Caliburn.Micro;
-using BrainGraph.Compute.Subjects;
-using BrainGraph.WinStore.Services;
-using BraingGraph.Services.Loaders;
 using Windows.Storage;
-using BrainLab.Services.Loaders;
-using BrainGraph.WinStore.Events;
+using BrainGraph.ComputeRT.Subjects;
+using BrainGraph.Services.Loaders;
 
 namespace BrainGraph.WinStore.Services
 {
 	public interface ISubjectDataService
 	{
-		Task<List<Subject>> LoadSubjects(StorageFile file);
-		List<Subject> GetSubjects();
+        Task<List<SubjectViewModel>> LoadSubjects(StorageFile file);
+        List<SubjectViewModel> GetSubjects();
 
 		Task IndexDataFolder(StorageFolder folder, int vertexLimit);
-		Task LoadSubjectData(Subject subject, int vertexLimit);
+        Task LoadSubjectData(SubjectViewModel subject, int vertexLimit);
 
 		void Clear();
 	}
@@ -28,29 +24,22 @@ namespace BrainGraph.WinStore.Services
 	{
 		private readonly IEventAggregator _eventAggregator;
 
-		private List<Subject> _subjects;
-		//private Dictionary<string, List<Subject>> _subjectsByGroup;
-		private Dictionary<string, Subject> _subjectsByEventId;
+        private List<SubjectViewModel> _subjects;
+        private Dictionary<string, SubjectViewModel> _subjectsByEventId;
 
 		public SubjectDataService()
 		{
 			_eventAggregator = IoC.Get<IEventAggregator>();
-			_subjects = new List<Subject>();
-			//_subjectsByGroup = new Dictionary<string, List<Subject>>();
-			_subjectsByEventId = new Dictionary<string, Subject>();
+            _subjects = new List<SubjectViewModel>();
+            _subjectsByEventId = new Dictionary<string, SubjectViewModel>();
 		}
 
-		public async Task<List<Subject>> LoadSubjects(StorageFile file)
+        public async Task<List<SubjectViewModel>> LoadSubjects(StorageFile file)
 		{
 			_subjects = await SubjectCSVLoader.LoadSubjectFile(file);
 
 			foreach (var sub in _subjects)
 			{
-				//if (!_subjectsByGroup.ContainsKey(sub.GroupId))
-				//	_subjectsByGroup[sub.GroupId] = new List<Subject>();
-					
-				//_subjectsByGroup[sub.GroupId].Add(sub);
-
 				foreach (var eventId in sub.EventIds)
 					_subjectsByEventId[eventId] = sub;
 			}
@@ -62,7 +51,7 @@ namespace BrainGraph.WinStore.Services
 		{
 			public StorageFile File { get; set; }
 			public string DataType { get; set; }
-			public SubjectGraph Graph { get; set; }
+			public GraphViewModel Graph { get; set; }
 		}
 
 		private Dictionary<string, List<AdjFile>> _adjBySubjectId = new Dictionary<string, List<AdjFile>>();
@@ -97,7 +86,7 @@ namespace BrainGraph.WinStore.Services
 
 					AdjFile adj = new AdjFile();
 					adj.File = file;
-					adj.Graph = new SubjectGraph(vertexLimit);
+                    adj.Graph = new GraphViewModel(vertexLimit);
 					adj.DataType = sbAdjType.ToString();
 
 					_adjBySubjectId[subject.SubjectId].Add(adj);
@@ -105,7 +94,7 @@ namespace BrainGraph.WinStore.Services
 			}
 		}
 
-		public async Task LoadSubjectData(Subject subject, int vertexLimit)
+        public async Task LoadSubjectData(SubjectViewModel subject, int vertexLimit)
 		{
 			if (_adjBySubjectId.ContainsKey(subject.SubjectId))
 			{
@@ -139,7 +128,7 @@ namespace BrainGraph.WinStore.Services
 			}
 		}
 
-		public List<Subject> GetSubjects()
+        public List<SubjectViewModel> GetSubjects()
 		{
 			return _subjects;
 		}
@@ -148,7 +137,6 @@ namespace BrainGraph.WinStore.Services
 		{
 			_subjects.Clear();
 			_subjectsByEventId.Clear();
-			//_subjectsByGroup.Clear();
 		}
-	}
+    }
 }

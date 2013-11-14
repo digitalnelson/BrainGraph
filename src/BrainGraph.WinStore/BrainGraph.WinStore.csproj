@@ -163,6 +163,7 @@
     <Compile Include="Screens\Nodal\NodalStrengthView.xaml.cs">
       <DependentUpon>NodalStrengthView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Sources\GroupsViewModel.cs" />
     <Compile Include="Screens\Sources\RegionsView.xaml.cs">
       <DependentUpon>RegionsView.xaml</DependentUpon>
     </Compile>
@@ -180,11 +181,14 @@
     <Compile Include="Screens\Sources\RegionViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectGroupViewModel.cs" />
     <Compile Include="Screens\Sources\SubjectsFilterViewModels.cs" />
+    <Compile Include="Screens\Sources\GroupsView.xaml.cs">
+      <DependentUpon>GroupsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Sources\SubjectsView.xaml.cs">
       <DependentUpon>SubjectsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Sources\SubjectsViewModel.cs" />
-    <Compile Include="Screens\Sources\SubjectViewModel.cs" />
+    <Compile Include="Screens\Sources\SubjectScreenViewModel.cs" />
     <Compile Include="Services\IAppPreferences.cs" />
     <Compile Include="Services\IComputeService.cs" />
     <Compile Include="Services\IRegionService.cs" />
@@ -316,6 +320,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Sources\GroupsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Screens\Sources\SubjectsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -360,15 +368,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BrainGraph.ComputeRT\BrainGraph.ComputeRT.vcxproj">
       <Project>{6756aaf2-df88-4fe3-a833-736ee3861afd}</Project>
       <Name>BrainGraph.ComputeRT</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

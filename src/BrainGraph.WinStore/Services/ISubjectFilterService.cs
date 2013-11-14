@@ -1,17 +1,14 @@
-﻿using BrainGraph.Compute.Subjects;
+﻿using BrainGraph.ComputeRT.Subjects;
 using BrainGraph.WinStore.Events;
 using Caliburn.Micro;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrainGraph.WinStore.Services
 {
 	interface ISubjectFilterService
 	{
-		void AddSubject(Subject subject);
+        void AddSubject(SubjectViewModel subject);
 		List<string> GetGroups();
 		Dictionary<string, ComputeGroup> GetGroupSettings();
 		List<string> GetDataTypes();
@@ -22,9 +19,9 @@ namespace BrainGraph.WinStore.Services
 
 		void FilterSubjects();
 
-		List<Subject> GetGroup1();
-		List<Subject> GetGroup2();
-		List<Subject> GetRemaining();
+        List<SubjectViewModel> GetGroup1();
+        List<SubjectViewModel> GetGroup2();
+        List<SubjectViewModel> GetRemaining();
 
 		void Clear();
 	}
@@ -36,12 +33,12 @@ namespace BrainGraph.WinStore.Services
 		private Dictionary<string, ComputeGroup> _groupLookup = new Dictionary<string, ComputeGroup>();
 		private Dictionary<string, bool> _dataTypeLookup = new Dictionary<string, bool>();
 
-		private List<Subject> _all = new List<Subject>();
-		private List<Subject> _group1 = new List<Subject>();
-		private List<Subject> _group2 = new List<Subject>();
-		private List<Subject> _remaining = new List<Subject>();
+        private List<SubjectViewModel> _all = new List<SubjectViewModel>();
+        private List<SubjectViewModel> _group1 = new List<SubjectViewModel>();
+        private List<SubjectViewModel> _group2 = new List<SubjectViewModel>();
+        private List<SubjectViewModel> _remaining = new List<SubjectViewModel>();
 
-		public void AddSubject(Subject subject)
+        public void AddSubject(SubjectViewModel subject)
 		{
 			if(!_groupLookup.ContainsKey(subject.GroupId.ToLower()))
 				_groupLookup[subject.GroupId.ToLower()] = ComputeGroup.GroupNone;
@@ -121,17 +118,17 @@ namespace BrainGraph.WinStore.Services
 			_eventAggregator.Publish(new SubjectsFilteredEvent());
 		}
 
-		public List<Subject> GetGroup1()
+        public List<SubjectViewModel> GetGroup1()
 		{
 			return _group1;
 		}
 
-		public List<Subject> GetGroup2()
+        public List<SubjectViewModel> GetGroup2()
 		{
 			return _group2;
 		}
 
-		public List<Subject> GetRemaining()
+        public List<SubjectViewModel> GetRemaining()
 		{
 			return _remaining;
 		}

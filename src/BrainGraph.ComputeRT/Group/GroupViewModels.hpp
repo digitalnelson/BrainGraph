@@ -1,13 +1,17 @@
 #pragma once
 #include "collection.h"
+#include "Group/TStat.hpp"
+#include "Group/Edge.hpp"
+#include "Group/Node.hpp"
+#include "Group/Component.hpp"
+#include "Group/Global.hpp"
+#include "Group/Graph.hpp"
 
-namespace BrainGraph { namespace Compute { namespace Graph
+namespace BrainGraph { namespace ComputeRT { namespace Group
 {
 	namespace PC = Platform::Collections;
 	namespace WFC = Windows::Foundation::Collections;
-	struct CompareNode;
-	struct CompareEdge;
-	struct TStat;
+	namespace BCG = BrainGraph::Compute::Group;
 	
 	public ref class TStatViewModel sealed
 	{
@@ -35,13 +39,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property int TwoTailCount { int get() { return _stat.TwoTailCount; } void set(int val) { _stat.TwoTailCount = val; } }
 
 	internal:
-		TStatViewModel(TStat tstat)
+		TStatViewModel(BCG::TStat tstat)
 		{
 			_stat = tstat;
 		}
 
 	private:
-		TStat _stat;
+		BCG::TStat _stat;
 	};
 
 	public ref class EdgeViewModel sealed
@@ -52,13 +56,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property TStatViewModel^ Weight { TStatViewModel^ get() { return ref new TStatViewModel(_edge->Stats); } }
 
 	internal:
-		EdgeViewModel(std::shared_ptr<CompareEdge> edge)
+		EdgeViewModel(std::shared_ptr<BCG::Edge> edge)
 		{
 			_edge = edge;
 		}
 
 	private:
-		std::shared_ptr<CompareEdge> _edge;
+		std::shared_ptr<BCG::Edge> _edge;
 	};
 
 	public ref class NodeViewModel sealed
@@ -68,13 +72,13 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property TStatViewModel^ Strength { TStatViewModel^ get() { return ref new TStatViewModel(_node->Strength); } }
 
 	internal:
-		NodeViewModel(std::shared_ptr<CompareNode> node)
+		NodeViewModel(std::shared_ptr<BCG::Node> node)
 		{
 			_node = node;
 		}
 
 	private:
-		std::shared_ptr<CompareNode> _node;
+		std::shared_ptr<BCG::Node> _node;
 	};
 
 	public ref class ComponentViewModel sealed
@@ -85,7 +89,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property WFC::IVectorView<int>^ RandomDistribution { WFC::IVectorView<int>^ get() { return _randomDistribution->GetView(); } }
 
 	internal:
-		ComponentViewModel(std::shared_ptr<Component> component)
+		ComponentViewModel(std::shared_ptr<BCG::Component> component)
 		{
 			_component = component;
 
@@ -96,17 +100,17 @@ namespace BrainGraph { namespace Compute { namespace Graph
 			_randomDistribution = ref new PC::Vector<int>();
 			for(auto distVal : _component->RandomDistribution)
 			{
-				_randomDistribution->Append(distVal.combine(plus<int>()));
+				_randomDistribution->Append(distVal.combine(std::plus<int>()));
 			}
 		}
 
-		void AddEdge(std::shared_ptr<CompareEdge> edge)
+		void AddEdge(std::shared_ptr<BCG::Edge> edge)
 		{
 			_edges->Append(ref new EdgeViewModel(edge));
 		}
 
 	private:
-		std::shared_ptr<Component> _component;
+		std::shared_ptr<BCG::Component> _component;
 		PC::Vector<EdgeViewModel^>^ _edges;
 		PC::Vector<int>^ _randomDistribution;
 	};
@@ -116,22 +120,22 @@ namespace BrainGraph { namespace Compute { namespace Graph
 	public:
 		GlobalViewModel()
 		{
-			_global = make_shared<CompareGlobal>();
+			_global = std::make_shared<BCG::Global>();
 		}
 
 		property TStatViewModel^ Strength { TStatViewModel^ get() { return ref new TStatViewModel(_global->Strength.Stats); } }
 
 	internal:
-		GlobalViewModel(shared_ptr<CompareGlobal> global)
+		GlobalViewModel(std::shared_ptr<BCG::Global> global)
 		{
 			_global = global;
 		}
 
 	private:
-		shared_ptr<CompareGlobal> _global;
+		std::shared_ptr<BCG::Global> _global;
 	};
 
-	public ref class CompareGraphViewModel sealed
+	public ref class GraphViewModel sealed
 	{
 	public:
 		property Platform::String^ Name;
@@ -141,7 +145,7 @@ namespace BrainGraph { namespace Compute { namespace Graph
 		property WFC::IVectorView<EdgeViewModel^>^ Edges { WFC::IVectorView<EdgeViewModel^>^ get() { return _edges->GetView(); } } 
 
 	internal:
-		CompareGraphViewModel(std::shared_ptr<CompareGraph> graph)
+		GraphViewModel(std::shared_ptr<BCG::Graph> graph)
 		{
 			_graph = graph;
 
@@ -160,23 +164,24 @@ namespace BrainGraph { namespace Compute { namespace Graph
 				AddEdge(compareEdge);
 		}
 
-		void AddComponent(std::shared_ptr<Component> component)
+		void AddComponent(std::shared_ptr<BCG::Component> component)
 		{
 			_components->Append(ref new ComponentViewModel(component));
 		}
 
-		void AddNode(std::shared_ptr<CompareNode> node)
+		void AddNode(std::shared_ptr<BCG::Node> node)
 		{
 			_nodes->Append(ref new NodeViewModel(node));
 		}
 
-		void AddEdge(std::shared_ptr<CompareEdge> edge)
+		void AddEdge(std::shared_ptr<BCG::Edge> edge)
 		{
 			_edges->Append(ref new EdgeViewModel(edge));
 		}
 
 	private:
-		std::shared_ptr<CompareGraph> _graph;
+		std::shared_ptr<BCG::Graph> _graph;
+		
 		PC::Vector<ComponentViewModel^>^ _components;
 		PC::Vector<NodeViewModel^>^ _nodes;
 		PC::Vector<EdgeViewModel^>^ _edges;
