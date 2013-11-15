@@ -101,15 +101,15 @@
                             <StackPanel Orientation="Horizontal" Grid.Row="0">
                                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" Text="{Binding DataType}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="0,0,0,6" />
                                 <TextBlock Text=" - " HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
-                                <TextBlock Text="{Binding SigNodeCount}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
+                                <TextBlock Text="{Binding GroupName}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
                                 <TextBlock Text="/" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
                                 <TextBlock Text="{Binding SigEdges.Count}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{StaticResource ApplicationForegroundThemeBrush}" FontFamily="Segoe UI Semibold" Style="{StaticResource TitleTextStyle}" FontSize="24" Margin="8,0,0,6"/>
                             </StackPanel>
 
-                            <VariableSizedWrapGrid Grid.Row="1" ItemHeight="250" ItemWidth="250">
-                                <oxy:Plot Background="#00000000" Model="{Binding AXPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                <oxy:Plot Background="#00000000" Model="{Binding CRPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                <oxy:Plot Background="#00000000" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            <VariableSizedWrapGrid Grid.Row="1" ItemHeight="500" ItemWidth="500">
+                                <oxy:Plot Background="#00000000" Model="{Binding DTIPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                <oxy:Plot Background="#00000000" Model="{Binding FMRIPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+								<!--<oxy:Plot Background="#00000000" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />-->
                             </VariableSizedWrapGrid>
 
                             <GridView ItemsSource="{Binding SigNodes}" Grid.Row="1" Grid.Column="1">

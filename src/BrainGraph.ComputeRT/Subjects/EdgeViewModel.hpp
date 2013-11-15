@@ -11,6 +11,7 @@ namespace BrainGraph { namespace ComputeRT { namespace Subjects	{
 	public:
 		property int NodeOneIndex { int get() { return _edge->Vertices.first; } }
 		property int NodeTwoIndex { int get() { return _edge->Vertices.second; } }
+		property double Value {double get(){ return _edge->Value; } }
 
 	internal:
 		EdgeViewModel(std::shared_ptr<BCS::Edge> edge)

@@ -4,6 +4,7 @@ using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using OxyPlot;
 using System;
+using System.Collections.Generic;
 
 namespace BrainGraph.WinStore.Screens.Sources
 {
@@ -62,19 +63,17 @@ namespace BrainGraph.WinStore.Screens.Sources
 			#endregion
 		}
 
-		public void Handle(SubjectsFilteredEvent message)
-		{
-			// TODO: Make this update async after 300msec
-
-            var dts = _subjectFilterService.GetDataTypeSettings();
-            var g1 = _subjectFilterService.GetGroup1();
-
+        public DataItemViewModel ProcessGroup(Dictionary<string,bool> dts, string groupName, List<BrainGraph.ComputeRT.Subjects.SubjectViewModel> subjects)
+        {
             var divm = new DataItemViewModel();
-            divm.GroupName = "Group 1";
-
-            foreach(var sub in g1)
+            divm.GroupName = groupName;
+			divm.TypeAverages = new Dictionary<string, double[,]>();
+                        
+            foreach (var dt in dts)
             {
-                foreach (var dt in dts)
+				double[,] groupAverage = new double[90, 90];
+
+                foreach(var sub in subjects)
                 {
                     if (dt.Value)
                     {
@@ -82,15 +81,48 @@ namespace BrainGraph.WinStore.Screens.Sources
 
                         foreach (var edge in graph.Edges)
                         {
-                            
+							if (edge.NodeOneIndex <= edge.NodeTwoIndex)
+							{
+								groupAverage[89 - edge.NodeOneIndex, edge.NodeTwoIndex] += edge.Value;
+								groupAverage[89 - edge.NodeTwoIndex, edge.NodeOneIndex] += edge.Value;
+							}
                         }
                     }
                 }
+
+				for (var i = 0; i < 90; i++ )
+				{
+					for(var j = 0; j < 90; j++)
+					{
+						groupAverage[i, j] = groupAverage[i, j] / subjects.Count;
+					}
+				}
+
+				divm.TypeAverages[dt.Key] = groupAverage;
             }
 
-            DataItems.Add(divm);
+			divm.DTIPlotModel.Axes.Add(new OxyPlot.Axes.ColorAxis { Position = OxyPlot.Axes.AxisPosition.Right, Palette = OxyPalettes.Jet(200), HighColor = OxyColors.Gray, LowColor = OxyColors.Black });
+			divm.DTIPlotModel.Series.Add(new OxyPlot.Series.HeatMapSeries { X0 = 0, X1 = 90, Y0 = 0, Y1 = 90, Data = divm.TypeAverages["DTI-adj"], Interpolate = false });
 
-            var g2 = _subjectFilterService.GetGroup1();
+			divm.FMRIPlotModel.Axes.Add(new OxyPlot.Axes.ColorAxis { Position = OxyPlot.Axes.AxisPosition.Right, Palette = OxyPalettes.Jet(100), HighColor = OxyColors.Gray, LowColor = OxyColors.Black });
+			divm.FMRIPlotModel.Series.Add(new OxyPlot.Series.HeatMapSeries { X0 = 0, X1 = 90, Y0 = 0, Y1 = 90, Data = divm.TypeAverages["fMRI-mo"], Interpolate = false });
+
+			return divm;
+        }
+
+		public void SetupCharts()
+		{
+
+		}
+
+		public void Handle(SubjectsFilteredEvent message)
+		{
+			// TODO: Make this update async after 300msec
+
+            var dts = _subjectFilterService.GetDataTypeSettings();
+
+            DataItems.Add(ProcessGroup(dts, "Group 1", _subjectFilterService.GetGroup1()));
+            DataItems.Add(ProcessGroup(dts, "Group 2", _subjectFilterService.GetGroup2()));
 
             PrimaryValue = DataItems.Count.ToString();
 		}
@@ -100,7 +132,17 @@ namespace BrainGraph.WinStore.Screens.Sources
 
         public class DataItemViewModel : Screen
         {
+			public DataItemViewModel()
+			{
+				DTIPlotModel = new PlotModel();
+				FMRIPlotModel = new PlotModel();
+			}
+
             public string GroupName { get; set; }
+            public Dictionary<string, double[,]> TypeAverages { get; set; }
+
+			public PlotModel DTIPlotModel { get { return _inlDTIPlotModel; } set { _inlDTIPlotModel = value; NotifyOfPropertyChange(() => DTIPlotModel); } } private PlotModel _inlDTIPlotModel;
+			public PlotModel FMRIPlotModel { get { return _inlFMRIPlotModel; } set { _inlFMRIPlotModel = value; NotifyOfPropertyChange(() => FMRIPlotModel); } } private PlotModel _inlFMRIPlotModel;
 
             public PlotModel AvgEdgePlotModel { get { return _inlAvgEdgePlotModel; } set { _inlAvgEdgePlotModel = value; NotifyOfPropertyChange(() => AvgEdgePlotModel); } } private PlotModel _inlAvgEdgePlotModel;
         }
