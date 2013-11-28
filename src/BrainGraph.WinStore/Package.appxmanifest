@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="AgileMedicine.BrainGraph" Publisher="CN=4584EE3B-39C1-4D63-8F25-1BA22D6C8853" Version="1.1.0.0" />
+  <Identity Name="AgileMedicine.BrainGraph" Publisher="CN=Brent Nelson" Version="1.1.0.3" />
   <Properties>
     <DisplayName>BrainGraph</DisplayName>
     <PublisherDisplayName>AgileMedicine</PublisherDisplayName>

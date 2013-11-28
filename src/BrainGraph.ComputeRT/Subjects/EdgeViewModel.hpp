@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "Subjects/Edge.hpp"
+#include "BrainGraph.Compute/Subjects/Edge.hpp"
 
 namespace BrainGraph { namespace ComputeRT { namespace Subjects	{
 

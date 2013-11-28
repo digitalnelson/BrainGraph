@@ -1,0 +1,4 @@
+MainPackage=C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.WinStore\bin\ARM\Release\BrainGraph.WinStore_1.1.0.3_Bundle\BrainGraph.WinStore_1.1.0.3_ARM.appx
+SymbolPackage=C:\Users\Brent\Documents\GitHub\BrainGraph\src\AppPackages\BrainGraph.WinStore_1.1.0.3_Test\BrainGraph.WinStore_1.1.0.3_ARM.appxsym
+ResourcePack=C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.WinStore\bin\ARM\Release\BrainGraph.WinStore_1.1.0.3_Bundle\BrainGraph.WinStore_1.1.0.3_scale-140.appx
+ResourcePack=C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.WinStore\bin\ARM\Release\BrainGraph.WinStore_1.1.0.3_Bundle\BrainGraph.WinStore_1.1.0.3_scale-180.appx

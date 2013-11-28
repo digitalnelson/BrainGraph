@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
 #include "collection.h"
-#include "Subjects/Subject.hpp"
-#include "Subjects/Graph.hpp"
+#include "BrainGraph.Compute/Subjects/Subject.hpp"
+#include "BrainGraph.Compute/Subjects/Graph.hpp"
 #include "GraphViewModel.hpp"
 
 namespace BrainGraph { namespace ComputeRT { namespace Subjects

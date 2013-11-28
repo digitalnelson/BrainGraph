@@ -1,0 +1,2 @@
+MainPackage=C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.WinStore\bin\x86\Release\BrainGraph.WinStore_1.1.0.3_Bundle\BrainGraph.WinStore_1.1.0.3_x86.appx
+SymbolPackage=C:\Users\Brent\Documents\GitHub\BrainGraph\src\AppPackages\BrainGraph.WinStore_1.1.0.3_Test\BrainGraph.WinStore_1.1.0.3_x86.appxsym

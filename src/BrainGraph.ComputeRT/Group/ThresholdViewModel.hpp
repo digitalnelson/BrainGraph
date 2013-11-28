@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "collection.h"
-#include "Group/Threshold.hpp"
+#include "BrainGraph.Compute/Group/Threshold.hpp"
 
 namespace BrainGraph { namespace ComputeRT { namespace Group
 {

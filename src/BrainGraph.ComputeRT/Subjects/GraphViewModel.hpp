@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "Subjects/Graph.hpp"
+#include "BrainGraph.Compute/Subjects/Graph.hpp"
 #include "EdgeViewModel.hpp"
 #include "NodeViewModel.hpp"
 

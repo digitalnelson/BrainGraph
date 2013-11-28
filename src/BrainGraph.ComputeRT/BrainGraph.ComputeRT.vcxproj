@@ -94,27 +94,33 @@
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\BrainGraph.Compute;..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);$(VCInstallDir)UnitTest\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(VCInstallDir)UnitTest\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
+    <IncludePath>../../../boost_1_50_0;../;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);$(VCInstallDir)UnitTest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\boost_1_50_0;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(VCInstallDir)UnitTest\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\BrainGraph.Compute;..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.Compute\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../../boost_1_50_0;../;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\boost_1_50_0;C:\Users\Brent\Documents\GitHub\BrainGraph\src\BrainGraph.Compute\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../../../boost_1_50_0;../;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\..\..\boost_1_50_0;$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <GenerateManifest>false</GenerateManifest>
+    <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM)</LibraryPath>
+    <IncludePath>../../../boost_1_50_0;../;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <GenerateManifest>false</GenerateManifest>
-    <IncludePath>..\..\..\boost_1_50_0;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../../../boost_1_50_0;../;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>..\..\..\boost_1_50_0;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>false</GenerateManifest>
+    <LibraryPath>..\..\..\boost_1_50_0;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
+    <IncludePath>../../../boost_1_50_0;../;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

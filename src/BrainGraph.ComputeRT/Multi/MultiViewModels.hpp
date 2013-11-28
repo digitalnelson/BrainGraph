@@ -1,6 +1,6 @@
 #pragma once
 #include "collection.h"
-#include "Multi/Graph.hpp"
+#include "BrainGraph.Compute/Multi/Graph.hpp"
 #include "../Group/GroupViewModels.hpp"
 
 namespace BrainGraph { namespace ComputeRT { namespace Multi

@@ -1,11 +1,11 @@
 #pragma once
 #include "collection.h"
-#include "Group/TStat.hpp"
-#include "Group/Edge.hpp"
-#include "Group/Node.hpp"
-#include "Group/Component.hpp"
-#include "Group/Global.hpp"
-#include "Group/Graph.hpp"
+#include "BrainGraph.Compute/Group/TStat.hpp"
+#include "BrainGraph.Compute/Group/Edge.hpp"
+#include "BrainGraph.Compute/Group/Node.hpp"
+#include "BrainGraph.Compute/Group/Component.hpp"
+#include "BrainGraph.Compute/Group/Global.hpp"
+#include "BrainGraph.Compute/Group/Graph.hpp"
 
 namespace BrainGraph { namespace ComputeRT { namespace Group
 {

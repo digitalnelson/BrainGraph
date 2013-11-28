@@ -2,8 +2,8 @@
 #include <memory>
 #include <random>
 #include <ppltasks.h>
-#include "Multi/Graph.hpp"
-#include "Group/Compare.hpp"
+#include "BrainGraph.Compute/Multi/Graph.hpp"
+#include "BrainGraph.Compute/Group/Compare.hpp"
 #include "../Subjects/SubjectViewModel.hpp"
 #include "../Group/ThresholdViewModel.hpp"
 #include "MultiViewModels.hpp"
