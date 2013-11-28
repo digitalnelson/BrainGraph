@@ -48,8 +48,8 @@ namespace BrainGraph { namespace Compute { namespace Group
 				_nodes[nodeIdx].push_back(graph->Nodes[nodeIdx]);
 
 			// Store our globals
-			BCS::Global sgg;
-			sgg.Strength = graph->GlobalStrength();
+			std::shared_ptr<BCS::Global> sgg = std::make_shared<BCS::Global>();
+			sgg->Strength = graph->GlobalStrength();
 			_globals.push_back(sgg);
 
 			//if (_attrs.size() < subject->Attributes->Size)
@@ -129,8 +129,8 @@ namespace BrainGraph { namespace Compute { namespace Group
 					if (idx < szGrp1)
 						grpId = 0;
 
-					calcDegree.IncludeValue(0, nodeVal->Degree);
-					calcStrength.IncludeValue(0, avgStrength);
+					calcDegree.IncludeValue(grpId, nodeVal->Degree);
+					calcStrength.IncludeValue(grpId, avgStrength);
 				}
 
 				auto node = std::make_shared<Node>();
@@ -150,6 +150,8 @@ namespace BrainGraph { namespace Compute { namespace Group
 			// TODO: Probably need to make this thread safe
 			std::shared_ptr<Global> globalStats = std::make_shared<Global>();
 
+			TStatCalc strength;
+
 			// Loop through the vals we were passed
 			for (size_t idx = 0; idx < _subjectCount; ++idx)
 			{
@@ -159,16 +161,20 @@ namespace BrainGraph { namespace Compute { namespace Group
 				if (idx < szGrp1)
 					grpId = 0;
 
+				strength.IncludeValue(grpId, subjectGlobals->Strength);
+
 				// TODO: Loop here and include the associated global values
 				int attrIdx = 0;
 				for (auto attr : _attrs)
 				{
 					if (idx < attr.size())
-						globalStats->Strength.IncludePearsonValue(attrIdx, grpId, subjectGlobals.Strength, attr[idx]);
+						globalStats->Strength.IncludePearsonValue(attrIdx, grpId, subjectGlobals->Strength, attr[idx]);
 
 					++attrIdx;
 				}
 			}
+
+			globalStats->Strength.Stats = strength.Calculate();
 
 			return globalStats;
 		}
@@ -247,7 +253,7 @@ namespace BrainGraph { namespace Compute { namespace Group
 
 		std::vector<std::vector<std::shared_ptr<BCS::Edge>>> _edges;  // Mtx of edge vs subject  e.g. 4005x58
 		std::vector<std::vector<std::shared_ptr<BCS::Node>>> _nodes;	// Mtx of node vs subject  e.g. 90x58
-		std::vector<BCS::Global> _globals;			// Arr of subject values  e.g. 1x58
+		std::vector<std::shared_ptr<BCS::Global>> _globals;			// Arr of subject values  e.g. 1x58
 		
 		std::vector<std::vector<double>> _attrs;  // Vector of attr names and subject values NAttrx58
 	};

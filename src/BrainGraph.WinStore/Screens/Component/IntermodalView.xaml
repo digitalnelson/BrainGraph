@@ -58,8 +58,9 @@
 			<TextBlock x:Name="pageTitle" Grid.Column="1" Text="Intermodal Component" Style="{StaticResource PageHeaderTextStyle}"/>
 		</Grid>
 
-		<Grid Grid.Row="1" Grid.Column="0" Margin="120,0,0,0">
+		<Grid Grid.Row="1" Grid.Column="0" Margin="120,0,0,0" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False">
 			<Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 
@@ -67,14 +68,19 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition/>
 			</Grid.ColumnDefinitions>
-			
-			<VariableSizedWrapGrid ItemHeight="300" ItemWidth="300">
+
+            <VariableSizedWrapGrid>
+                <TextBlock Text="P Value:" />
+                <TextBlock Text="{Binding PValue}" />
+            </VariableSizedWrapGrid>
+            
+			<VariableSizedWrapGrid Grid.Row="1" ItemHeight="300" ItemWidth="300" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False">
 				<oxy:Plot Background="#00000000" Model="{Binding AXPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 				<oxy:Plot Background="#00000000" Model="{Binding CRPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 				<oxy:Plot Background="#00000000" Model="{Binding SGPlotModel}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 			</VariableSizedWrapGrid>
 
-			<GridView ItemsSource="{Binding Mode=OneWay, Source={StaticResource groupedItemsViewSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" Grid.Column="1" Margin="10,0,0,50" SelectionMode="None">
+			<GridView Grid.Row="1" ItemsSource="{Binding Mode=OneWay, Source={StaticResource groupedItemsViewSource}}" ScrollViewer.IsHorizontalScrollChainingEnabled="False" IsSwipeEnabled="True" Grid.Column="1" Margin="10,0,0,50" SelectionMode="None" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False">
 
 				<GridView.ItemsPanel>
 					<ItemsPanelTemplate>

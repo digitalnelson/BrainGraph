@@ -112,6 +112,8 @@ namespace BrainGraph.WinStore.Screens.Component
 					itm.SigNodes = new List<NodeSummaryViewModel>();
 					itm.SigEdges = new List<EdgeSummaryViewModel>();
 
+                    itm.PValue = (double)lrgCmp.RandomTailCount / permutations;
+
 					foreach (var region in regions)
 						itm.Nodes.Add(new NodeSummaryViewModel { Region = region });
 
@@ -284,6 +286,8 @@ namespace BrainGraph.WinStore.Screens.Component
 	{
 		public string DataType { get; set; }
 		public int SigNodeCount { get; set; }
+
+        public double PValue { get { return _inlpValue; } set { _inlpValue = value; NotifyOfPropertyChange(() => PValue); } } private double _inlpValue;
 
 		public List<NodeSummaryViewModel> Nodes { get; set; }
 

@@ -87,6 +87,7 @@ namespace BrainGraph { namespace ComputeRT { namespace Group
 		property WFC::IVectorView<EdgeViewModel^>^ Edges { WFC::IVectorView<EdgeViewModel^>^ get() { return _edges->GetView(); } } 
 		property int NodeCount { int get() { return _component->Vertices.size(); } }
 		property WFC::IVectorView<int>^ RandomDistribution { WFC::IVectorView<int>^ get() { return _randomDistribution->GetView(); } }
+		property int RandomTailCount { int get() { return _component->RightTailExtent; }}
 
 	internal:
 		ComponentViewModel(std::shared_ptr<BCG::Component> component)

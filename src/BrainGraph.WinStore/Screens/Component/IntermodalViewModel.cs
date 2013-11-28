@@ -73,32 +73,34 @@ namespace BrainGraph.WinStore.Screens.Component
 				}
 			}
 
-			// Get the data types
-			var dataTypes = _filterService.GetDataTypes();
-			// Get the subject data
-			var grp1 = _filterService.GetGroup1();
-			var grp2 = _filterService.GetGroup2();
+            this.PValue = (double)results.RandomOverlapCount / permutations;
 
-			// Loop through datatypes and calc avg str for intermodal cpt for each subj
-			foreach (var dataType in dataTypes)
-			{
-				foreach (var sub in grp1)
-				{
-					var subGraphVM = sub.Graphs[dataType];
-					var dTotal = 0.0;
-					var dRegCount = 0.0;
+            //// Get the data types
+            //var dataTypes = _filterService.GetDataTypes();
+            //// Get the subject data
+            //var grp1 = _filterService.GetGroup1();
+            //var grp2 = _filterService.GetGroup2();
 
-					foreach (var reg in OverlapRegions)
-					{
-						var nodeVM = subGraphVM.Nodes[Int32.Parse(reg.Index)];  // TODO: Why is index a string?
+            //// Loop through datatypes and calc avg str for intermodal cpt for each subj
+            //foreach (var dataType in dataTypes)
+            //{
+            //    foreach (var sub in grp1)
+            //    {
+            //        var subGraphVM = sub.Graphs[dataType];
+            //        var dTotal = 0.0;
+            //        var dRegCount = 0.0;
 
-						dTotal += ((double)nodeVM.TotalStrength / (double)nodeVM.Degree);
-						dRegCount++;
-					}
+            //        foreach (var reg in OverlapRegions)
+            //        {
+            //            var nodeVM = subGraphVM.Nodes[Int32.Parse(reg.Index)];  // TODO: Why is index a string?
 
-					Debug.WriteLine(string.Format("{0},{1},{2},{3}", dataType, dTotal / dRegCount, sub.Attributes["CogMem"], sub.GroupId));
-				}
-			}			
+            //            dTotal += ((double)nodeVM.TotalStrength / (double)nodeVM.Degree);
+            //            dRegCount++;
+            //        }
+
+            //        Debug.WriteLine(string.Format("{0},{1},{2},{3}", dataType, dTotal / dRegCount, sub.Attributes["CogMem"], sub.GroupId));
+            //    }
+            //}			
 
 			this.PrimaryValue = overlapCount.ToString();
 
@@ -166,6 +168,8 @@ namespace BrainGraph.WinStore.Screens.Component
 		}
 
 		public override Type ViewModelType { get { return typeof(IntermodalViewModel); } }
+
+        public double PValue { get { return _inlpValue; } set { _inlpValue = value; NotifyOfPropertyChange(() => PValue); } } private double _inlpValue;
 		
 		public BindableCollection<RegionViewModel> Regions { get; private set; }
 		public BindableCollection<RegionViewModel> OverlapRegions { get; private set; }

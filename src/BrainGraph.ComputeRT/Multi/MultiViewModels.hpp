@@ -32,6 +32,7 @@ namespace BrainGraph { namespace ComputeRT { namespace Multi
 		property WFC::IVectorView<MultiNodeViewModel^>^ MultiNodes { WFC::IVectorView<MultiNodeViewModel^>^ get()  {  return _multiNodes->GetView(); } }
 		property WFC::IVectorView<BCRG::GraphViewModel^>^ Graphs { WFC::IVectorView<BCRG::GraphViewModel^>^ get()  { return _graphs->GetView(); } }
 		property WFC::IVectorView<int>^ RandomDistribution { WFC::IVectorView<int>^ get() { return _randomDistribution->GetView(); } }
+		property int RandomOverlapCount { int get() { return _multiGraph->GetRandomNodalOverlapCount(); } }
 
 	internal:
 		MultiGraphViewModel(std::shared_ptr<BCM::Graph> multiGraph)

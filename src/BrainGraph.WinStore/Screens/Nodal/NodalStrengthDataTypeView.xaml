@@ -89,7 +89,7 @@
 
 				<GridView.ItemTemplate>
 					<DataTemplate>
-						<Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="4">
+						<Grid HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="4" IsHitTestVisible="False">
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto" />
 								<RowDefinition/>

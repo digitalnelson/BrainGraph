@@ -199,6 +199,8 @@ namespace BrainGraph { namespace ComputeRT { namespace Multi
 							//}
 						}//);
 
+						_permutations = permCount;
+
 					}
 					catch (P::Exception^ e)
 					{

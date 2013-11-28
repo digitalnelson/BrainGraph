@@ -36,6 +36,11 @@ namespace BrainGraph { namespace Compute { namespace Multi {
 			return _fullOverlapTotal;
 		}
 
+		int GetRandomNodalOverlapCount()
+		{
+			return _randomGraphOverlapCount;
+		}
+
 		void AddRandomOverlapValue(size_t randomOverlapCount)
 		{
 			if (randomOverlapCount >= _fullOverlapTotal)
