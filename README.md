@@ -12,7 +12,7 @@ If you are interested in helping us test out our application prior to app store 
 Installation of the developer build is fairly straight forward and requires the user to download a package and run a powershell script which installs a temporary developer certificate and then side loads the application.
 
 ### Installation ###
-1. Download application package here.
+1. Download application package here. packages/BrainGraph.WinStore_1.1.0.3_Test.zip
 2. Right click on the script file and select run as administrator.
 
 ### Removal ###
