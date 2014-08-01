@@ -113,7 +113,7 @@ namespace BrainGraph { namespace Compute { namespace Group
 			con::parallel_for((size_t)0, _nodeCount, [=, &idxs, &nodeStats](int nodeIndex)
 			{
 				// Pull out a view of the subject values for a single edge
-				auto nodeValues = _nodes[nodeIndex];
+				//auto nodeValues = _nodes[nodeIndex];
 
 				TStatCalc calcDegree;
 				TStatCalc calcStrength;
@@ -121,7 +121,7 @@ namespace BrainGraph { namespace Compute { namespace Group
 				// Loop through the vals we were passed
 				for (size_t idx = 0; idx < _subjectCount; ++idx)
 				{
-					auto nodeVal = nodeValues[idxs[idx]];
+					auto nodeVal = _nodes[nodeIndex][idxs[idx]];
 
 					double avgStrength = nodeVal->TotalStrength / _nodeCount;
 
@@ -203,19 +203,19 @@ namespace BrainGraph { namespace Compute { namespace Group
 			std::unique_ptr<Graph> randomGraph(new Graph(_nodeCount, _lu, (double)_threshold->Value));
 
 			// Calculate edge group comparison
-			randomGraph->AddEdges(CalcEdgeComparison(idxs, szGrp1));
+			//randomGraph->AddEdges(CalcEdgeComparison(idxs, szGrp1));
 
 			// Calculate node group comparison
 			randomGraph->AddNodes(CalcNodeComparison(idxs, szGrp1));
 
 			// Calculate NBS components
-			randomGraph->ComputeComponents();
+			//randomGraph->ComputeComponents();
 
 			// Calculate global group comparison
 			randomGraph->SetGlobal(CalcGlobalComparison(idxs, szGrp1));
 
 			// Update our edge stats with our random values
-			_cmpGraph->UpdateEdgeStats(randomGraph->Edges);
+			//_cmpGraph->UpdateEdgeStats(randomGraph->Edges);
 
 			// Update our edge stats with our random values
 			_cmpGraph->UpdateNodeStats(randomGraph->Nodes);
@@ -223,6 +223,8 @@ namespace BrainGraph { namespace Compute { namespace Group
 			//_cmpGraph->UpdateComponentStats( randomGraph->GetLargestComponent() );
 
 			_cmpGraph->UpdateGlobalStats(randomGraph->Global);
+
+			return nullptr;
 
 			// Get the largest components
 			auto lrgstRndmCmp = randomGraph->GetLargestComponent();

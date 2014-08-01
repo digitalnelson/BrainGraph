@@ -179,13 +179,15 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
 			foreach (var node in nodes)
 			{
-				//if (node.Significant)
-				if(node.Difference >= min && node.Difference <= max)
-					s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, node.Difference));
-				else
-					s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
-				//else
-					//s2.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
+					if (node.Significant)
+					{
+						if(node.Difference >= min && node.Difference <= max)
+							s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, node.Difference));
+						else
+							s1.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
+					}
+					else
+						s2.Points.Add(new BrainScatterPoint(horizSelector(node.ROI), vertSelector(node.ROI), node.ROI, 0));
 			}
 
 			model.Series.Add(s2);
