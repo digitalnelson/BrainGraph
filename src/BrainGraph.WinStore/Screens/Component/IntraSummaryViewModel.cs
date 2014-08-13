@@ -6,15 +6,10 @@ using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using OxyPlot;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using OxyPlot.Axes;
 using OxyPlot.Series;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace BrainGraph.WinStore.Screens.Component

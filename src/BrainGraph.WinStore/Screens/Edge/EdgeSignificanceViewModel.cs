@@ -69,15 +69,17 @@ namespace BrainGraph.WinStore.Screens.Edge
 				{
 					var pval = (double)edge.Weight.TwoTailCount / (double)permutations;
 
-					if (pval < qThresh)
-					{
-						var nvm = new EdgeSigViewModel { RawEdge = edge };
-						nvm.NodeOneTitle = regions[edge.NodeOneIndex].Name.Replace("_", " ");
-						nvm.NodeTwoTitle = regions[edge.NodeTwoIndex].Name.Replace("_", " ");
-						nvm.PValue = pval;
+                    if ((pval <= 0.000012))
+                    {
+                        var nvm = new EdgeSigViewModel { RawEdge = edge };
+                        nvm.NodeOneTitle = regions[edge.NodeOneIndex].Name.Replace("_", " ");
+                        nvm.NodeTwoTitle = regions[edge.NodeTwoIndex].Name.Replace("_", " ");
+                        nvm.PValue = pval;
 
-						edges.Add(nvm);
-					}
+                        edges.Add(nvm);
+                    }
+                    //else
+                    //    break;
 				}
 
 				EdgeSigGroupViewModel gvm = new EdgeSigGroupViewModel();

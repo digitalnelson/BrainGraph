@@ -1,5 +1,4 @@
-﻿using BrainGraph.ComputeRT.Subjects;
-using BrainGraph.WinStore.Common;
+﻿using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Common.Viz;
 using BrainGraph.WinStore.Events;
 using BrainGraph.WinStore.Models;
@@ -70,6 +69,13 @@ namespace BrainGraph.WinStore.Screens.Component
 					Regions[multiNode.Id].IsOverlap = multiNode.IsFullOverlap;
 					OverlapRegions.Add(Regions[multiNode.Id]);
 					overlapCount++;
+
+                    Debug.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", 
+                        Regions[multiNode.Id].Region.X, Regions[multiNode.Id].Region.Y, Regions[multiNode.Id].Region.Z,
+                        "1",
+                        "1",
+                        Regions[multiNode.Id].Region.Name
+                        );
 				}
 			}
 

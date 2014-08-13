@@ -61,17 +61,22 @@ namespace BrainGraph.WinStore.Screens.Nodal
 									  orderby node.PValue
 									  select node;
 
-					var index = 1;
+                    var sigNodes = new List<NodalViewModel>();
+					
+                    var index = 1;
 					foreach (var node in nodesByPVal)
 					{
 						node.QValue = ((double)index / (double)regionCount) * 0.05;
 
+                        if (node.PValue <= 0.00055)
+                            sigNodes.Add(node);
+
 						++index;
 					}
 
-					var sigNodes = from node in nodes
-								   where node.PValue <= node.QValue
-								   select node;
+                    //var sigNodes = from node in nodes
+                    //               where node.PValue <= node.QValue
+                    //               select node;
 					
 					Nodes.AddRange(nodes.OrderBy(n => n.PValue));
 					SigNodeCount = sigNodes.Count();

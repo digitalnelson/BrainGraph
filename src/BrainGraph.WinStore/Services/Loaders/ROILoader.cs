@@ -23,16 +23,19 @@ namespace BrainGraph.WinStore.Services.Loaders
 
 			foreach (var line in lines)
 			{
-				var fields = line.Split(' ');
+				var fields = line.Split('\t');
 
 				ROI roi = new ROI()
 				{
 					Index = Int32.Parse(fields[0]),
 					Name = fields[1],
 					Ident = Int32.Parse(fields[2]),
-					X = Double.Parse(fields[3]),
-					Y = Double.Parse(fields[4]),
-					Z = Double.Parse(fields[5]),
+					X = Double.Parse(fields[6]),
+					Y = Double.Parse(fields[7]),
+					Z = Double.Parse(fields[8]),
+                    TX = Double.Parse(fields[10]),
+                    TY = Double.Parse(fields[11]),
+                    TZ = Double.Parse(fields[12]),
 				};
 				
 				regionsOfInterest.Add(roi);
