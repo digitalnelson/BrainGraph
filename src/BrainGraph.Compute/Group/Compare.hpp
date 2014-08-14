@@ -203,7 +203,7 @@ namespace BrainGraph { namespace Compute { namespace Group
 			std::unique_ptr<Graph> randomGraph(new Graph(_nodeCount, _lu, (double)_threshold->Value));
 
 			// Calculate edge group comparison
-			//randomGraph->AddEdges(CalcEdgeComparison(idxs, szGrp1));
+			randomGraph->AddEdges(CalcEdgeComparison(idxs, szGrp1));
 
 			// Calculate node group comparison
 			randomGraph->AddNodes(CalcNodeComparison(idxs, szGrp1));
@@ -215,7 +215,7 @@ namespace BrainGraph { namespace Compute { namespace Group
 			randomGraph->SetGlobal(CalcGlobalComparison(idxs, szGrp1));
 
 			// Update our edge stats with our random values
-			//_cmpGraph->UpdateEdgeStats(randomGraph->Edges);
+			_cmpGraph->UpdateEdgeStats(randomGraph->Edges);
 
 			// Update our edge stats with our random values
 			_cmpGraph->UpdateNodeStats(randomGraph->Nodes);

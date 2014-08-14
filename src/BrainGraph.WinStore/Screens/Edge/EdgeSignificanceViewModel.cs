@@ -5,6 +5,8 @@ using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace BrainGraph.WinStore.Screens.Edge
 {
@@ -45,46 +47,30 @@ namespace BrainGraph.WinStore.Screens.Edge
 				var pVals = new List<double>();
 				foreach (var edge in graph.Edges)
 				{
-					pVals.Add((double)edge.Weight.TwoTailCount / (double)permutations);
+						var pval = (double)edge.Weight.TwoTailCount / (double)permutations;
+
+						var nvm = new EdgeSigViewModel { RawEdge = edge };
+						nvm.NodeOneTitle = regions[edge.NodeOneIndex].Name.Replace("_", " ");
+						nvm.NodeTwoTitle = regions[edge.NodeTwoIndex].Name.Replace("_", " ");
+						nvm.PValue = pval;
+
+						edges.Add(nvm);
 				}
 
-				var qThresh = -1.0;
-				pVals.Sort();
-				for (var i = 0; i < pVals.Count; i++)
+				var edgesByPVal = from edge in edges
+													orderby edge.PValue
+													select edge;
+
+				Debug.WriteLine("Edge PValues {0}", graph.Name);
+
+				foreach (var edge in edgesByPVal)
 				{
-					double dIdx = (double)i;
-					double dReg = (double)pVals.Count;
-					double qval = ((dIdx + 1) / dReg) * 0.05;
-
-					if (pVals[i] <= qval)
-					{
-						qThresh = qval;
-						continue;
-					}
-					else
-						break;
-				}
-
-				foreach (var edge in graph.Edges)
-				{
-					var pval = (double)edge.Weight.TwoTailCount / (double)permutations;
-
-                    if ((pval <= 0.000012))
-                    {
-                        var nvm = new EdgeSigViewModel { RawEdge = edge };
-                        nvm.NodeOneTitle = regions[edge.NodeOneIndex].Name.Replace("_", " ");
-                        nvm.NodeTwoTitle = regions[edge.NodeTwoIndex].Name.Replace("_", " ");
-                        nvm.PValue = pval;
-
-                        edges.Add(nvm);
-                    }
-                    //else
-                    //    break;
+						Debug.WriteLine("{0}", edge.PValue);
 				}
 
 				EdgeSigGroupViewModel gvm = new EdgeSigGroupViewModel();
 				gvm.GroupName = graph.Name;
-				gvm.Edges.AddRange(edges);
+				gvm.Edges.AddRange(edgesByPVal);
 
 				EdgeGroups.Add(gvm);
 

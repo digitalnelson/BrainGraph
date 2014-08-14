@@ -61,9 +61,9 @@ namespace BrainGraph.WinStore.Screens.Nodal
 									  orderby node.PValue
 									  select node;
 
-                    var sigNodes = new List<NodalViewModel>();
+          var sigNodes = new List<NodalViewModel>();
 					
-                    var index = 1;
+          var index = 1;
 					foreach (var node in nodesByPVal)
 					{
 						node.QValue = ((double)index / (double)regionCount) * 0.05;

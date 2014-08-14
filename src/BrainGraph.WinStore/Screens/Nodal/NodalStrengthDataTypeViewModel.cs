@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace BrainGraph.WinStore.Screens.Nodal
 {
@@ -110,10 +111,14 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
                 var sigNodes = new List<DtNodalViewModel>();
 
+								Debug.WriteLine("PValues {0}", graph.Name);
+
                 var index = 1;
                 foreach (var node in nodesByPVal)
                 {
                     node.QValue = ((double)index / (double)regionCount) * 0.05;
+
+										Debug.WriteLine("{0}", node.PValue);
 
                     if (node.PValue <= 0.00055)
                         sigNodes.Add(node);

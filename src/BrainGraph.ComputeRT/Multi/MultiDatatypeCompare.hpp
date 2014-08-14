@@ -189,7 +189,7 @@ namespace BrainGraph { namespace ComputeRT { namespace Multi
 
 							permCount++;
 
-							if (permCount % 5000 == 0)
+							if (permCount % 100 == 0)
 								reporter.report(permCount);
 
 							//}
