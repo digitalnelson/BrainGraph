@@ -61,11 +61,12 @@ namespace BrainGraph.WinStore.Screens.Edge
 													orderby edge.PValue
 													select edge;
 
-				Debug.WriteLine("Edge PValues {0}", graph.Name);
+				Debug.WriteLine("Edge Results - {0}", graph.Name);
+				Debug.WriteLine("Node1Idx\tNode2Idx\tDiff\tPvalue");
 
 				foreach (var edge in edgesByPVal)
 				{
-						Debug.WriteLine("{0}", edge.PValue);
+						Debug.WriteLine("{0}\t{1}\t{2}\t{3}", edge.RawEdge.NodeOneIndex, edge.RawEdge.NodeTwoIndex, edge.Difference, edge.PValue);
 				}
 
 				EdgeSigGroupViewModel gvm = new EdgeSigGroupViewModel();
@@ -81,8 +82,6 @@ namespace BrainGraph.WinStore.Screens.Edge
 				else
 					PrimaryValue += "\n" + graph.Name + ": " + gvm.Edges.Count.ToString();
 			}
-
-			//PrimaryValue = total.ToString();
 		}
 
 		public override Type ViewModelType { get { return typeof(EdgeSignificanceViewModel); } }

@@ -95,36 +95,19 @@ namespace BrainGraph.WinStore.Screens.Nodal
 								  orderby node.PValue
 								  select node;
 
-                //var index = 1;
-                //foreach (var node in nodesByPVal)
-                //{
-                //    node.QValue = ((double)index / (double)regionCount) * 0.05;
-                //    ++index;
-                //}
+        var sigNodes = new List<DtNodalViewModel>();
 
-                //var sigNodes = from node in nodes
-                //               where node.PValue <= node.QValue
-                //               select node;
+				Debug.WriteLine("Node Results - {0}", graph.Name);
+				Debug.WriteLine("NodeIdx\tDiff\tPvalue");
 
-                //foreach (var node in sigNodes)
-                //    node.Significant = true;
+        var index = 1;
+        foreach (var node in nodesByPVal)
+        {
+            node.QValue = ((double)index / (double)regionCount) * 0.05;
+						Debug.WriteLine("{0}\t{1}\t{2}", node.RawNode.Index, node.RawNode.Strength.M1 - node.RawNode.Strength.M2, node.PValue);
 
-                var sigNodes = new List<DtNodalViewModel>();
-
-								Debug.WriteLine("PValues {0}", graph.Name);
-
-                var index = 1;
-                foreach (var node in nodesByPVal)
-                {
-                    node.QValue = ((double)index / (double)regionCount) * 0.05;
-
-										Debug.WriteLine("{0}", node.PValue);
-
-                    if (node.PValue <= 0.00055)
-                        sigNodes.Add(node);
-
-                    ++index;
-                }
+            ++index;
+        }
 
 				var diff = from node in nodes
 						   select node.Difference;
