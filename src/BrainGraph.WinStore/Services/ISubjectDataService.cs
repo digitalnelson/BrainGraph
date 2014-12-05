@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Diagnostics;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -94,6 +95,42 @@ namespace BrainGraph.WinStore.Services
 			}
 		}
 
+		private bool DoWeCare(int v1, int v2)
+		{
+			if((v1 == 84 && v2 == 76) || (v1 == 76 && v2 == 84))
+				return true;
+
+			if ((v1 == 16 && v2 == 76) || (v1 == 76 && v2 == 16))
+				return true;
+
+			if ((v1 == 80 && v2 == 76) || (v1 == 76 && v2 == 80))
+				return true;
+
+			if ((v1 == 78 && v2 == 76) || (v1 == 76 && v2 == 78))
+				return true;
+
+			if ((v1 == 46 && v2 == 76) || (v1 == 76 && v2 == 46))
+				return true;
+
+			if ((v1 == 0 && v2 == 76) || (v1 == 76 && v2 == 0))
+				return true;
+
+			if ((v1 == 56 && v2 == 76) || (v1 == 76 && v2 == 56))
+				return true;
+
+			if ((v1 == 54 && v2 == 76) || (v1 == 76 && v2 == 54))
+				return true;
+
+			if ((v1 == 30 && v2 == 70) || (v1 == 70 && v2 == 30))
+				return true;
+
+			if ((v1 == 28 && v2 == 76) || (v1 == 76 && v2 == 28))
+				return true;
+
+			return false;
+		}
+
+
         public async Task LoadSubjectData(SubjectViewModel subject, int vertexLimit)
 		{
 			if (_adjBySubjectId.ContainsKey(subject.SubjectId))
@@ -116,9 +153,18 @@ namespace BrainGraph.WinStore.Services
 						{
 							if (lineIdx < vertexLimit && colIdx < vertexLimit)
 							{
+								var val = Double.Parse(columns[colIdx]);
+
+								if (DoWeCare(lineIdx, colIdx) && (adj.DataType == "fMRI-mo") && (colIdx > lineIdx))
+								{
+									var str = string.Format("{0}, {1}{2}, {3}", subject.SubjectId, lineIdx, colIdx, val);
+
+									Debug.WriteLine(str);
+								}
+
 								// Only load the upper triangle
 								if (colIdx > lineIdx)
-									adj.Graph.AddEdge(lineIdx, colIdx, Math.Abs(Double.Parse(columns[colIdx])));
+									adj.Graph.AddEdge(lineIdx, colIdx, Math.Abs(val));
 							}
 						}
 					}

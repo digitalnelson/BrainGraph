@@ -11,6 +11,7 @@ using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace BrainGraph.WinStore.Screens.Component
 {
@@ -112,18 +113,57 @@ namespace BrainGraph.WinStore.Screens.Component
 					foreach (var region in regions)
 						itm.Nodes.Add(new NodeSummaryViewModel { Region = region });
 
+                    int[,] mtx = new int[90, 90];
 					foreach (var edge in lrgCmp.Edges)
 					{
 						itm.Nodes[edge.NodeOneIndex].Significant = true;
 						itm.Nodes[edge.NodeTwoIndex].Significant = true;
 
+                        mtx[edge.NodeOneIndex, edge.NodeTwoIndex] = 1;
+                        
 						itm.SigEdges.Add(new EdgeSummaryViewModel());
 					}
 
+                    
+                    Debug.WriteLine("Edge Makeup");
+                    for (int m = 0; m < 90; m++)
+                    {
+                        StringBuilder sbLine = new StringBuilder();
+
+                        for (int n = 0; n < 90; n++)
+                        {
+                            if(n != 89)
+                                sbLine.AppendFormat("{0}\t", mtx[m, n]);
+                            else
+                                sbLine.AppendFormat("{0}", mtx[m, n]);
+                        }
+
+                        Debug.WriteLine(sbLine.ToString());
+                    }
+
+                    Debug.WriteLine("Node Makeup");
 					foreach (var node in itm.Nodes)
 					{
-						if (node.Significant)
-							itm.SigNodes.Add(node);
+                        if (node.Significant)
+                        {
+                            itm.SigNodes.Add(node);
+
+                            Debug.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                                node.Region.TX, node.Region.TY, node.Region.TZ,
+                                "1",
+                                "1",
+                                node.Region.Name
+                                );
+                        }
+                        else
+                        {
+                            Debug.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                                node.Region.TX, node.Region.TY, node.Region.TZ,
+                                "0",
+                                "0",
+                                "-"
+                                );
+                        }
 					}
 
 					itm.AXPlotModel = LoadPlotModel(itm.Nodes, lrgCmp, r => r.X, r => r.Y);

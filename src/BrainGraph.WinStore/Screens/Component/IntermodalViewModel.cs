@@ -71,7 +71,7 @@ namespace BrainGraph.WinStore.Screens.Component
 					overlapCount++;
 
                     Debug.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}", 
-                        Regions[multiNode.Id].Region.X, Regions[multiNode.Id].Region.Y, Regions[multiNode.Id].Region.Z,
+                        Regions[multiNode.Id].Region.TX, Regions[multiNode.Id].Region.TY, Regions[multiNode.Id].Region.TZ,
                         "1",
                         "1",
                         Regions[multiNode.Id].Region.Name

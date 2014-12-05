@@ -1,10 +1,12 @@
 ﻿using BrainGraph.ComputeRT.Group;
 using BrainGraph.WinStore.Common;
 using BrainGraph.WinStore.Events;
+using BrainGraph.WinStore.Models;
 using BrainGraph.WinStore.Services;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BrainGraph.WinStore.Screens.Nodal
@@ -70,6 +72,16 @@ namespace BrainGraph.WinStore.Screens.Nodal
 
                         if (node.PValue <= 0.00055)
                             sigNodes.Add(node);
+
+						var nodeIdx = node.RawNode.Index;
+						var region = regions[nodeIdx];
+
+						Debug.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}",
+								region.TX, region.TY, region.TZ,
+								node.Difference,
+								node.Difference,
+								region.Name
+								);
 
 						++index;
 					}
