@@ -243,7 +243,7 @@ namespace BrainGraph.WinStore.Services
 
 								if (DoWeCare(lineIdx, colIdx) && (adj.DataType == "fMRI-mo") && (colIdx > lineIdx))
 								{
-									var str = string.Format("{0}, {1}{2}, {3}", subject.SubjectId, lineIdx, colIdx, val);
+									var str = string.Format("{0}, {1:00}{2:00}, {3}", subject.SubjectId, lineIdx, colIdx, val);
 
 									Debug.WriteLine(str);
 								}
