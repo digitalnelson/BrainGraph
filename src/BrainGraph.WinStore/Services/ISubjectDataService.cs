@@ -97,41 +97,127 @@ namespace BrainGraph.WinStore.Services
 
 		private bool DoWeCare(int v1, int v2)
 		{
-			if((v1 == 84 && v2 == 76) || (v1 == 76 && v2 == 84))
-				return true;
+			var smaller = 0;
+			var larger = 0;
+			if (v1 >= v2)
+			{
+				smaller = v2;
+				larger = v1;
+			}
+			else
+			{
+				smaller = v1;
+				larger = v2;
+			}
 
-			if ((v1 == 16 && v2 == 76) || (v1 == 76 && v2 == 16))
-				return true;
-
-			if ((v1 == 80 && v2 == 76) || (v1 == 76 && v2 == 80))
-				return true;
-
-			if ((v1 == 78 && v2 == 76) || (v1 == 76 && v2 == 78))
-				return true;
-
-			if ((v1 == 46 && v2 == 76) || (v1 == 76 && v2 == 46))
-				return true;
-
-			if ((v1 == 0 && v2 == 76) || (v1 == 76 && v2 == 0))
-				return true;
-
-			if ((v1 == 56 && v2 == 76) || (v1 == 76 && v2 == 56))
-				return true;
-
-			if ((v1 == 54 && v2 == 76) || (v1 == 76 && v2 == 54))
-				return true;
-
-			if ((v1 == 30 && v2 == 70) || (v1 == 70 && v2 == 30))
-				return true;
-
-			if ((v1 == 28 && v2 == 76) || (v1 == 76 && v2 == 28))
-				return true;
+			if ((smaller == 1) && (larger == 76))
+					return true;
+			if ((smaller == 1) && (larger == 77))
+					return true;
+			if ((smaller == 9) && (larger == 26))
+					return true;
+			if ((smaller == 10) && (larger == 76))
+					return true;
+			if ((smaller == 11) && (larger == 76))
+					return true;
+			if ((smaller == 16) && (larger == 70))
+					return true;
+			if ((smaller == 16) && (larger == 77))
+					return true;
+			if ((smaller == 16) && (larger == 76))
+					return true;
+			if ((smaller == 16) && (larger == 71))
+					return true;
+			if ((smaller == 17) && (larger == 77))
+					return true;
+			if ((smaller == 17) && (larger == 76))
+					return true;
+			if ((smaller == 26) && (larger == 74))
+					return true;
+			if ((smaller == 28) && (larger == 70))
+					return true;
+			if ((smaller == 29) && (larger == 70))
+					return true;
+			if ((smaller == 29) && (larger == 77))
+					return true;
+			if ((smaller == 29) && (larger == 76))
+					return true;
+			if ((smaller == 30) && (larger == 70))
+					return true;
+			if ((smaller == 30) && (larger == 71))
+					return true;
+			if ((smaller == 31) && (larger == 70))
+					return true;
+			if ((smaller == 31) && (larger == 71))
+					return true;
+			if ((smaller == 46) && (larger == 76))
+					return true;
+			if ((smaller == 46) && (larger == 77))
+					return true;
+			if ((smaller == 46) && (larger == 70))
+					return true;
+			if ((smaller == 47) && (larger == 77))
+					return true;
+			if ((smaller == 47) && (larger == 76))
+					return true;
+			if ((smaller == 47) && (larger == 70))
+					return true;
+			if ((smaller == 54) && (larger == 77))
+					return true;
+			if ((smaller == 55) && (larger == 77))
+					return true;
+			if ((smaller == 55) && (larger == 76))
+					return true;
+			if ((smaller == 56) && (larger == 76))
+					return true;
+			if ((smaller == 56) && (larger == 77))
+					return true;
+			if ((smaller == 57) && (larger == 77))
+					return true;
+			if ((smaller == 57) && (larger == 76))
+					return true;
+			if ((smaller == 70) && (larger == 78))
+					return true;
+			if ((smaller == 70) && (larger == 80))
+					return true;
+			if ((smaller == 70) && (larger == 75))
+					return true;
+			if ((smaller == 70) && (larger == 73))
+					return true;
+			if ((smaller == 70) && (larger == 79))
+					return true;
+			if ((smaller == 71) && (larger == 78))
+					return true;
+			if ((smaller == 76) && (larger == 78))
+					return true;
+			if ((smaller == 76) && (larger == 80))
+					return true;
+			if ((smaller == 76) && (larger == 79))
+					return true;
+			if ((smaller == 76) && (larger == 85))
+					return true;
+			if ((smaller == 76) && (larger == 81))
+					return true;
+			if ((smaller == 76) && (larger == 84))
+					return true;
+			if ((smaller == 77) && (larger == 85))
+					return true;
+			if ((smaller == 77) && (larger == 78))
+					return true;
+			if ((smaller == 77) && (larger == 81))
+					return true;
+			if ((smaller == 77) && (larger == 80))
+					return true;
+			if ((smaller == 77) && (larger == 79))
+					return true;
+			if ((smaller == 77) && (larger == 84))
+					return true;
 
 			return false;
 		}
 
 
-        public async Task LoadSubjectData(SubjectViewModel subject, int vertexLimit)
+    public async Task LoadSubjectData(SubjectViewModel subject, int vertexLimit)
 		{
 			if (_adjBySubjectId.ContainsKey(subject.SubjectId))
 			{
